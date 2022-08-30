@@ -3,14 +3,13 @@ import { v4 as uuidv4 } from 'uuid';
 import Tense from "./Tense"
 import tenseNames from "../../assets/js/map-tense-names.js"
 import tenseColors from "../../assets/js/map-tense-colors.js"
-import styles from "./conjugations.module.css";
+import styles from "./styles/conjugations.module.css";
 
 function Conjugations(props){
 
     const [englishTenseNames, setEnglishTenseNames] = useState( true )
     
     console.log(tenseNames)
-    // const tenses = Object.keys( tenseNames[ props.language ].english )
     const tenses = Object.entries( tenseNames )
         .filter( ( [ _, languages ] ) => Object.keys( languages ).includes( props.language ))
         .map( ( [ tense, _ ] ) => tense )

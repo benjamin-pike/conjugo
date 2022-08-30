@@ -1,7 +1,6 @@
-import { useRef, useEffect} from "react"
+import { useRef } from "react"
 import { useLang } from "../../store/LangContext"
-import useHTTP from "../../hooks/useHTTP"
-import styles from "./styles_verb-card.module.css"
+import styles from "./styles/verb-card.module.css"
 import getAudio from "../../functions/getAudio"
 
 function VerbCard( props ){

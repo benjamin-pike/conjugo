@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react"
-import { useLang } from "../../../store/LangContext" 
-import getAudio from "../../../functions/getAudio.js"
-import VerbCard from "../VerbCard"
-import styles from "./styles_audio-card.module.css"
+import { useLang } from "../../store/LangContext" 
+import getAudio from "../../functions/getAudio.js"
+import VerbCard from "./VerbCard"
+import styles from "./styles/audio-card.module.css"
 
 function AudioCard( props ){
 

@@ -1,8 +1,8 @@
-import newVerb from "../../../assets/images/new-verb.svg"
-import irregularVerb from "../../../assets/images/irregular-verb.svg"
-import stemChangingVerb from "../../../assets/images/stem-changing-verb.svg"
+import newVerb from "../../assets/images/new-verb.svg"
+import irregularVerb from "../../assets/images/irregular-verb.svg"
+import stemChangingVerb from "../../assets/images/stem-changing-verb.svg"
 
-import styles from "./styles_alert-banner.module.css"
+import styles from "./styles/alert-banner.module.css"
 
 function AlertBanner( props ){
 

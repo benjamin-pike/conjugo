@@ -1,0 +1,135 @@
+/* CAROUSEL */
+#verb-carousel__content{
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    padding: 1em 1.5em 3em 1.5em;
+    background-color: var(--lightgray);
+    border-radius: 1em;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+#verb-carousel__content::-webkit-scrollbar {
+    display: none;
+}
+
+#verb-carousel__loading{
+    width: fit-content;
+    height: fit-content;
+    margin: auto;
+    display: flex;
+    /* transform: translateY(1.25em); */
+    margin-top: 1.85em;
+}
+
+@keyframes loading-circle-pulse{
+    from { 
+        transform: scale(1);
+        opacity: 100%
+    }
+    to { 
+        transform: scale(1.5);
+        opacity: 60%
+    }
+}
+
+#verb-carousel__loading-circle-1,
+#verb-carousel__loading-circle-2,
+#verb-carousel__loading-circle-3{
+    background-color: var(--textcolor50);
+    width: 0.75em;
+    height: 0.75em;
+    border-radius: 50%;
+    margin: 0 0.5em;
+}
+
+#verb-carousel__loading-circle-1{
+    animation: loading-circle-pulse 750ms ease-in-out infinite alternate;
+}
+
+#verb-carousel__loading-circle-2{
+    animation: loading-circle-pulse 750ms ease-in-out 250ms infinite alternate;
+}
+
+#verb-carousel__loading-circle-3{
+    animation: loading-circle-pulse 750ms ease-in-out 500ms infinite alternate;
+}
+
+#verb-carousel__empty{
+    background-color: var(--textcolor);
+    color: var(--offwhite);
+    line-height: 4.5em;
+    width: 100%;
+    text-align: center;
+    margin: auto;
+    margin-top: 0.5em;
+    border-radius: 0.5em;
+    white-space: pre;
+    box-shadow: 0.1em 0.1em 0.25em var(--selected), 
+                0.1em 0.1em 0.5em var(--selected),
+                0.1em 0.1em 1em var(--selected);
+}
+
+/* VERB CARD */
+
+.verb-card{
+    position: relative;
+    height: 5.5em;
+    width: 100%;
+    padding: 0.5em 0;
+    box-sizing: border-box;
+    scroll-snap-align: center;
+}
+
+.verb-card-face{
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.5em;
+    opacity: 90%;
+    background-color: var(--offwhite);
+    box-shadow: 0.1em 0.1em 0.5em var(--selected);
+    overflow: hidden;
+    transition: background-color 300ms ease, 
+                transform 200ms ease,
+                opacity 300ms ease;
+}
+
+.verb-card-face > p{
+    cursor: pointer;
+    white-space: nowrap;
+    padding: 0.5em 1em;
+    border-radius: 3em;
+    color: var(--textcolor);
+    transition: 
+        color 100ms ease,
+        background-color 300ms ease,
+        box-shadow 300ms ease;
+}
+
+.verb-card__right-bar{
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 0.5em;
+    background-color: var(--red);
+}
+
+#verb-card-face__focused{
+    background-color: var(--red);
+    opacity: 100%;
+    transform: scale(1.025);
+    box-shadow: 0.1em 0.1em 0.5em var(--selected),
+                0.1em 0.1em 1em var(--selected);
+}
+
+#verb-card-face__focused > p{
+    color: var(--offwhite);
+}

@@ -1,5 +1,5 @@
-import ConjugationCard from "../ConjugationCard"
-import styles from "./styles_conjugations-group.module.css"
+import ConjugationCard from "./ConjugationCard"
+import styles from "./styles/alert-conjugations.module.css"
 
 function ConjugationsGroup( props ){
 

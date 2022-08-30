@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useNav } from "../../../store/NavContext";
+import { useNav } from "../../store/NavContext";
 
 import AlertBanner from "./AlertBanner";
-import VerbCard from "../VerbCard";
-import ExplainerCard from "../ExplainerCard";
-import ConjugationsGroup from "./ConjugationsGroup";
+import VerbCard from "./VerbCard";
+import ExplainerCard from "./ExplainerCard";
+import ConjugationsGroup from "./AlertConjugations";
 
-import RaisedButton from "../../common/RaisedButton/RaisedButton";
-import styles from "../learn.module.css"
+import RaisedButton from "../common/RaisedButton/RaisedButton";
+import styles from "./styles/learn.module.css"
 
 function Alert(){
 

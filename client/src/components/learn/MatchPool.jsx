@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-import ConjugationCard from "../ConjugationCard";
+import ConjugationCard from "./ConjugationCard";
 
 function Pool( props ){
 

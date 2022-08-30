@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../store/AuthContext';
 import { useNav } from '../../store/NavContext';
 import { v4 as uuidv4 } from 'uuid';
-import NavBrand from './NavBrand';
-import NavItem from './NavItem';
-import NavLanguageSelector from './NavLanguageSelector';
-import NavAvatar from './NavAvatar';
-import items from './nav_items'
-import styles from "./nav-bar.module.css";
+import Brand from './Brand';
+import PageLink from './PageLink';
+import LanguageSelector from './LanguageSelector';
+import Avatar from './Avatar';
+import styles from "./styles/navbar.module.css";
 
 function NavBar(props) {
 
@@ -15,6 +14,13 @@ function NavBar(props) {
     const { visible, current } = useNav()
     const [open, setOpen] = useState( { language: false, avatar: false } );
     const [highlight, setHighlight] = useState()
+
+    const pages = [
+        { text: 'about', icon: './circle.svg', link: '#' },
+        { text: 'learn', icon: './circle.svg', link: '/learn' },
+        { text: 'practice', icon: './circle.svg', link: '/practice' },
+        { text: 'reference', icon: './circle.svg', link: '/reference' },
+    ]
 
     document.onclick = (e) => {
 
@@ -57,7 +63,7 @@ function NavBar(props) {
     if ( visible ) return (
         <div className = {styles["navbar"]}>
             <nav>
-                <NavBrand />
+                <Brand />
 
                 <div id = {styles["nav-items"]}>
                     <div 
@@ -70,26 +76,26 @@ function NavBar(props) {
                             backgroundColor: `var(--${highlightColor[current]})`
                         }}
                     />
-                    {items.map(item => 
-                        <NavItem
+                    { pages.map( item => 
+                        <PageLink
                             styles = {styles}
                             key = {uuidv4()} 
                             text = {item.text}
                             icon = {item.icon}
                             link = {item.link}
                         />
-                    )}
+                    ) }
                 </div>
 
                 <div id = {styles["profile-specific"]}>
-                    <NavLanguageSelector
+                    <LanguageSelector
                         open = {open}
                         setOpen = {setOpen}
                         language = {props.language}
                         setLanguage = {props.setLanguage} 
                         highlight = {highlight}
                     />
-                    <NavAvatar 
+                    <Avatar 
                         open = {open}
                         setOpen = {setOpen}
                         img = {auth.userData.image}

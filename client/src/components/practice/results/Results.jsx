@@ -6,7 +6,7 @@ import Details from "./Details"
 import Level from "./Level"
 import Loading from "../../temporary/Loading"
 import Error from "../../temporary/Error"
-import styles from "./results.module.css"
+import styles from "./styles/results.module.css"
 
 function Results(props){
 

@@ -1,0 +1,75 @@
+
+#verb-search{
+    box-sizing: border-box;
+    height: 4em;
+    border-radius: 1em;
+    margin-bottom: 1em;
+    padding: 1em 1.25em;
+    background-color: var(--lightgray);
+    color: var(--textcolor);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: box-shadow 200ms ease;
+}
+
+#verb-search__input{
+    height: 100%;
+    border: 0;
+    outline: none;
+    background-color: transparent;
+    border-radius: 0.5em;
+    color: var(--textcolor);
+    font-size: 1.25em;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    width: 100%;
+}
+
+#verb-search:focus{
+    box-shadow: 0 0 0 1em var(--selected);
+}
+
+#verb-search > svg{
+    margin-right: 0.5em;
+}
+
+#verb-search > button{
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    margin-left: 0.5em;
+    background-color: transparent;
+    border: none;
+    width: 1.25em;
+    /* height: 1.25em; */
+    color: var(--textcolor);
+}
+
+#verb-search > button:hover{
+    opacity: 75%;
+}
+
+#verb-search > button > svg{
+    height: 100%;
+    width: 100%;
+    transform: translateY(0.1em);
+}
+
+#verb-search__star{
+    position: relative;
+    color: var(--textcolor);
+
+}
+
+#verb-search__star > svg{
+    position: absolute;
+    height: 1.35em;
+    aspect-ratio: 1;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 200ms ease;
+    stroke: var(--textcolor);
+    stroke-width: 10;
+}

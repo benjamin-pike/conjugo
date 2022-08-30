@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleQuestion, faClipboard, faVolumeHigh } from '@fortawesome/free-solid-svg-icons'
 import subjectsMap from "../../assets/js/subjects_map";
-import styles from "./tense.module.css"
+import styles from "./styles/tense.module.css"
 
 function Subject(props){
 

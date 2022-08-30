@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import styles from "./styles_progress-bar.module.css"
+import styles from "./styles/progress-bar.module.css"
 
 function ProgressBar( props ){
     return(

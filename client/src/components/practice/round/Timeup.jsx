@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from "./timeup.module.css"
+import styles from "./styles/timeup.module.css"
 
 function Timeup(props) {
 

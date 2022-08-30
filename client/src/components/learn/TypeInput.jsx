@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
-import { useLang } from "../../../store/LangContext"
+import { useLang } from "../../store/LangContext"
 
-import styles from "./type_input.module.css"
+import styles from "./styles/type-input.module.css"
 
 function TypeInput( props ){
 

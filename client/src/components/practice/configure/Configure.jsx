@@ -8,7 +8,7 @@ import Points from "./Points"
 import Time from "./Time"
 import Loading from "../../temporary/Loading";
 import Error from "../../temporary/Error";
-import styles from "./configure.module.css"
+import styles from "./styles/configure.module.css"
 
 function Configure(props){
 

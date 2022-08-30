@@ -5,20 +5,20 @@ import { useLang } from "../../store/LangContext";
 import useHTTP from "../../hooks/useHTTP";
 
 // Components
-import Alert from "./alert/Alert";
-import AlertBanner from "./alert/AlertBanner";
-import AlertConjugations from "./alert/ConjugationsGroup";
+import Alert from "./Alert";
+import AlertBanner from "./AlertBanner";
+import AlertConjugations from "./AlertConjugations";
 import ProgressBar from "./ProgressBar";
 import VerbCard from "./VerbCard";
-import AudioCard from "./select/AudioCard";
+import AudioCard from "./AudioCard";
 import ExplainerCard from "./ExplainerCard";
-import MatchCards from "./match/Cards";
-import SelectCards from "./select/Cards"
-import TypeInput from "./type/TypeInput"
+import MatchCards from "./MatchCards";
+import SelectCards from "./SelectCards"
+import TypeInput from "./TypeInput"
 import RaisedButton from "../common/RaisedButton/RaisedButton";
 
 // Styles
-import styles from "./learn.module.css"
+import styles from "./styles/learn.module.css"
 
 function Learn(){
 

@@ -1,4 +1,4 @@
-import ConjugationCard from "../ConjugationCard";
+import ConjugationCard from "./ConjugationCard";
 
 function Boxes( props ){
 

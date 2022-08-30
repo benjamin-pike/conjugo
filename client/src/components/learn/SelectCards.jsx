@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import ConjugationCard from "../ConjugationCard";
-import styles from "./styles_cards.module.css"
+import ConjugationCard from "./ConjugationCard";
+import styles from "./styles/select-cards.module.css"
 
 function Cards( props ){
 

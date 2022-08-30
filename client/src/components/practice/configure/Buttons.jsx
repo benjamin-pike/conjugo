@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import buttonsData from "./buttons_data";
+import buttonsData from "./map-buttons";
 
 function Buttons(props){
 

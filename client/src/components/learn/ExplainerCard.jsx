@@ -1,6 +1,6 @@
 import tenseColors from "../../assets/js/map-tense-colors.js";
 import subjectColors from "../../assets/js/map-subject-colors.js";
-import styles from "./styles_explainer-card.module.css";
+import styles from "./styles/explainer-card.module.css";
 import { useLang } from "../../store/LangContext";
 
 function ExplainerCard( props ){

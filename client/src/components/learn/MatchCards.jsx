@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 
-import Pool from "./Pool";
-import Boxes from "./Boxes";
+import Pool from "./MatchPool";
+import Boxes from "./MatchBoxes";
 
-import styles from "./styles_cards.module.css"
+import styles from "./styles/match-cards.module.css"
 
 function Cards( props ){
 

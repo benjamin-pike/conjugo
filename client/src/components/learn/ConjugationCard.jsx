@@ -1,5 +1,5 @@
 import useHTTP from "../../hooks/useHTTP"
-import styles from "./styles_conjugation-card.module.css"
+import styles from "./styles/conjugation-card.module.css"
 
 function ConjugationCard( props ){
 

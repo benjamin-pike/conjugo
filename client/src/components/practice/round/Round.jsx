@@ -8,7 +8,7 @@ import Loading from "../../temporary/Loading";
 import tenseNames from "../../../assets/js/map-tense-names.js"
 import tenseColors from "../../../assets/js/map-tense-colors.js"
 import subjectColors from "../../../assets/js/map-subject-colors.js"
-import styles from "./round.module.css"
+import styles from "./styles/round.module.css"
 
 function Round(props) {
 

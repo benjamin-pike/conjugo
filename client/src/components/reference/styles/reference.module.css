@@ -1,0 +1,91 @@
+#reference{
+    background-color: var(--offwhite);
+    box-sizing: border-box;
+    padding: 2vh;
+    display: flex;
+    overflow: hidden;
+}
+
+#left-content{
+    height: 100%;
+    width: 20vw;
+    min-width: 15em;
+    overflow-x: hidden;
+    border-radius: 1em;
+    transition: 
+        width 500ms ease,
+        min-width 500ms ease,
+        opacity 500ms ease,
+        filter 500ms ease;
+}
+
+#right-content{
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    border-radius: 1em;
+    margin-left: 1em;
+    overflow: hidden;
+    
+    transition: 
+        width 500ms ease,
+        margin-left 500ms ease;
+}
+
+#verb-carousel{
+    position: relative;
+    width: 100%;
+    height: calc(100% - 5em);
+}
+
+#detail-bar{
+    position: relative;
+    box-sizing: border-box;
+    height: 4em;
+    border-radius: 1em;
+    margin-bottom: 1em;
+    background-color: var(--lightgray);
+    display: flex;
+    align-items: center;
+}
+
+#conjugations__container{
+    position: relative;
+    height: calc(100% - 5em);
+    border-radius: 1em;
+    background-color: var(--lightgray);
+}
+
+#conjugations__content{
+    box-sizing: border-box;
+    height: 100%;
+    padding: 2em 1.5em 1.5em 1.5em;
+    overflow-y: scroll;
+}
+
+#conjugations__collapse{
+    position: absolute;
+    cursor: pointer;
+    width: 1.2em;
+    height: 2.4em;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    background-color: var(--textcolor);
+    color: var(--offwhite);
+    border-radius: 0 1.2em 1.2em 0;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    opacity: 0%;
+    transition: opacity 300ms ease;
+}
+
+#conjugations__collapse > svg{
+    margin-left: 0.25em;
+    height: 1em;
+}
+
+#conjugations__collapse:hover{
+    opacity: 50%
+}

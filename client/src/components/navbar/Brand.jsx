@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './nav-brand.module.css'
+import styles from './styles/brand.module.css'
 
 function NavBrand() {
 
