@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+:root {
+    --offwhite: rgb(245, 242, 240);
+    --offwhite90: rgb(235, 230, 226, 0.9);
+    --lightgray: hsl(22, 20%, 92%);
+    --textcolor: rgba(70, 70, 70, 0.995);
+    --textcolor50: rgba(70, 70, 70, 0.25);
+    --selected: rgba(70, 70, 70, 0.10);
+    --shadow: rgba(70, 70, 70, 0.05);
+    --textspacing: 0vh;
+    --complete: rgb(76, 209, 44);
+    --roundcomplete: rgb(255, 192, 0);
+    --incorrect: rgb(255, 50, 100);
+    --hinted: rgb(120, 120, 120);
+    --loadingradius: 10vh;
+    --highlight: rgba(75, 185, 99, 0.25);
+
+    --red: hsl(345, 100%, 60%);
+    --orange: hsl(24, 100%, 56%);
+    --yellow: hsl(45, 100%, 50%);
+    --green: hsl(108, 65%, 50%);
+    --aqua: hsl(180, 100%, 42%);
+    --blue: rgb(0, 123, 255);
+    --purple: hsl(274, 100%, 55%);
+    --pink: rgb(229, 16, 148);
+
+    --red-dark: rgb(249,0,62);
+    --orange-dark: rgb(250,85,0);
+    --yellow-dark: rgb(255, 174, 0);
+    --green-dark: rgb(0,194,0);
+    --blue-dark: rgb(0,90,252);
+    --purple-dark: rgb(124,0,252);
+}
+
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: "Montserrat";
+    font-weight: 700;
+}
+
+body{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
+
+.disable-transitions * {
+    transition: none !important;
+}
+
+  

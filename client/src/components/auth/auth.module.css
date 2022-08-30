@@ -1,0 +1,424 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap');
+
+:root {
+    --error-light: hsl(358, 60%, 90%);
+    --error-mid: hsl(358, 100%, 80%);
+    --error-dark: var(--red);
+    --textspacing: 0vh;
+    --input-margin: 0.35em;
+}
+
+/* GENERAL */
+#container{
+    background-color: var(--offwhite);
+    height: clamp(35em, 100vh, 100vh);
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: scroll;
+}
+
+.bounding-box{
+    width: 25em;
+    pointer-events: auto;
+    margin: auto;
+    align-items: center;
+    padding: 2.5em 0;
+    font-size: clamp(0.9em, 2.25vh, 1.1em);
+}
+
+.input-container{
+    display: inline-flex;
+    position: relative;
+    margin-top: calc(var(--input-margin) * 1.2);
+    margin-bottom: calc(var(--input-margin) * 1.2);
+    padding: 0;
+    width: 100%;
+    align-items: center;
+    overflow: hidden;
+}
+
+.input-container input {
+    position: relative;
+    width: 100%;
+    height: 1.5em;
+    padding: 1em;
+    border-width: 0 0 0.125em 0;
+    border-radius: 0.75em 0.75em 0.125em 0.125em;
+    outline: none;
+    text-align: left;
+    font-size: 0.85em;
+    font-family: "Montserrat";
+    font-weight: 600;
+    user-select: none;
+    letter-spacing: var(--textspacing);
+    transition:
+        border-color 200ms linear,
+        border-width 200ms linear,
+        border-radius 200ms linear,
+        margin-bottom 200ms linear
+}
+
+.input__valid{
+    border-color: rgb(220, 220, 220);
+    color: var(--textcolor);
+    background-color: var(--lightgray);
+    caret-color: var(--textcolor);
+}
+
+.input__valid:focus{
+    border-color: var(--yellow);
+    border-width: 0 0 0.175em;
+    border-radius: 0.75em 0.75em 0.175em 0.175em;
+    margin-bottom: -0.05em;
+}
+
+.input__valid:-webkit-autofill,
+.input__valid:-webkit-autofill:hover, 
+.input__valid:-webkit-autofill:focus, 
+.input__valid:-webkit-autofill:active{
+    background-color: var(--lightgray) !important;
+    color: var(--textcolor) !important;
+    -webkit-text-fill-color: var(--textcolor) !important;
+    -webkit-textfont-family: "Montserrat" !important;
+    font-weight: 600 !important;
+    box-shadow: 0 0 0 1000px var(--lightgray) inset !important;
+    -webkit-box-shadow: 0 0 0 1000px var(--lightgray) inset !important;
+}
+
+.input__valid::placeholder{
+    color: var(--textcolor); 
+    opacity: 50%; 
+    letter-spacing: var(--textspacing);
+}
+
+.input__valid:-ms-input-placeholder{
+    color: var(--textcolor); 
+    opacity: 50%; 
+    letter-spacing: var(--textspacing);
+}
+
+.input__valid::-ms-input-placeholder{
+    color: var(--textcolor); 
+    opacity: 50%; 
+    letter-spacing: var(--textspacing);
+}
+
+.input__invalid{
+    border-color: var(--error-mid);
+    color: var(--red);
+    background-color: var(--error-light);
+    caret-color: var(--red);
+}
+
+.input__invalid:focus{
+    border-color: var(--error-dark);
+    border-width: 0 0 0.175em;
+    margin-bottom: -0.05em;
+}
+
+.input__invalid:-webkit-autofill,
+.input__invalid:-webkit-autofill:hover, 
+.input__invalid:-webkit-autofill:focus, 
+.input__invalid:-webkit-autofill:active{
+    background-color: var(--error-light) !important;
+    color: var(--red) !important;
+    -webkit-text-fill-color: var(--red) !important;
+    -webkit-textfont-family: "Montserrat" !important;
+    font-weight: 600 !important;
+    box-shadow: 0 0 0 1000px var(--error-light) inset !important;
+    -webkit-box-shadow: 0 0 0 1000px var(--error-light) inset !important;
+}
+
+.input__invalid::placeholder{
+    color: var(--red) !important;
+    opacity: 80%;
+    letter-spacing: var(--textspacing);
+}
+
+.input__invalid:-ms-input-placeholder{
+    color: (--red) !important;
+    opacity: 80%;
+    letter-spacing: var(--textspacing);
+}
+
+.input__invalid::-ms-input-placeholder{
+    color: (--red) !important;
+    opacity: 80%;
+    letter-spacing: var(--textspacing);
+}
+
+/* TITLE AND TERMS */
+.title{
+    position: relative;
+    margin: auto;
+    text-align: center;
+    color: var(--textcolor);
+    width: fit-content;
+    font-size: 1.75em;
+    margin-bottom: 0.75em;
+    white-space: pre;
+}
+
+@keyframes blink{
+    from { opacity: 0 }
+    to { opacity: 1 }
+}
+
+.title::after{
+    content: '';
+    position: absolute;
+    height: 1.15em;
+    margin-top: 0.06em;
+    width: 0.125em;
+    background-color: var(--textcolor);
+    animation: blink 500ms ease-in-out infinite alternate;
+    border-radius: 0.025em;
+}
+
+.terms > p{
+    margin: 0;
+    margin-top: 1.25em;
+    font-family: "Montserrat";
+    font-weight: 400;
+    font-size: 0.9em;
+    text-align: center;
+    color: var(--textcolor);
+    white-space: no-wrap;
+}
+    
+.terms > p > a{
+    color: inherit;
+    text-decoration: none;
+}
+
+.terms > p > a:hover{
+    opacity: 75%;
+}
+
+/* FORM STRUCTURE */
+
+/* REGISTER */
+    #fname-container,
+    #lname-container{
+        margin-top: 0;
+    }
+
+    #fname-container,
+    #username-container{
+        width: calc(50% - var(--input-margin));
+        margin-right: var(--input-margin);
+    }
+
+    #lname-container,
+    #dob-container{
+        width: calc(50% - var(--input-margin));
+        margin-left: var(--input-margin);
+    }
+
+    #dob{
+        content: ''
+    }
+
+    #password-confirm-container{
+        margin-bottom: 0;
+    }
+
+    #password-register{
+        padding-right: 8.25em;
+        letter-spacing: 0.25em;
+    }
+
+    #password-confirm{
+        letter-spacing: 0.25em;
+    }
+
+    /* LOGIN */
+    #password-login{
+        padding-right: 9.25em;
+        letter-spacing: 0.25em;
+    }
+
+/* PASSWORD BOX */
+.password-buttons{
+    position: absolute;
+    top: 0.8em;
+    right: 1.15em;
+    border: none;
+    cursor: pointer;
+}
+
+.password-buttons > p{
+    display: inline-block;
+    margin: 0;
+    font-size: 0.85em;
+    font-weight: 700;
+    white-space: pre;
+    transition: opacity 500ms;
+}
+
+.input__valid + .password-buttons > p{
+    color: var(--textcolor);
+    opacity: 25%
+}
+
+.input__invalid + .password-buttons > p{
+    color: var(--red);
+    opacity: 45%
+}
+
+#show-password:hover,
+#auto-password:hover,
+#forgot-password:hover{
+    opacity: 100%;
+}
+
+/* BUTTONS */
+.buttons{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1.5em;
+}
+
+/* BUTTONS */
+.button-3d-wrapper{
+    background-color: var(--selected);
+    padding: 0.25em;
+    /* margin: 1.5em 0.4em 0; */
+    /* width: fit-content; */
+    width: 80%;
+    border-radius: 1em;
+    transition: background-color 500ms ease;
+}
+
+.button-3d{
+    cursor: pointer;
+    color: white;
+    padding: 0.9em 0;
+    height: 3em;
+    width: 100%;
+    border-radius: 0.75em;
+    border: none;
+    font-family: "Montserrat";
+    font-weight: 700;
+    font-size: 1.05em;
+    transition: 
+        transform 100ms ease, 
+        box-shadow 100ms ease,
+        filter 200ms ease,
+        background-color 200ms ease;
+    transform: translateY(-0.25em);
+}
+
+
+
+#primary{
+    background-color: hsl(45, 100%, 50%);
+    box-shadow: 0 0.25em hsl(45, 100%, 43%);
+}
+
+#secondary{
+    background-color: var(--red);
+    box-shadow: 0 0.25em hsl(345, 100%, 40%);
+    ;
+}
+
+#primary:active,
+#secondary:active{
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.button-3d:hover{
+    filter: brightness(1.05)
+}
+
+.button-3d-overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    border-radius: 0.75em;
+    box-shadow: 0 0 var(--selected) inset;
+    transition: box-shadow 100ms ease;
+}
+
+#primary:active > .button-3d-overlay{
+    box-shadow: 0 0.25em var(--selected) inset;
+}
+
+#secondary:active > .button-3d-overlay{
+    box-shadow: 0 0.25em rgba(0, 0, 0, 0.15) inset;
+}
+
+#buttons__alternative{
+    color: var(--textcolor50);
+    font-size: 0.9em;
+    font-weight: 600;
+    margin: 0;
+    margin: 1.1em 0 1.35em;
+    padding: 0;
+    white-space: pre;
+}
+
+/* TOOLTIP */
+.error{
+    position: absolute;
+    right: 100%;
+    margin-right: 1em;
+    width: fit-content;
+
+}
+.error > p,
+.error > div{
+    width: fit-content;
+    border-radius: 0.5em;
+    background-color: var(--lightgray);
+    margin: 0;
+    padding: 1em;
+    font-size: 0.8em;
+    font-weight: 500;
+    color: rgba(70, 70, 70, 0.85);
+    white-space: nowrap;
+}
+
+#error__lname,
+#error__dob,
+#error__email,
+#error__password-confirm,
+#error__password-login{
+    left: 100%;
+    right: 0;
+    margin-left: 1em;
+    margin-right: 5em;
+
+}
+
+.error > div > p,
+.error > div > ul > li{
+    padding: 0;
+    margin: 0.1em;
+    font-weight: 500;
+}
+
+.error > div > p {
+    font-weight: 700;
+}
+.error > div > ul > li{
+    font-weight: 500;
+    line-height: 1.5em;
+}
+
+.error > div > ul{
+    margin: 0;
+    margin-top: 0.5em;
+    padding: 0;
+    padding-left: 1.75em;
+    padding-right: 0.25em
+}

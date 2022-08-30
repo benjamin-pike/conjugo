@@ -1,0 +1,101 @@
+#card__explainer{
+    padding: 1.25em 1.5em;
+    border-radius: 0.4em;
+    color: var(--textcolor);
+    background-color: var(--offwhite);
+    box-shadow: 0.25em 0.25em 0.25em 0.125em var(--shadow);
+}
+
+#card__explainer > p{
+    margin: 0;
+    padding: 0;
+    font-size: 1.5em;
+    color: var(--textcolor);
+    white-space: pre;
+    display: flex;
+    align-items: center;
+}
+
+#card__explainer span:not(.card__explainer__background):not(.card__explainer__foreground) {
+    position: relative;
+    display: inline-block;
+    color: transparent;
+    padding: 0.35em 0.75em;
+    border-radius: 100vmax;
+    font-size: 0.9em;
+}
+
+#card__explainer__verb .card__explainer__background{
+    opacity: 1;
+}
+
+.card__explainer__foreground{
+    position: relative;
+}
+
+.card__explainer__foreground::after{
+    content: attr(data-attr);
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0; left: 0;
+    background: black;
+    mix-blend-mode: overlay;
+    opacity: 0.3;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+#card__explainer p:not(span){
+    font-weight: 600;
+}
+
+.card__explainer__background{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0; left: 0;
+    border-radius: 100vmax;
+    opacity: 0.175;
+}
+
+#card__explainer__regularity,
+#card__explainer__tense,
+#card__explainer__irregular,
+#card__explainer__stem-changing,
+#card__explainer__translation,
+.card__explainer__highlight__middle,
+.card__explainer__highlight__right{
+    margin-left: 0.5em;
+}
+
+#card__explainer__verb,
+#card__explainer__regularity,
+#card__explainer__tense,
+#card__explainer__irregular,
+#card__explainer__stem-changing,
+.card__explainer__highlight__left,
+.card__explainer__highlight__middle {
+    margin-right: 0.5em;
+}
+
+#card__explainer > p > span[ color = "red" ] > span.card__explainer__background { background-color: var(--red) }
+#card__explainer > p > span[ color = "red" ] > span.card__explainer__foreground { color: var(--red) }
+#card__explainer > p > span[ color = "orange" ] > span.card__explainer__background { background-color: var(--orange) }
+#card__explainer > p > span[ color = "orange" ] > span.card__explainer__foreground { color: var(--orange) }
+#card__explainer > p > span[ color = "yellow" ] > span.card__explainer__background { background-color: var(--yellow) }
+#card__explainer > p > span[ color = "yellow" ] > span.card__explainer__foreground { color: var(--yellow) }
+#card__explainer > p > span[ color = "green" ] > span.card__explainer__background { background-color: var(--green) }
+#card__explainer > p > span[ color = "green" ] > span.card__explainer__foreground { color: var(--green) }
+#card__explainer > p > span[ color = "blue" ] > span.card__explainer__background { background-color: var(--blue) }
+#card__explainer > p > span[ color = "blue" ] > span.card__explainer__foreground { color: var(--blue) }
+#card__explainer > p > span[ color = "purple" ] > span.card__explainer__background { background-color: var(--purple) }
+#card__explainer > p > span[ color = "purple" ] > span.card__explainer__foreground { color: var(--purple) }
+#card__explainer > p > span[ color = "dark" ] > span.card__explainer__background { background-color: var(--textcolor) }
+#card__explainer > p > span[ color = "dark" ] > span.card__explainer__foreground { color: var(--offwhite) }
+
+#card__explainer > p > span[ color = "yellow" ] > span.card__explainer__foreground,
+#card__explainer > p > span[ color = "green" ] > span.card__explainer__foreground { 
+    filter: brightness( 0.925 ) saturate( 1.25 );
+}

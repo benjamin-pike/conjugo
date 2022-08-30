@@ -1,0 +1,44 @@
+#footer{
+    height: 4em;
+    background-color: white;
+    border-top: 0.25em solid var(--selected);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#wrapper{
+    list-style-type: none;
+    margin: auto;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--textcolor50);
+    width: 100%;
+    margin-bottom: 0.1em;
+    min-width: 670px;
+}
+
+#wrapper > li{
+    margin: 0 1em;
+    font-size: 0.9em;
+    transition: color 200ms ease;
+}
+
+#wrapper > li:not(#copyright):hover{
+    cursor: pointer;
+    color: var(--textcolor)
+}
+
+#bold{
+    white-space: pre;
+}
+
+#copyright{
+    color: var(--yellow)
+}
+
+#copyright > .light{
+    font-weight: 300;
+}

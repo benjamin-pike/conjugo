@@ -1,0 +1,130 @@
+@keyframes darken-background{
+    from {opacity: 0%}
+    to {opacity: 100%}
+}
+
+@keyframes rotate-only{
+    0% { transform: rotate3d(0, 0, 0, 0) }
+    50% { transform: rotate3d(1, 0.2, 0.1, 720deg) }
+    75% { transform: rotateX(720deg) }
+    100% { transform: rotateX(720deg) }
+}
+
+@keyframes scale-and-rotate{
+    0% { transform: scale(0) rotate3d(0, 0, 0, 0); filter: brightness(0.6) blur(20px); top: calc(50% - 10vh)}
+    50% { transform: scale(1) rotate3d(1, 0.15, 0.15, 720deg); filter: brightness(1); top: calc(50% - 10vh)}
+    75% { transform: scale(1) rotateX(720deg) rotateZ(0); top: calc(50% - 10vh)}
+    100% { transform: scale(1) rotateX(720deg) rotateZ(0); top: calc(50% - 20vh)}
+}
+
+@keyframes delayed-descent{
+    from{ top: 50%; transform: translate(-50%, -50%); }
+    to{ top: 53%; transform: translate(-50%, 0); }
+}
+
+#timeup{
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    animation: darken-background 500ms ease forwards;
+}
+
+#mount{
+    box-sizing: border-box;
+    position: absolute;
+    width: fit-content;
+    background-color: var(--offwhite);
+    top: 53%;
+    left: 50%;
+    transform: translate(-50%, 0) scale(0);
+    border-radius: 0.8vh;
+    box-shadow: 0 0 0.5em 0.25em var(--selected);
+    padding: 4.5vh 3.5vh 3.5vh 3.5vh;
+    perspective: 600px;
+    animation: delayed-descent 625ms ease 1875ms forwards;
+}
+
+#card{
+    position: absolute;
+    top: calc(50% - 20vh);
+    left: calc(50% - 34vh);
+    transform: translate( );
+    background-color: var(--offwhite);
+    border-radius: 0.8vh;
+    animation: scale-and-rotate 2500ms ease forwards;
+    box-shadow: 0 0 0.5em 0.25em var(--selected);
+    width: fit-content;
+    z-index: 100;
+}
+
+#card > p{
+    box-sizing: border-box;
+    margin: 0;
+    width: 68vh;
+    line-height: 20vh;
+    text-align: center;
+    font-size: 10vh;
+    color: var(--textcolor);
+    animation: rotate-only 2500ms ease forwards;
+    backface-visibility: hidden;
+}
+
+/* BUTTONS */
+#timeup #buttons > div{
+    background-color: var(--selected);
+    margin: 0 1vh;
+    padding: 0.6vh;
+    width: fit-content;
+    border-radius: 2vh;
+    transition: background-color 100ms ease;
+}
+
+#timeup #buttons button{
+    cursor: pointer;
+    background-color: hsl(45, 100%, 50%);
+    color: white;
+    padding: 1.75vh 4vh;
+    border-radius: 1.5vh;
+    border: none;
+    font-family: "Montserrat";
+    font-weight: 700;
+    font-size: 2.75vh;
+    box-shadow: 0 0.75vh hsl(45, 100%, 43%);
+    transition: 
+        transform 100ms ease, 
+        box-shadow 100ms ease,
+        filter 200ms ease,
+        background-color 200ms ease;
+    transform: translateY(-0.75vh);
+}
+
+#timeup #buttons button:hover{
+    background-color:  hsl(45, 100%, 55%);
+}
+
+#timeup #buttons button:active{
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+#timeup #buttons .button-overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    border-radius: 1.5vh;
+    box-shadow: 0 0 var(--selected) inset;
+    transition: box-shadow 100ms ease;
+}
+
+#timeup #buttons button:active > div{
+    box-shadow: 0 0.6vh var(--selected) inset;
+}
+
+#timeup #buttons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

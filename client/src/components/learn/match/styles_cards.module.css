@@ -1,0 +1,164 @@
+/* TOP LEVEL */
+@keyframes correct-pulse{
+    0% { transform: scale( 1 ) }
+    50% { transform: scale( 1.05 ) }
+    100% { transform: scale( 1 ) }
+}
+
+@keyframes incorrect-shake{
+    0% { transform: translateX( 0 )  }
+    12.5% { transform: translateX( 0.25em ) }
+    37.5% { transform: translateX( -0.25em ) }
+    62.5% { transform: translateX( 0.25em ) }
+    87.5% { transform: translateX( -0.25em ) }
+    100% { transform: translateX( 0 ) }
+}
+
+.correct,
+.incorrect{
+    pointer-events: none;
+}
+
+.correct > div{
+    background-color: var(--green);
+    animation: correct-pulse 750ms ease alternate;
+}
+
+.incorrect > div{
+    background-color: var(--red);
+}
+
+.cards__box:nth-of-type( 2n - 1) .incorrect > div{
+    animation: incorrect-shake 500ms ease reverse;
+}
+
+.cards__box:nth-of-type( 2n ) .incorrect > div{
+    animation: incorrect-shake 500ms ease forwards;
+}
+
+.correct p > span,
+.incorrect p > span{
+    color: var(--offwhite);
+}
+
+/* POOL */
+#pool{
+    /* background-color: var(--shadow); */
+    padding: 1.5em;
+    display: flex;
+    gap: 1em;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 0.6em;
+}
+
+#pool > svg{
+    pointer-events: none;
+    margin-top: -11em;
+    margin-bottom: -1.5em;
+    width: calc(100% + 3em);
+    height: 11.5em;
+    overflow: visible;
+}
+
+#pool > svg > rect{
+    stroke: var(--textcolor50);
+    stroke-dasharray: 0.25em 0.5em;
+    stroke-linecap: round;
+    fill: rgba(0, 0, 0, 0.015);
+    stroke-width: 0.1em;
+    width: 100%;
+    height: 100%;
+}
+
+#pool__row-1,
+#pool__row-2{
+    display: flex;
+    gap: 1em;
+    width: fit-content;
+}
+
+.pool__card:not(.dragging){
+    opacity: 1;
+    cursor: grab;
+}
+
+.pool__card *{
+    pointer-events: none;
+}
+
+.dragging{
+    cursor: grabbing;
+}
+
+.pool__container{
+    opacity: 1;
+    color: rgba(0, 0, 0, 0.025);
+    background-color: currentColor;
+    box-shadow:
+        0 0 0 0.1em #efeae6 inset,
+        0 0 0 0.1em rgba(0, 0, 0, 0.015) inset,
+        0 0 0.1em 0.1em currentColor inset;
+    border-radius: 0.6em;
+}
+
+/* BOXES */
+#cards{
+    display: flex;
+    gap: 1.5em;
+}
+
+#cards__singular, 
+#cards__plural{
+    display: flex;
+    gap: 1em;
+}
+
+.cards__subjects,
+.cards__boxes {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.cards__subjects{
+    align-items: flex-end;
+}
+
+.cards__box{
+    position: relative;
+    border-radius: 0.4em;
+    box-shadow:
+        0.05em 0 0 0.1em #efeae6 inset,
+        -0.05em 0 0 0.1em #efeae6 inset;
+    transition: background-color 500ms ease;
+}
+
+.cards__box.empty{
+    background-color: var(--shadow);
+}
+
+.cards__box svg{
+    position: absolute;
+    left: 0.125em; top: 0.05em;
+    height: calc(100% - 0.1em);
+    width: calc(100% - 0.25em);
+    overflow: visible;
+    border-radius: 0.4em;
+    pointer-events: none;
+    transition: opacity 500ms ease;
+}
+
+.cards__box.filled svg{
+    opacity: 0.5;
+}
+
+.cards__box svg rect{
+    width: 100%;
+    height: 100%;
+    stroke: var(--textcolor50);
+    fill: transparent;
+    stroke-width: 0.1em;
+    stroke-linecap: round;
+    stroke-dasharray: 0.25em 0.5em;
+}

@@ -1,0 +1,421 @@
+:root{
+    --bar-height: 4.25vh;
+
+    --canvas-width: 100%;
+    --stroke-width: 4vh;
+    
+    --radius: calc(50% - ( var(--stroke-width) / 2 ) );
+    --pi: 3.14159265358979;
+    --circumference: calc( 2 * var(--radius) * var(--pi) );
+    --degconst: var(--circumference) / 360;
+    
+    --initial: 50; /* 0 - 360 */
+    --target: 300; /* 0 - 360 */
+    --speed: 0.25; /* 0 - 1 */
+    
+    --delta: calc( var(--target) - var(--initial) ); /* Use if target > initial */
+    --animation-duration: calc( ( 1 / var(--speed) * 250ms ) + ( var(--delta) / 360 ) * ( 1 / var(--speed) * 2000ms ))
+  
+}
+
+#results{
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: var(--offwhite);
+}
+
+#results .container{
+    width: 100vh;
+    transform: translateY(6vh);
+    animation: slide-up 500ms ease 6000ms forwards;
+}
+
+/* DETAILS */
+#results .results-row .label{
+    width: fit-content;
+    margin-left: 2.5vh;
+    padding: 1.25vh 2.25vh 1.05vh;
+    transform: translateY(0.05vh);
+    background-color: var(--textcolor);
+    font-size: calc(var(--bar-height) / 2);
+    text-align: center;
+    color: white;
+    border-radius: 2.5vh 2.5vh 0 0;
+    /* background-image: linear-gradient(rgba(70, 70, 70, 0.5) 0%, rgba(70, 70, 70, 0.5) 100%);
+    background-blend-mode: soft-light; */
+    overflow: hidden;
+    position: relative;
+}
+
+#results .results-row .label .label-shadow{
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    background-color: black;
+    mix-blend-mode: darken;
+    opacity: 10%;
+    z-index: -1;
+}
+
+#results .progress-bar{
+    width: 100%;
+    height: var(--bar-height);
+    background-color: var(--selected);
+    border-radius: calc(var(--bar-height) / 2);
+    margin-bottom: calc(var(--bar-height) / 2);
+    position: relative;
+    z-index: 100;
+}
+
+#results .progress-bar .foreground{
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background-color: var(--yellow);
+    border-radius: calc(var(--bar-height) / 2);
+    overflow: hidden;
+}
+
+#results .progress-bar .value{
+    position: absolute;
+    height: 100%;
+    right: 0;
+    padding: 0 calc(var(--bar-height) / 2);
+    font-size: calc(var(--bar-height) / 2);
+    line-height: var(--bar-height);
+    color: white;
+    border-radius: calc(var(--bar-height) / 2);
+    overflow: hidden;
+}
+
+@keyframes fade-down{
+    to {
+        transform: translateY(0);
+        opacity: 100%;
+    }
+}
+
+@keyframes expand-horizontal{
+    to{
+        width: 50%;
+    }
+}
+
+#results .results-row{
+    transform: translateY(-2vh);
+    opacity: 0%;
+    animation: fade-down 1000ms ease forwards;
+}
+
+#results .divider{
+    width: 0%;
+    height: 0;
+    margin: 6vh auto 1vh;
+    background-color: rgb(220, 220, 220);
+    border: 0.2vh solid rgb(220, 220, 220);
+    border-radius: 0.5vh;
+    animation: expand-horizontal 1000ms ease 3000ms forwards
+}
+
+#results-row-tenses{animation-delay: 500ms !important;}
+#results-row-verb-pool{animation-delay: 1000ms !important;}
+#results-row-points{animation-delay: 1500ms !important;}
+#results-row-time{animation-delay: 2000ms !important;}
+#results-row-accuracy{animation-delay: 3500ms !important;}
+
+/* 3D BUTTON */
+@keyframes slide-up{
+    to{
+        transform: translateY(1.5vh);
+    }
+}
+#results #buttons > div{
+    background-color: var(--selected);
+    padding: 0.6vh;
+    margin: 6vh 1vh 0;
+    width: fit-content;
+    border-radius: 2vh;
+    transition: background-color 100ms ease;
+    transform: translateY(20vh);
+}
+
+#results #buttons button{
+    cursor: pointer;
+    background-color: hsl(45, 100%, 50%);
+    color: white;
+    padding: 1.75vh 4vh;
+    border-radius: 1.5vh;
+    border: none;
+    font-family: "Montserrat";
+    font-weight: 700;
+    font-size: 2.75vh;
+    box-shadow: 0 0.75vh hsl(45, 100%, 43%);
+    transition: 
+        transform 100ms ease, 
+        box-shadow 100ms ease,
+        filter 200ms ease,
+        background-color 200ms ease;
+    transform: translateY(-0.75vh);
+}
+
+#results #buttons button:hover{
+    background-color:  hsl(45, 100%, 55%);
+}
+
+#results #buttons button:active{
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+#results #buttons .button-overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    border-radius: 1.5vh;
+    box-shadow: 0 0 var(--selected) inset;
+    transition: box-shadow 100ms ease;
+}
+
+#results #buttons button:active > div{
+    box-shadow: 0 0.6vh var(--selected) inset;
+}
+
+#results #buttons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* 
+#results .button.analyse{
+    animation: slide-up 500ms ease 4000ms forwards;
+} */
+
+
+#results #buttons #button-continue-details-wrapper{
+    margin-top: 3vh;
+}
+
+#results #button-continue-details-wrapper{
+    animation: slide-up 500ms ease 6000ms forwards;
+}
+
+#results #button-continue-level-wrapper{
+    /* animation: slide-up 500ms ease 4000ms forwards; */
+    opacity: 1;
+}
+
+/* LEVEL */
+#level #progress{
+    position: relative;
+    transform: translateY(6vh);
+    /* animation: slide-up 500ms ease 4000ms forwards; */
+}
+
+#results #level #progress #progress-circle{
+    overflow: hidden;
+    width: 70vh;
+    height: 70vh;
+    border-radius: 100%;
+    background-color: transparent;
+    position: relative;
+}
+
+#results #level #progress .segment{
+    position: absolute;
+    background-color: var(--yellow);
+    width: 50vh;
+    height: 50vh;
+    left: 35vh;
+    top: 35vh;
+    transform-origin: 0 0;
+}
+
+#results #level #progress #inner-circle{
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    top: 5%;
+    left: 5%;
+    background-color: var(--offwhite);
+}
+
+#results #level #progress #static-circle{
+    position: absolute;
+    width: 5%;
+    height: 5%;
+    border-radius: 50%;
+    left: 47.5%;
+    background-color: var(--yellow);
+}
+
+#results #level #progress #dynamic-circle{
+    position: absolute;
+    width: 5%;
+    height: 5%;
+    border-radius: 50%;
+    background-color: var(--yellow);
+}
+
+#results #level #progress #current-level-title{
+    position: absolute;
+    top: 11vh; left: 50%;
+    padding-bottom: 0.5vh;
+    transform: translateX(-50%);
+    margin: 0;
+    text-align: center;
+    color: var(--textcolor);
+    font-size: 5vh;
+    width: fit-content;
+}
+
+#current-level-title::after{
+    position: absolute;
+    left: 50%; top: 100%;
+    transform: translate(-50%);
+    content: "";
+    border-radius: 100vmax;
+    width: 15vh;
+    height: 0.35vh;
+    background-color: var(--selected);
+}
+
+#current-level-value{
+    position: absolute;
+    left: 0;
+    top: 14vh;
+    width: 70vh;
+    margin: 0;
+    text-align: center;
+    font-size: 24vh;
+    font-weight: 700;
+
+    background-color: rgb(0, 0, 0);
+    color: transparent;
+    text-shadow: 0 0.5vh 1vh rgba(255, 255, 255, 0.25);
+    background-clip: text;
+}
+
+#results #level #progress #xp{
+    position: absolute;
+    top: 39vh;
+    height: fit-content;
+    width: 70vh;
+}
+
+#results #level #progress #xp > p{
+    position: absolute;
+    width: fit-content;
+    margin: 0;
+    text-align: center;
+    color: var(--textcolor);
+    font-size: 5vh;
+}
+
+#results #level #progress #xp .main-text{
+    margin: 0;
+    width: fit-content;
+    text-align: center;
+    color: var(--textcolor);
+    font-size: 5vh;
+}
+
+#results #level #progress #xp .sub-text{
+    margin: 0;
+    width: fit-content;
+    top: 6vh;
+    text-align: center;
+    color: var(--textcolor50);
+    font-size: 2.5vh;
+}
+
+#results #level #progress #xp > div{
+    position: absolute;
+    width: fit-content;
+}
+
+#results #level #progress #xp #divider{
+    left: 34vh; 
+    width: 2vh;
+    font-weight: 400;
+    color: var(--selected);
+    transform: translateY(-0.25vh);
+}
+
+#results #level #progress #xp #current-xp{right: 36vh}
+#results #level #progress #xp #next-level{left: 36vh}
+
+#results #level #progress #xp #current-xp > p {margin-right: 0; margin-left: auto}
+#results #level #progress #xp #next-level > p {margin-left: 0;  margin-right: auto}
+
+#results #level #progress #xp #current-xp > .main-text {padding-right: 1vh}
+#results #level #progress #xp #next-level > .main-text {padding-left: 1vh}
+
+
+#results #level #progress #language{
+    box-sizing: border-box;
+    position: absolute;
+    top: 50vh; 
+    left: 29vh;
+    padding: 1vh;
+    width: 12vh;
+    height: 12vh;
+    background-color: var(--selected);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#results #level #progress #language > img{
+    width: 10vh;
+    margin: 0;
+    border-radius: 50%;
+    box-shadow: 1vh 1vh var(--selected) inset;
+}
+
+#results #level #progress #language #img-shadow{
+    position: absolute;
+    width: 10vh;
+    height: 10vh;
+    top: 1vh;
+    left: 1vh;
+    border-radius: 50%;
+    background-color: transparent;
+    box-shadow: 1vh 1vh black inset;
+    opacity: 100%;
+    mix-blend-mode: soft-light;
+}
+  #progress-circle > svg {
+    transform: rotate(-90deg);
+    width: var(--canvas-width);
+    aspect-ratio: 1;
+  }
+  
+  #progress-circle__background {
+    stroke: rgb(220, 220, 220);
+    stroke-width: var(--stroke-width);
+    fill: transparent;
+  }
+  
+  #progress-circle__foreground {
+    stroke: rgb(255, 192, 0);
+    stroke-width: var(--stroke-width);
+    fill: transparent;
+    stroke-dasharray: var(--circumference);
+    stroke-dashoffset: calc( ( 360 - var(--initial) ) * var(--degconst) );
+    stroke-linecap: round;
+    animation: dash var(--animation-duration) ease forwards;
+  }
+  
+  @keyframes dash {
+    to {
+      stroke-dashoffset: calc( ( 360 - var(--target) ) * var(--degconst) );
+    }
+  }

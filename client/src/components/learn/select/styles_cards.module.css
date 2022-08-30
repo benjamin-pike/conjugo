@@ -1,0 +1,72 @@
+#cards__container{
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 1.5em;
+    background-color: var(--shadow);
+    border-radius: 0.4em;
+    gap: 1em;
+}
+
+#cards__container > svg{
+    pointer-events: none;
+    top: -0.05em; left: -0.05em;
+    position: absolute;
+    width: calc( 100% + 0.05em );
+    height: calc( 100% + 0.05em );
+    overflow: visible;
+}
+
+#cards__container > svg > rect{
+    stroke: var(--textcolor50);
+    stroke-dasharray: 0.25em 0.5em;
+    stroke-linecap: round;
+    fill: transparent;
+    stroke-width: 0.1em;
+    width: 100%;
+    height: 100%;
+}
+
+.cards__row{
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+}
+
+.active,
+.inactive{
+    position: relative;
+    cursor: pointer;
+}
+
+.active p span,
+.active-correct p span,
+.active-incorrect p span,
+.inactive-correct p span{
+    color: var(--offwhite) !important;
+}
+
+.active > div{
+    background-color: var(--blue);
+}
+
+.active-correct > div{
+    background-color: var(--green);
+}
+
+.active-incorrect > div{
+    background-color: var(--red);
+}
+
+.inactive-correct > div{
+    background-color: var(--yellow);
+}
+
+.active-correct,
+.active-incorrect,
+.inactive-correct,
+.inactive-incorrect{
+    pointer-events: none;
+}

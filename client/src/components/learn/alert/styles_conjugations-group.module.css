@@ -1,0 +1,20 @@
+#cards__conjugations{
+    display: flex;
+    gap: 0.75em;
+    align-items: flex-start;
+}
+
+#cards__conjugations__left,
+#cards__conjugations__right{
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em
+}
+
+#cards__conjugations__left{
+    align-items: flex-end;
+}
+
+#cards__conjugations__right{
+    align-items: flex-start;
+}

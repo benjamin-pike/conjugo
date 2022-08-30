@@ -1,0 +1,23 @@
+#alert{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5em 2em;
+    border-radius: 100vmax;
+}
+
+#alert img{
+    height: 1.5em;
+}
+
+#alert__shadow{
+    position: absolute;
+    filter: drop-shadow(0.2em 0.2em 0.2em black);
+    mix-blend-mode: soft-light;
+    opacity: 0.5;
+}
+
+#alert.new{ background-color: var(--yellow) }
+#alert.irregular{ background-color: var(--red) }
+#alert.stem-changing{ background-color: var(--orange) }

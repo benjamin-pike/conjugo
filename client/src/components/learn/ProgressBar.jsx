@@ -1,0 +1,18 @@
+import { Link } from 'react-router-dom';
+import styles from "./styles_progress-bar.module.css"
+
+function ProgressBar( props ){
+    return(
+        <div id = {styles["progress-bar__wrapper"]} visible = { props.visible ? "true" : "false" }>
+            <div id = {styles["progress-bar__background"]}>
+                <div id = {styles["progress-bar__foreground"]} />
+            </div>
+            <Link to = "/reference" id = { styles["exit"]}>
+                <button />
+            </Link>
+        </div>
+
+    );
+}
+
+export default ProgressBar;

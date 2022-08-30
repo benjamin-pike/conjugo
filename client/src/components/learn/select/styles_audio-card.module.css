@@ -1,0 +1,29 @@
+#waveform__card{
+    cursor: pointer;
+    padding: 2em 2.75em;
+    border-radius: 0.4em;
+    background-color: var(--offwhite);
+    box-shadow: 0.25em 0.25em 0.25em 0.125em var(--shadow);
+    transition: transform 200ms ease;
+}
+
+#waveform__card:hover{
+    transform: scale(1.05)
+}
+
+#waveform{
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 0.45em;
+    height: 5em;
+    padding: 1em 0em;
+}
+
+.waveform__bar{
+    pointer-events: none;
+    width: 0.9em;
+    background-color: var(--red);
+    border-radius: 100vmax;
+    transition: height 150ms ease;
+}

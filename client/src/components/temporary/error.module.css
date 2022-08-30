@@ -1,0 +1,28 @@
+/* ERROR SCREEN */
+#error-screen{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--offwhite);
+}
+
+#error-screen #error-code > h1{
+    margin-right: min(3vh, 1.5vw);
+    font-size: min(13vh, 6.5vw);
+    font-weight: 300;
+    color: var(--textcolor50)
+}
+#error-screen #error-text > h2{
+    margin-bottom: min(0.5vh, 0.25vw);
+    font-size: min(5vh, 2.5vw);
+    color: var(--textcolor);
+}
+
+#error-screen #error-text > p{
+    margin-top: min(0.5vh, 0.25vw);
+    font-size: min(4vh, 2vw);
+    font-weight: 300;
+    color: var(--textcolor);
+}

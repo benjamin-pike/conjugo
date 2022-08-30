@@ -1,0 +1,118 @@
+.card__conjugations__wrapper{
+    width: fit-content;
+    border-radius: 100vmax;
+    transition: transform 500ms ease;
+}
+
+.card__conjugations__face{
+    box-sizing: content-box;
+    position: relative;
+    font-size: 1em;
+    padding: 1em 1.5em;
+    height: 1.75em;
+    width: fit-content;
+    border-radius: 0.4em;
+    color: var(--textcolor);
+    background-color: var(--offwhite);
+    box-shadow: 0.25em 0.25em 0.25em 0.125em var(--shadow);
+    border: none;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 500ms ease, background-color 200ms ease;
+}
+
+button.card__conjugations__face:hover{
+    transform: scale(1.025)
+}
+
+button.card__conjugations__face{
+    cursor: pointer;
+}
+
+button.card__conjugations__face[color = "red"]:hover{ background-color: var(--red) }
+button.card__conjugations__face[color = "orange"]:hover{ background-color: var(--orange) }
+button.card__conjugations__face[color = "yellow"]:hover{ background-color: var(--yellow) }
+button.card__conjugations__face[color = "green"]:hover{ background-color: var(--green) }
+button.card__conjugations__face[color = "blue"]:hover{ background-color: var(--blue) }
+button.card__conjugations__face[color = "purple"]:hover{ background-color: var(--purple) }
+
+button.card__conjugations__face:hover .card_conjugations__subject,
+button.card__conjugations__face:hover .card_conjugations__conjugation{
+    color: var(--offwhite) !important;
+}
+
+.card__conjugations__face *{
+    pointer-events: none;
+}
+
+.card__conjugations__face p{
+    margin: 0;
+    padding: 0;
+    width: fit-content;
+    height: 1.75em;
+    z-index: 0;
+}
+
+.card__conjugations__face span{
+    transition: color 200ms ease;
+    font-size: 1.5em;
+    color: var(--textcolor);
+    white-space: pre;
+    font-weight: 600;
+}
+
+.card_conjugations__subject{
+    /* font-weight: 600; */
+    color: var(--textcolor);
+}
+
+.card_conjugations__subject.bipartite{
+    opacity: 0.75;
+}
+
+.card_conjugations__conjugation.bipartite{
+    font-weight: 700;
+}
+
+.card_conjugations__conjugation.bipartite::before{
+    content: " "
+}
+
+.card__conjugations__face__pulse__wrapper{
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border-radius: 0.45em;
+    overflow: hidden;
+}
+
+.card__conjugations__face__pulse__circle1,
+.card__conjugations__face__pulse__circle2 {
+    height: 2em;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background-color: white;
+    mix-blend-mode: soft-light;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    visibility: hidden;
+}
+
+.card__conjugations__face__pulse__circle2{
+    opacity: 0.5;
+}
+
+@keyframes pulse-small{
+    0% { visibility: visible }
+    100% {
+        transform: translate(-50%, -50%) scale(5);
+        opacity: 0;
+    }
+}
