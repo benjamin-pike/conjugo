@@ -10,7 +10,7 @@
     align-items: center;
     box-shadow: 0 0 0 0 var(--selected);
     transition: box-shadow 200ms;
-    border: 0.07em solid var(--textcolor50);
+    outline: 0.07em solid var(--textcolor50);
 }
 
 #nav-language-selector-toggle:hover{

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useAuth } from '../../store/AuthContext';
 import { useNav } from '../../store/NavContext';
 import { v4 as uuidv4 } from 'uuid';
@@ -6,14 +6,17 @@ import Brand from './Brand';
 import PageLink from './PageLink';
 import LanguageSelector from './LanguageSelector';
 import Avatar from './Avatar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from "./styles/navbar.module.css";
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 function NavBar(props) {
 
     const { auth } = useAuth()
     const { visible, current } = useNav()
-    const [open, setOpen] = useState( { language: false, avatar: false } );
+    const [open, setOpen] = useState( { language: false, avatar: false, pages: false } );
     const [highlight, setHighlight] = useState()
+    const hamburgerRef = useRef()
 
     const pages = [
         { text: 'about', icon: './circle.svg', link: '#' },
@@ -32,33 +35,19 @@ function NavBar(props) {
                         
             if (highlight) setHighlight(false)
 
-            if (attributes.includes("nav-language-selector") || attributes.includes("nav-avatar")) return
+            if (attributes.includes("nav-language-selector") || attributes.includes("nav-avatar") || attributes.includes("nav-items")) return
         }
 
-        if ( Object.values(open).includes(true)) setOpen( { language: false, avatar: false } )
+        if ( Object.values(open).includes(true)) setOpen( { language: false, avatar: false, pages: false } )
     }
 
-    useEffect(() => {
-        const highlight = document.getElementById(styles["nav-item__highlight"])
-        const current = document.querySelector(`.${styles["current"]}`)
+    window.onresize = () => {
+        if ( getComputedStyle( hamburgerRef.current ).visibility === "hidden" ){
+            if ( open.pages) setOpen( current => ({ ...current, pages: false })  )
 
-        function adjustHighlight(){
-            const itemWidth = current.offsetWidth
-            const itemLeft = current.offsetLeft
-
-            highlight.style.width = `calc(${itemWidth}px + 1.8em)`
-            highlight.style.left = `calc(${itemLeft}px - 0.9em)`
+            
         }
-        
-        if ( current && highlight ) adjustHighlight()
-        
-        visible && window.addEventListener("resize", adjustHighlight)
-
-        return () => {visible && window.removeEventListener("resize", adjustHighlight)}
-
-    }, [visible, current])
-
-    const highlightColor = {about: "red", learn: "orange", practice: "yellow", reference: "green"}
+    }
 
     if ( visible ) return (
         <div className = {styles["navbar"]}>
@@ -67,24 +56,38 @@ function NavBar(props) {
 
                 <div id = {styles["nav-items"]}>
                     <div 
-                        id = {styles["nav-item__highlight"]} 
-                        style = {{
-                            transition: document.getElementById(styles["nav-item__highlight"]) ? 
-                            "left 200ms ease, width 200ms ease, background-color 200ms ease" 
-                            :
-                            "background-color 200ms ease",
-                            backgroundColor: `var(--${highlightColor[current]})`
-                        }}
-                    />
-                    { pages.map( item => 
-                        <PageLink
-                            styles = {styles}
-                            key = {uuidv4()} 
-                            text = {item.text}
-                            icon = {item.icon}
-                            link = {item.link}
-                        />
-                    ) }
+                        id = {styles["nav-items__container"]} 
+                        style = { open.pages ? {
+                            height: "13em",
+                            boxShadow: '0 0 0.5em 0.25em var(--selected)',
+                            padding: "0.2em 0",
+                        } : {}}>
+                        
+                        { pages.map( item => 
+                            <PageLink
+                                styles = {styles}
+                                key = {uuidv4()} 
+                                text = {item.text}
+                                icon = {item.icon}
+                                link = {item.link}
+                                setOpen = {setOpen}
+                            />
+                        ) }
+                    </div>
+                    <div    
+                        id = {styles["hamburger"]}
+                        ref = { hamburgerRef }
+                        onClick = {() => {
+                            if ( open.language || open.avatar ){
+                                setOpen( { language: false, avatar: false, pages: false } )
+                                setTimeout(() => setOpen( { language: false, avatar: false, pages: true } ) , 200)
+                            } else {
+                                setOpen( { open, pages: !open.pages } )
+                            }
+                        }}>
+                        
+                        <FontAwesomeIcon icon = { faBars }/>
+                    </div>
                 </div>
 
                 <div id = {styles["profile-specific"]}>

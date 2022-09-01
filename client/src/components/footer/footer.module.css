@@ -5,6 +5,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+} 
+
+#footer-items{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #wrapper{
@@ -16,8 +22,7 @@
     justify-content: center;
     color: var(--textcolor50);
     width: 100%;
-    margin-bottom: 0.1em;
-    min-width: 670px;
+    min-width: 25em;
 }
 
 #wrapper > li{
@@ -31,14 +36,36 @@
     color: var(--textcolor)
 }
 
+#wrapper > p{
+    margin: 0;
+    padding: 0;
+}
+
 #bold{
     white-space: pre;
 }
 
 #copyright{
-    color: var(--yellow)
+    color: var(--yellow);
+    font-size: 0.9em;
+    white-space: nowrap;
 }
 
 #copyright > .light{
     font-weight: 500;
+}
+
+@media only screen and ( max-width: 50em ){
+    #footer{
+        height: fit-content;
+        padding: 1em 0;
+    }
+    #footer-items{
+        flex-direction: column;
+        gap: 0.5em
+    }
+
+    #copyright{
+        margin: 0;
+    }
 }

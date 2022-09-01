@@ -18,11 +18,25 @@
     filter: drop-shadow(0 0 0.5em rgba(0, 0, 0, 0.04));
 }
 
-#configure-mount-spanish{ width: 67.5%; min-width: 52.5em; }
-#configure-mount-french{ width: 62.5%; min-width: 45em; }
-#configure-mount-italian{ width: 65%; min-width: 52.5em; }
-#configure-mount-german{ width: 60%; min-width: 42.5em; }
-#configure-mount-portuguese{ width: 67.5%; min-width: 53.5em; }
+#configure-mount-spanish{ 
+    width: clamp( 55em, 67.5%, 70em )
+}
+
+#configure-mount-french{
+    width: clamp( 47.5em, 62.5%, 62.5em )
+}
+
+#configure-mount-german{ 
+    width: clamp( 40em, 60%, 60em )
+}
+
+#configure-mount-italian{ 
+    width: clamp( 55em, 65%, 60em )
+}
+
+#configure-mount-portuguese{ 
+    width: clamp( 55em, 67.5%, 70em )
+}
 
 /* TABS */
 .tab{
@@ -100,7 +114,9 @@
         filter 200ms ease,
 }
 
-#configure .button:not(.disabled):active{ transform: scale(0.95) }
+#configure .button:not(.disabled):active{
+    transform: scale(0.95)
+}
 
 #configure .button::before,
 #configure .button::after{
@@ -153,7 +169,7 @@
 
 #configure .tier-2 {
     flex-grow: 0;
-    width: 11em;
+    width: 20%;
 }
 
 #configure .vl{

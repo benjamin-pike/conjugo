@@ -11,9 +11,9 @@ function NavLanguageSelector(props) {
 
     return (
         <div id = {styles["nav-language-selector"]} onClick = {() => {
-            if (props.open.avatar){
-                props.setOpen( { language: false, avatar: false } )
-                setTimeout(() => props.setOpen( { language: true, avatar: false } ) , 200)
+            if ( props.open.avatar || props.open.pages ){
+                props.setOpen( { language: false, avatar: false, pages: false } )
+                setTimeout(() => props.setOpen( { language: true, avatar: false, pages: false } ) , 200)
             } else {
                 props.setOpen( { ...props.open, language: !props.open.language})
             }

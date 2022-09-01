@@ -13,11 +13,11 @@
         z-index: 1;
     }
     49.9%{
-        transform: translateX(+5vh);
+        transform: translateX(+2em);
         z-index: 1;
     }
     50%{
-        transform: translateX(+5vh);
+        transform: translateX(+2em);
         z-index: 0;
     }
     100%{
@@ -32,11 +32,11 @@
         z-index: 0;
     }
     49.9%{
-        transform: translateX(-5vh);
+        transform: translateX(-2em);
         z-index: 0;
     }
     50%{
-        transform: translateX(-5vh);
+        transform: translateX(-2em);
         z-index: 1;
     }
     100%{
@@ -46,8 +46,8 @@
 }
 
 #loading-screen > .circle{
-    height: 5vh;
-    width: 5vh;
+    height: 2em;
+    width: 2em;
     border-radius: 50%;
     margin: 0;
 }
@@ -56,12 +56,12 @@
     /* background-color: hsl(160, 90%, 45%); */
     animation: circle-1 850ms ease infinite;
     background-color: var(--yellow);
-    /* box-shadow: -0.5vh -0.5vh 1.5vh var(--textcolor50) inset; */
+    /* box-shadow: -0.2em -0.2em 1.2em var(--textcolor50) inset; */
 }
 
 #loading-screen > #circle-2{
     /* background-color: hsl(180, 90%, 36%); */
     background-color: var(--red);
     animation: circle-2 850ms ease infinite;
-    /* box-shadow: -0.5vh -0.5vh 1.5vh var(--textcolor50) inset; */
+    /* box-shadow: -0.2em -0.2em 1.2em var(--textcolor50) inset; */
 }

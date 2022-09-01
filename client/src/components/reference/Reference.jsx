@@ -555,7 +555,6 @@ function Reference(){
                     width: displayLeft ? "20vw" : "0",
                     minWidth: displayLeft ? "15em" : "0",
                     opacity: displayLeft ? "100%" : "0%",
-                    filter: displayLeft ? "brightness(1)" : "brightness(0.7)"
                 }}>
 
                 <Search

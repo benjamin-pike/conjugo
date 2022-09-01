@@ -1,6 +1,10 @@
 #nav-brand{
+    margin-right: 3em;
+}
+
+#nav-brand > p{
     margin: 0;
-    margin-right:4vw;
+    padding: 0;
     font-size: 1.25em;
     color: rgb(255, 192, 0)
 }

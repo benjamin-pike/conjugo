@@ -9,9 +9,9 @@ function NavAvatar(props) {
 
     return (
         <div id = {styles["nav-avatar"]} onClick = {() => {
-            if (props.open.language){
-                props.setOpen( { language: false, avatar: false } )
-                setTimeout(() => props.setOpen( { language: false, avatar: true } ) , 200)
+            if ( props.open.language || props.open.pages ){
+                props.setOpen( { language: false, avatar: false, pages: false } )
+                setTimeout(() => props.setOpen( { language: false, avatar: true, pages: false } ) , 200)
             } else {
                 props.setOpen( { ...props.open, avatar: !props.open.avatar } )
             }
