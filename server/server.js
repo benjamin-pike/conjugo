@@ -573,7 +573,7 @@ app.get("/api/learn", async (req, res) => {
                     const translations = await Promise.all( 
                         verbs.map( async ( verb ) => {
                             let data = await Verb.findById(`${language}_${verb}`)
-                            return [ verb, data.translations[0] ]
+                            return [ verb, data.translations.principal ]
                         })
                     )
 

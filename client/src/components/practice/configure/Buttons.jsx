@@ -6,7 +6,6 @@ function Buttons(props){
     const styles = props.styles
 
     const buttons = buttonsData[props.language.name]
-    console.log(props)
 
     const rows = [...Array(buttons.tenses[buttons.tenses.length - 1].row).keys()] // Create array containing value for each row 
     const buttonDetails = {} // Create empty object to store button details
@@ -267,7 +266,7 @@ function Buttons(props){
 
     return(
         <>
-            <section>
+            <section id = {styles["subjects"]}>
                 <div id = {styles["tenses-tab-title"]} className = {`${styles["tab"]} ${styles["title"]}`}>
                     Subjects
                 </div>
@@ -291,7 +290,7 @@ function Buttons(props){
                     )}
                 </div>
             </section>
-            <section>
+            <section id = {styles["tenses"]}>
                 <div id = {styles["tenses-tab-title"]} className = {`${styles["tab"]} ${styles["title"]}`}>
                     Tenses
                 </div>

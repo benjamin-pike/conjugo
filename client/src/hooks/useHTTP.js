@@ -89,7 +89,7 @@ function useHTTP(){
             localStorage.removeItem("accessToken")
             localStorage.removeItem("refreshToken")
 
-            // document.location.reload()
+            document.location.reload()
         }
     }
 

@@ -72,23 +72,29 @@ function TypeInput( props ){
         <div
             id = { styles[ "input__wrapper" ] }
             style = {{ width: 4 * width + "ch" }}>
-            <input
-                ref = { inputRef }
-                id = { styles[ "input__input" ] } 
-                onChange = { handleChange }
-                spellCheck = "false"
-                autoComplete = "off"
-                value = { text }
-                readOnly = { correct !== null }
-                isChecked = { props.checked ? "true" : "false" }
-                style = {{ 
-                    width: width + "ch",
-                    color: `var(--${ correct === null ? "textcolor" : correct ? "green" : "red" })`,
-                    borderBottom: `0.075em solid var(--${ correct === null ? "textcolor50" : correct ? "green" : "red" })`
-                }}
-            />
+            <div id = { styles["input__container"]}>
+                <input
+                    ref = { inputRef }
+                    id = { styles[ "input__input" ] } 
+                    onChange = { handleChange }
+                    spellCheck = "false"
+                    autoComplete = "off"
+                    value = { text }
+                    readOnly = { correct !== null }
+                    isChecked = { props.checked ? "true" : "false" }
+                    style = {{ 
+                        width: width + "ch",
+                        color: `var(--${ correct === null ? "textcolor" : correct ? "green" : "red" })`,
+                    }}
+                />
+                <div 
+                    id = { styles[ "input__underline" ] }
+                    style = {{
+                        backgroundColor: `var(--${ correct === null ? "textcolor50" : correct ? "green" : "red" })`
+                    }}/>
+            </div>
             <svg 
-                id = { styles[ "input__underline"] }
+                id = { styles[ "input__dots"] }
                 style = {{ width:  4 * width - 12 + "ch" }}>
 
                 <line 
