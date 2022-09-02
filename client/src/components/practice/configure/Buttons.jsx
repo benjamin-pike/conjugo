@@ -115,8 +115,6 @@ function Buttons(props){
             }
         }))
 
-        console.log(tenses)
-
         // Check complexity status
         setTenses(state => {
             

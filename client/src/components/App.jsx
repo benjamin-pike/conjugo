@@ -65,7 +65,7 @@ function App() {
     const ref = useRef()
 
     useEffect(() => {
-        let timeout = null
+        let timeout = null;
 
         const resizeObserver = new ResizeObserver( () => {
             ref.current.classList.add( "disable-transitions" )

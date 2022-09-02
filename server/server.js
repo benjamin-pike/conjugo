@@ -266,12 +266,6 @@ function calculateScore(language, subjects, tenses, verbs, points, time, accurac
     }
 }
 
-// app.post('/api/results', (req, res) => {
-//     roundResults = req.body
-//     console.log(roundResults)
-//     res.send('200')
-// })
-
 app.post('/api/results', async (req, res) => {
 
     const user = await User.findOne({ id: req.body.id })
@@ -317,7 +311,6 @@ async function getStarredVerbs(language, id){
 
 async function getAudio(language, verb, complexity, mood, tense, conjugation){
     let response = await Verb.findById(`${language}_${verb}`)
-    console.log(response, language, verb)
 
     return response['audio'][complexity][mood][tense][conjugation]
 }

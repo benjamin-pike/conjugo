@@ -72,7 +72,6 @@ function Learn(){
             break;
             
         case "audio":
-            console.log(infinitive);
             promptElement = 
                 <AudioCard
                     audio = { cardContent }

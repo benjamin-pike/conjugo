@@ -40,9 +40,7 @@ function ConjugationCard( props ){
             circle1.style.animation = `${styles["pulse-small"]} 500ms ease forwards`
             
             props.setDisabled( true )
-                        
-            setTimeout(() => console.log(circle1.style.animationPlayState), 2000)
-    
+                            
             setTimeout(() => circle2.style.animation = `${styles["pulse-small"]} 500ms ease forwards`, 200)
             
             setTimeout(() => circle1.style.animation = "none", 500)

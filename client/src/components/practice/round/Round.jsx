@@ -57,8 +57,6 @@ function Round(props) {
                 }
                 else{
                     setRep(rep + 1)
-
-                    console.log(props.resultsData)
                 }
             }
 
@@ -181,7 +179,6 @@ function Cards(props){
     useEffect(() => {
         function handleKeyDown(e){
             props.roundStatus !== "timeup" && e.key === 'Shift' && setCardFlip(true)
-            console.log(props.roundStatus)
         }
 
         function handleKeyUp(e){
@@ -196,8 +193,6 @@ function Cards(props){
             document.removeEventListener("keyup", handleKeyUp)
         }
     })
-
-    console.log(tenseNames, `${props.complexity}-${props.mood}-${props.tense}`)
 
     return (
         <div id = {styles["cards"]}>
