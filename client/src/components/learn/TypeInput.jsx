@@ -13,7 +13,7 @@ function TypeInput( props ){
     const [correct, setCorrect] = useState( null )
     const [scrolled, setScrolled] = useState( false )
     const [activeSpecial, setActiveSpecial] = useState([])
-    const width = useState( 5 + Math.floor( Math.random() * 3 ) + props.answer.length )[0]
+    const width = useState( 3 + Math.floor( Math.random() * 3 ) + props.answer.length )[0]
 
     const inputRef = useRef()
     const wrapperRef = useRef()
