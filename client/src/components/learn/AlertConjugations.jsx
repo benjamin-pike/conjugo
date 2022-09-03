@@ -4,9 +4,6 @@ import styles from "./styles/alert-conjugations.module.css"
 function ConjugationsGroup( props ){
 
     const colors = ["red", "orange", "yellow", "green", "blue", "purple"]
-    // const subjects = ["yo", "tú", "él • ella", "nosotros", "vosotros", "ellos • ellas"]
-    // const conjugations = ["hablo", "hablas", "habla", "hablamos", "habláis", "hablan"]
-
     const subjects = props.pairs.map( pair => pair[0] )
     const conjugations = props.pairs.map( pair => pair[1] )
 
@@ -16,6 +13,7 @@ function ConjugationsGroup( props ){
                 {conjugations.slice(0, 3).map( (conjugation, index) => 
                     <ConjugationCard
                         key = { index }
+                        infinitive = { props.infinitive }
                         conjugation = { conjugation }
                         subject = { subjects[index] }
                         color = { colors[index] }
@@ -30,6 +28,7 @@ function ConjugationsGroup( props ){
                 {conjugations.slice(3, 6).map( (conjugation, index) => 
                     <ConjugationCard
                         key = { index + 3 }
+                        infinitive = { props.infinitive }
                         conjugation = { conjugation }
                         subject = { subjects[index + 3] }
                         color = { colors[index + 3] }
