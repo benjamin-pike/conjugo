@@ -23,8 +23,7 @@
 /server/.DS_Store
 /server/.env
 /server/src/static
-/_development/.DS_Store
-/_development/**/*.json
+/_development
 /_mongo
 
 *.log
