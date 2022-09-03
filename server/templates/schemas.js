@@ -18,12 +18,11 @@ const userSchema = new mongoose.Schema({
 
 const verbSchema = new mongoose.Schema({
     _id: { type: String },
-    language: { type: String },
-    verb: { type: String },
+    infinitive: { type: String },
     rank: { type: Number },
+    regularity: { type: String },
     conjugations: { type: Object },
     translations: { type: Object },
-    audio: { type: Object },
 })
 
 module.exports.userSchema = userSchema
