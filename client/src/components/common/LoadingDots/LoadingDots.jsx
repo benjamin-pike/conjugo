@@ -2,7 +2,6 @@ import React from "react";
 import styles from "./loading-dots.module.css"
 
 function LoadingDots(props){
-    console.log(props.style)
     return(
         <div 
             className = {styles["container"]} 

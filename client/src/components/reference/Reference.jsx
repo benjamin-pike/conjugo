@@ -521,31 +521,6 @@ function Reference(){
         setDisplayedCards(2000)
     }, [language, starred])
 
-
-    useEffect(() => { // Prevent transitions during window resize
-        const classes = document.body.classList;
-        let timer;
-
-        function disableTransitions(){
-            if (timer) {
-                clearTimeout(timer);
-                timer = null;               
-            
-            } else {
-                classes.add('disable-transitions');
-
-                timer = setTimeout(() => {
-                    classes.remove('disable-transitions');
-                    timer = null;
-                }, 100)
-            }
-        }
-
-        window.addEventListener('resize', disableTransitions)
-
-        return () => window.removeEventListener('resize', disableTransitions)
-    }, [])
-
     return(
         <div id = {styles["reference"]}
             style = {{ height: navVisible ? "calc(100vh - 8.5em)" : "100vh" }}>

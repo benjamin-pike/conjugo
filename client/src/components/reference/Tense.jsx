@@ -101,7 +101,6 @@ function Tense(props){
 
     if ( language.name === "italian" && props.route[1] === "compound" ){
         if ( props.conjugations["lui"] !== props.conjugations["lei"] ){
-            console.log(props.conjugations["lui"], props.conjugations["lei"])
             // props.conjugations["lui"] = props.conjugations["lui"].slice(0, -1) + "(o/a)"
         }
     }

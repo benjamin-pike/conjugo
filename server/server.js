@@ -266,12 +266,6 @@ function calculateScore(language, subjects, tenses, verbs, points, time, accurac
     }
 }
 
-// app.post('/api/results', (req, res) => {
-//     roundResults = req.body
-//     console.log(roundResults)
-//     res.send('200')
-// })
-
 app.post('/api/results', async (req, res) => {
 
     const user = await User.findOne({ id: req.body.id })
@@ -317,7 +311,6 @@ async function getStarredVerbs(language, id){
 
 async function getAudio(language, verb, complexity, mood, tense, conjugation){
     let response = await Verb.findById(`${language}_${verb}`)
-    console.log(response, language, verb)
 
     return response['audio'][complexity][mood][tense][conjugation]
 }
@@ -390,7 +383,7 @@ app.get("/api/learn", async (req, res) => {
     }, {})
     const conjugation = Object.keys( subjectsByConjugation )[ randomNumber( 0, Object.keys( subjectsByConjugation ).length ) ]
 
-    const activityType = [ "match", "select", "type" ][ randomNumber(0, 3) ]
+    const activityType = [ /*"match", "select", "type",*/ "alert" ][ randomNumber(0, 1) ]
 
     let question = {
         activityType,
@@ -627,6 +620,24 @@ app.get("/api/learn", async (req, res) => {
             }
             
             break;
+    
+        case "alert":
+            question.promptFormat = "text"
+            question.cardContent = verb
+            question.explainerData = {
+                type: "new",
+                verb,
+                regularity: verbData.regularity,
+                translation: verbData.translations.principal
+            }
+            question.alertConjugations = [
+                [ "yo", conjugations.yo ],
+                [ "tú", conjugations.tú ],
+                [ "él • ella", conjugations.él ],
+                [ "nosotros", conjugations.nosotros ],
+                [ "vosotros", conjugations.vosotros ],
+                [ "ellos • ellas", conjugations.ellos ]
+            ]
     }
 
     return res.json( question )
@@ -650,4 +661,309 @@ app.get("/api/learn", async (req, res) => {
             [ "ellos • ellas", conjugations.ellos ]
         ]
     })
+});
+
+app.get("/api/lesson", async (req, res) => {
+
+    const knownVerbs = 80
+    const language = "spanish"
+
+    const randomNumber = ( lower, upper ) => Math.floor( Math.random() * ( upper - lower ) ) + lower
+
+    // const conjugations = verbData.conjugations[ complexity ][ mood ][ tense ]
+    // const subjectsByConjugation = Object.entries( conjugations ).reduce( ( output, [ subject, conjugation ] ) => {
+                                                
+    //     if ( output[ conjugation ] ) output[conjugation].push( subject )
+    //     else output[ conjugation ] = [ subject ]
+
+    //     return output
+    // }, {})
+    // const conjugation = Object.keys( subjectsByConjugation )[ randomNumber( 0, Object.keys( subjectsByConjugation ).length ) ]
+
+    const activityType = [ "match", "select", "type", "alert" ][ randomNumber(0, 4) ]
+
+    const createQuestion = async ( verb, complexity, mood, tense, verbData, conjugations, conjugation, subjectsByConjugation ) => {
+        let question = {
+            activityType,
+            infinitive: verb,
+        }
+
+        switch ( activityType ){
+            case "match":
+                question.explainerData = {
+                    type: [ "conjugations", "translations" ][ randomNumber(0, 2) ]
+                }
+
+                if ( question.explainerData.type === "conjugations" ){
+                    question.matchPairs = [
+                        [ "yo", conjugations.yo ],
+                        [ "tú", conjugations.tú ],
+                        [ "él • ella", conjugations.él ],
+                        [ "nosotros", conjugations.nosotros ],
+                        [ "vosotros", conjugations.vosotros ],
+                        [ "ellos • ellas", conjugations.ellos ]
+                    ]
+                }
+
+                if ( question.explainerData.type === "translations" ){
+                    
+                    const verbs = infinitives[ language ]
+                        .slice( 0, knownVerbs )
+                        .map( array => array[0] )
+                        .sort( () => Math.random() - 0.5 )
+                        .slice( 0, 6 )
+                    
+                    question.matchPairs = await Promise.all( 
+                        verbs.map( async ( verb ) => {
+                            let data = await Verb.findById(`${ language }_${ verb }`)
+                            return [ verb, `to ${ data.translations.principal }` ]
+                        })
+                    )
+                }
+
+                break;
+            
+            case "select":
+                question.explainerData = { type: [
+                    "conjugations-tense",
+                    "conjugation-subject",
+                    "subject-audio",
+                    "subject-text",
+                    "translation-audio",
+                    "translation-text",
+                ][ randomNumber(0, 6) ] }
+
+                const [ answerType, promptType ] = question.explainerData.type.split( "-" )
+
+                question.promptFormat = promptType === "audio" ? "audio" : "text"
+                question.cardContent = answerType === "subject" ? conjugation : verb
+
+                const getCorrectConjugations = ( num, conjugations ) => {
+                    const output = {}
+
+                    while ( Object.keys( output ).length < num ){ // Loop until sufficient correct answers have been generated
+                        const subjects = Object.keys( conjugations ) // Extract subjects from conjugations object into array
+                        let subject = subjects[ randomNumber( 0, subjects.length ) ] // Select a subject at random
+
+                        if ( !Object.values( output ).includes( conjugations[ subject ] ) ){ // If the conjugation that corresponds with the selected subject is not already a value in output...
+                            output[ subject ] = conjugations[ subject ] // ...add the subject-conjugation pair to output
+                        }
+                    }
+
+                    return output
+                }
+
+                const getIncorrectConjugations = ( num, conjugations ) => {
+
+                    const tenses = Object.entries( verbData.conjugations[ complexity ][ mood ] )
+                        .filter( entry => entry[0] !== tense ).map( entry => entry[1] ) // Create array that contains all alternate (incorrect) tenses in the same mood
+
+                    const output = {}
+
+                    while ( Object.keys( output ).length < num ) { // Loop until sufficient 'incorrect tense' candidates have been generated
+                        let tense = tenses[ randomNumber( 0, tenses.length ) ] // Randomly an alternate tense (object)
+                        let subject = Object.keys( tense )[ randomNumber( 0, Object.keys( tense ).length ) ] // Randomly select a subject from the alterate tense
+
+                        if ( tense[ subject ] !== conjugations[ subject ] && !Object.values( output ).includes( tense[ subject ] ) ) // If answer is not inadvertently correct and conjugation is not already a value in output
+                            output[ subject ] = tense[ subject ] // Assign subject-conjugation pair to output
+                    }
+
+                    return output
+                }
+
+                switch ( question.explainerData.type ){
+                    case "conjugations-tense":
+
+                        question.explainerData.tense = tense
+
+                        const output = []
+
+                        const totalSubjectChanges = randomNumber( 0, 2 ) // Choose number of conjugations in correct tense but matched to incorrect subjects ( 0, 1, or 2 )
+                        const totalCorrect = randomNumber( 2 + totalSubjectChanges, 4 ) // Choose number of answers that will be correct ( subject changes will be extracted )
+                        
+                        const correctAnswers = getCorrectConjugations( totalCorrect, conjugations )
+                        const incorrectTenses = getIncorrectConjugations( 6 - totalCorrect, conjugations )
+
+                        // Switch subjects of a section of correct answers
+                        const incorrectSubjects = {} // Initialise object to contain conjugations with incorrect subject
+
+                        while ( Object.keys( incorrectSubjects ) < totalSubjectChanges ){ // Loop until sufficient 'incorrect subject' candidates have been generated                        
+                            const switchedSubject = Object.keys( correctAnswers )[ randomNumber( 0, totalCorrect ) ] // Randomly select subject from correct answers
+                            const availableConjugations = Object.values( conjugations ).filter( conjugation => conjugation !== conjugations[ switchedSubject ] )
+                            const switchedConjugation = availableConjugations[ randomNumber( 0, Object.entries( availableConjugations ).length - 1 ) ] // Randomly select conjugation that does not match subject but is in correct tense
+
+                            incorrectSubjects[ switchedSubject ] = switchedConjugation // Assign incorrect conjugation to subject key in relevant object
+                            
+                            delete correctAnswers[ switchedSubject ] // Delete subject-conjugation pair from correct answers object
+                        }
+
+                        // For each candidate in separate arrays, format into tripartite object (subject, conjugation, correct?) and push to candidate array
+                        Object.entries( correctAnswers ).forEach( ( [ subject, conjugation ] ) => 
+                            output.push( { subject, conjugation, correct: true })
+                        )
+
+                        Object.entries( incorrectSubjects ).forEach( ( [ subject, conjugation ] ) => 
+                            output.push( { subject, conjugation, correct: false })
+                        )
+
+                        Object.entries( incorrectTenses ).forEach( ( [ subject, conjugation ] ) => 
+                            output.push( { subject, conjugation, correct: false })
+                        )
+
+                        question.selectCandidates = output.sort( () => Math.random() - 0.5 )
+
+                        break;
+            
+                    case "conjugation-subject":
+
+                        const candidateConjugations = Object.keys( subjectsByConjugation )
+
+                        const correctConjugation =
+                        candidateConjugations[ randomNumber( 0, candidateConjugations.length ) ]
+
+                        question.explainerData.subject = 
+                            subjectsByConjugation[ correctConjugation ][ randomNumber( 0, subjectsByConjugation[ correctConjugation ].length ) ] 
+
+
+                        question.selectCandidates = candidateConjugations.map( candidate =>
+                            ({ 
+                                subject: null, 
+                                conjugation: candidate, 
+                                correct: candidate === correctConjugation
+                            })
+                        ).sort( () => Math.random() - 0.5 )
+
+                        break;
+                
+                    case "subject-audio":
+                    case "subject-text":
+                        
+                        question.cardContent = 
+                            Object.keys( subjectsByConjugation )[ randomNumber( 0, Object.keys( subjectsByConjugation ).length ) ]
+                        
+                        question.selectCandidates = Object.entries( subjectsByConjugation )
+                            .map( ( [ conjugation, subjects ] ) => 
+                                ({
+                                    subject: subjects[ randomNumber( 0, subjects.length ) ],
+                                    conjugation: null,
+                                    correct: conjugation === question.cardContent
+                                })
+                            ).sort( () => Math.random() - 0.5 )
+                        
+                        break;
+
+                    case "translation-audio":
+                    case "translation-text":
+
+                        const verbs = infinitives[ language ]
+                            .slice( 0, knownVerbs )
+                            .map( array => array[0] )
+                            .sort( () => Math.random() - 0.5 )
+                            .slice( 0, 6 )
+                        
+                        const translations = await Promise.all( 
+                            verbs.map( async ( verb ) => {
+                                let data = await Verb.findById(`${language}_${verb}`)
+                                return [ verb, data.translations.principal ]
+                            })
+                        )
+
+                        const [ correctOrigin, correctTranslation ] = translations[ randomNumber( 0, 6 ) ]
+
+                        question.infinitive = correctOrigin
+                        question.cardContent = correctOrigin
+                        question.selectCandidates = translations.map( ( [ origin, translation ] ) => (
+                            {
+                                subject: "to", 
+                                conjugation: translation, 
+                                correct: translation === correctTranslation
+                            }
+                        ))
+
+                        break;
+                }
+
+                break;
+            
+            case "type":
+                question.explainerData = { type: [
+                    "conjugation-audio",
+                    "conjugation-subject"
+                ][ randomNumber(0, 2) ] } 
+
+                switch ( question.explainerData.type ){
+                    case "conjugation-audio":
+                        question = {
+                            ...question,
+                            promptFormat: "audio",
+                            cardContent: conjugation,
+                            typeAnswer: conjugation
+                        }
+
+                        break;
+
+                    case "conjugation-subject":
+                        question = {
+                            ...question,
+                            promptFormat: "text",
+                            cardContent: verb,
+                            typeAnswer: conjugation,
+                            explainerData: {
+                                ...question.explainerData, 
+                                subject: subjectsByConjugation[ conjugation ][ randomNumber( 0, subjectsByConjugation[ conjugation ].length ) ]
+                            }
+                        }
+
+                        break;
+                }
+                
+                break;
+        
+            case "alert":
+                question.promptFormat = "text"
+                question.cardContent = verb
+                question.explainerData = {
+                    type: "new",
+                    verb,
+                    regularity: verbData.regularity,
+                    translation: verbData.translations.principal
+                }
+                question.alertConjugations = [
+                    [ "yo", conjugations.yo ],
+                    [ "tú", conjugations.tú ],
+                    [ "él • ella", conjugations.él ],
+                    [ "nosotros", conjugations.nosotros ],
+                    [ "vosotros", conjugations.vosotros ],
+                    [ "ellos • ellas", conjugations.ellos ]
+                ]
+        }
+
+        return question
+    }
+
+    questions = []
+
+    for ( i = 0; i < 15; i++ ){
+        let verb = infinitives[ language ][ randomNumber( 0, knownVerbs ) ][0]
+        let root = [ "simple", "indicative", "present" ]
+        let [ complexity, mood, tense ] = root
+        let verbData = await Verb.findById(`${language}_${verb}`)
+        let conjugations = verbData.conjugations[ complexity ][ mood ][ tense ]
+        
+        let subjectsByConjugation = Object.entries( conjugations ).reduce( ( output, [ subject, conjugation ] ) => {
+                                                
+            if ( output[ conjugation ] ) output[conjugation].push( subject )
+            else output[ conjugation ] = [ subject ]
+    
+            return output
+        }, {})
+
+        let conjugation = Object.keys( subjectsByConjugation )[ randomNumber( 0, Object.keys( subjectsByConjugation ).length ) ]
+
+        questions.push(
+            await createQuestion( verb, complexity, mood, tense, verbData, conjugations, conjugation, subjectsByConjugation )
+        )
+    }
+
+    res.json(questions)
 });

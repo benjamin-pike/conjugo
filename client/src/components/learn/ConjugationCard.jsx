@@ -1,30 +1,40 @@
+import { useRef } from "react"
+import getAudio from "../../functions/getAudio"
 import useHTTP from "../../hooks/useHTTP"
+import { useLang } from "../../store/LangContext"
 import styles from "./styles/conjugation-card.module.css"
 
 function ConjugationCard( props ){
 
+    const c1Ref = useRef()
+    const c2Ref = useRef()
+
     const { sendRequest } = useHTTP()
+    const { language } = useLang()
 
-    const processAudio = async () => {
-        const [infinitive, complexity, mood, tense] = props.audioPath
+    // const processAudio = async () => {
+    //     const [infinitive, complexity, mood, tense] = props.audioPath
 
-        const data = await sendRequest({ url: `http://localhost:9000/api/reference/audio?language=spanish&verb=${infinitive}&complexity=${complexity}&mood=${mood}&tense=${tense}&conjugation=${props.conjugation}` })
-        const audio = new Audio(`data:audio/mp3;base64, ${data.audio}`)
+    //     const data = await sendRequest({ url: `http://localhost:9000/api/reference/audio?language=spanish&verb=${infinitive}&complexity=${complexity}&mood=${mood}&tense=${tense}&conjugation=${props.conjugation}` })
+    //     const audio = new Audio(`data:audio/mp3;base64, ${data.audio}`)
         
-        audio.play()
+    //     audio.play()
         
-        return new Promise( resolve => 
-            audio.onloadedmetadata = () => 
-                resolve( audio.duration )
-        )
-    }
+    //     return new Promise( resolve => 
+    //         audio.onloadedmetadata = () => 
+    //             resolve( audio.duration )
+    //     )
+    // }
 
     const handleClick = async (e) => {
 
         if ( !props.disabled ){
-            const wrapper = e.target.querySelector("." + styles["card__conjugations__face__pulse__wrapper"])
-            const circle1 = wrapper.querySelector("." + styles["card__conjugations__face__pulse__circle1"])
-            const circle2 = wrapper.querySelector("." + styles["card__conjugations__face__pulse__circle2"])
+            console.log(props)
+            const { play: playAudio, duration } = 
+                await getAudio( language.name, props.infinitive, props.conjugation )
+
+            const circle1 = c1Ref.current
+            const circle2 = c2Ref.current
             
             const boundaries = e.target.getBoundingClientRect()
 
@@ -40,17 +50,15 @@ function ConjugationCard( props ){
             circle1.style.animation = `${styles["pulse-small"]} 500ms ease forwards`
             
             props.setDisabled( true )
-                        
-            setTimeout(() => console.log(circle1.style.animationPlayState), 2000)
-    
+                            
             setTimeout(() => circle2.style.animation = `${styles["pulse-small"]} 500ms ease forwards`, 200)
             
             setTimeout(() => circle1.style.animation = "none", 500)
             setTimeout(() =>  circle2.style.animation = "none", 700)
     
-            const pause = await processAudio()
+            playAudio()
 
-            setTimeout( () => props.setDisabled( false ), ( pause * 1000 ) - 200 )
+            setTimeout( () => props.setDisabled( false ), ( duration * 1000 ) - 200 )
         }
     }
 
@@ -74,8 +82,8 @@ function ConjugationCard( props ){
             </p>
 
             <div className = {styles["card__conjugations__face__pulse__wrapper"]}>
-                <div className = {styles["card__conjugations__face__pulse__circle1"]} /> 
-                <div className = {styles["card__conjugations__face__pulse__circle2"]} />
+                <div ref = { c1Ref } className = {styles["card__conjugations__face__pulse__circle1"]} /> 
+                <div ref = { c2Ref } className = {styles["card__conjugations__face__pulse__circle2"]} />
             </div>
         </button>
     );

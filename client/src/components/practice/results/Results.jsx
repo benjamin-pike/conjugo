@@ -31,8 +31,6 @@ function Results(props){
         config: { duration: 500 },
     });
 
-    console.log('results data', props.resultsData)
-
     useEffect(async () => {
         const data = await sendRequest({
             url: `http://localhost:9000/api/results?language=${language.name}`,

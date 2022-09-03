@@ -9,7 +9,6 @@ function Conjugations(props){
 
     const [englishTenseNames, setEnglishTenseNames] = useState( true )
     
-    console.log(tenseNames)
     const tenses = Object.entries( tenseNames )
         .filter( ( [ _, languages ] ) => Object.keys( languages ).includes( props.language ))
         .map( ( [ tense, _ ] ) => tense )

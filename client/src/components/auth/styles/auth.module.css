@@ -314,8 +314,6 @@
     transform: translateY(-0.25em);
 }
 
-
-
 #primary{
     background-color: hsl(45, 100%, 50%);
     box-shadow: 0 0.25em hsl(45, 100%, 43%);
@@ -324,7 +322,6 @@
 #secondary{
     background-color: var(--red);
     box-shadow: 0 0.25em hsl(345, 100%, 40%);
-    ;
 }
 
 #primary:active,

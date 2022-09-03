@@ -56,13 +56,13 @@
 }
 
 @media only screen and ( max-width: 50em ){
-    #footer{
-        height: fit-content;
-        padding: 1em 0;
+    #footer p, #footer li{
+        font-size: 0.8em;
     }
+
     #footer-items{
         flex-direction: column;
-        gap: 0.5em
+        gap: 0.2em
     }
 
     #copyright{

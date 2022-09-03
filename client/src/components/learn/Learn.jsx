@@ -51,7 +51,7 @@ function Learn(){
     const [explainerData, setExplainerData] = useState( "" ) // String that denotes content of explainer card
 
     // Initialise empty variables for the three activity types
-    const [alertPairs, setAlertPairs] = useState( [] )
+    const [alertConjugations, setAlertConjugations] = useState( [] )
     const [matchPairs, setMatchPairs] = useState( [] ) // Array that contains array pairs of strings necessary for 'match' activities
     const [selectCandidates, setSelectCandidates] = useState( [] ) // Array that contains tripartite objects that specify candidates for 'select' activities
     const [typeAnswer, setTypeAnswer] = useState( "hablamos" ) // String that specifies answer for 'type' activities
@@ -72,7 +72,6 @@ function Learn(){
             break;
             
         case "audio":
-            console.log(infinitive);
             promptElement = 
                 <AudioCard
                     audio = { cardContent }
@@ -90,7 +89,7 @@ function Learn(){
         case "alert":
             answerElement = 
                 <AlertConjugations 
-                    pairs = { alertPairs }
+                    pairs = { alertConjugations }
                     infinitive = { infinitive }
                     disabled = { audioDisabled }
                     setDisabled = { setAudioDisabled }
@@ -142,7 +141,7 @@ function Learn(){
 
         switch ( data.activityType ){
             case "alert":
-                setAlertPairs( data.alertPairs)
+                setAlertConjugations( data.alertConjugations )
                 setPromptFormat( data.promptFormat )
                 setCardContent( data.cardContent )
                 break;
@@ -197,7 +196,7 @@ function Learn(){
             onMouseUp = { handleMouseUp }
             tabIndex = { -1 }>
 
-            <ProgressBar visible = { activityType !== "alert" } />
+            { activityType && <ProgressBar visible = { activityType !== "alert" }/> }
 
             { renderContent && <div 
                 id = {styles["content"]}

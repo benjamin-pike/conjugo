@@ -13,8 +13,6 @@ function Cards( props ){
 
     const poolCards = props.pairs.map( pair => pair[0] );
     const boxCards = props.pairs.map( pair => pair[1] );
-
-    // console.log(poolCards, boxCards)
     
     const [boxDimensions, setBoxDimensions] = useState( {width: 0, height: 0} )
     const [cardWidths, setCardWidths] = useState( {} )

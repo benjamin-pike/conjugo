@@ -135,7 +135,6 @@ function Pool( props ){
     }, [ selectedCard ])
 
     if ( !conjugations.length ){
-        console.log('setting')
         setConjugations( [...props.boxCards].sort(() => Math.random() - 0.5) )
     }
 

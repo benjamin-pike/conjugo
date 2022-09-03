@@ -60,7 +60,6 @@ function Cards( props ){
                 states[ index ] = states[ index ] === "active" ? "inactive" : "active"
             } else {
                 Object.keys( states ).forEach( i => { if ( parseInt(i) !== index ) states[ i ] = "inactive" } )
-                console.log(states[index])
                 states[ index ] = states[ index ] === "active" ? "inactive" : "active"
             }
 
