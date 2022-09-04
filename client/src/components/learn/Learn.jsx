@@ -5,7 +5,6 @@ import { useLang } from "../../store/LangContext";
 import useHTTP from "../../hooks/useHTTP";
 
 // Components
-import Alert from "./Alert";
 import AlertBanner from "./AlertBanner";
 import AlertConjugations from "./AlertConjugations";
 import ProgressBar from "./ProgressBar";
@@ -32,6 +31,9 @@ function Learn(){
     // Determine current language
     const { language } = useLang()
 
+    const [questionIndex, setQuestionIndex] = useState( 0 )
+    const [lessonData, setLessonData] = useState( [] )
+
     const [renderContent, setRenderContent] = useState( false )
 
     const [audioDisabled, setAudioDisabled] = useState( false ) // Prevents excessive audio plays
@@ -40,32 +42,34 @@ function Learn(){
     const [buttonVisible, setButtonVisible] = useState( false ) // Denotes whether check/continue should be visible
 
     // Functions that are necessary for function of 'match' activities
-    const [handleMouseMove, setHandleMouseMove] = useState( () => {} );
-    const [handleMouseUp, setHandleMouseUp] = useState( () => {} );
+    const [handleMouseMove, setHandleMouseMove] = useState( null );
+    const [handleMouseUp, setHandleMouseUp] = useState( null );
 
     // Configure variables that determine question layout
-    const [activityType, setActivityType] = useState( "" ) // Should be one of either 'match', 'select', or 'type'
-    const [promptFormat, setPromptFormat] = useState( "" ) // Should be one of either 'text', 'audio', or empty string
-    const [infinitive, setInfinitive] = useState( [] ) // Array that contains the relevant keys to select audio files
-    const [cardContent, setCardContent] = useState( "" ) // String that is passed to text/audio cards to specify content 
-    const [explainerData, setExplainerData] = useState( "" ) // String that denotes content of explainer card
+    // const [activityType, setActivityType] = useState( "" ) // Should be one of either 'match', 'select', or 'type'
+    // const [promptFormat, setPromptFormat] = useState( "" ) // Should be one of either 'text', 'audio', or empty string
+    // const [infinitive, setInfinitive] = useState( [] ) // Array that contains the relevant keys to select audio files
+    // const [cardContent, setCardContent] = useState( "" ) // String that is passed to text/audio cards to specify content 
+    // const [explainerData, setExplainerData] = useState( "" ) // String that denotes content of explainer card
 
-    // Initialise empty variables for the three activity types
-    const [alertConjugations, setAlertConjugations] = useState( [] )
-    const [matchPairs, setMatchPairs] = useState( [] ) // Array that contains array pairs of strings necessary for 'match' activities
-    const [selectCandidates, setSelectCandidates] = useState( [] ) // Array that contains tripartite objects that specify candidates for 'select' activities
-    const [typeAnswer, setTypeAnswer] = useState( "hablamos" ) // String that specifies answer for 'type' activities
+    // // Initialise empty variables for the three activity types
+    // const [alertConjugations, setAlertConjugations] = useState( [] )
+    // const [matchPairs, setMatchPairs] = useState( [] ) // Array that contains array pairs of strings necessary for 'match' activities
+    // const [selectCandidates, setSelectCandidates] = useState( [] ) // Array that contains tripartite objects that specify candidates for 'select' activities
+    // const [typeAnswer, setTypeAnswer] = useState( "" ) // String that specifies answer for 'type' activities
 
     // Elements determined by switch statement
     let promptElement = null; // Contains 'prompt' element ( text or audio card )
     let answerElement = null; // Contains 'answer element ( match boxes [incl. pool], select cards, or text field)
 
-    switch( promptFormat ){
+    const currentQuestion = lessonData[ questionIndex ] ?? {}
+
+    switch( currentQuestion.promptFormat ){
         case "text":
             promptElement = 
                 <VerbCard
-                    text = { cardContent }
-                    infinitive = { infinitive }
+                    text = { currentQuestion.cardContent }
+                    infinitive = { currentQuestion.infinitive }
                     disabled = { audioDisabled }
                     setDisabled = { setAudioDisabled }
                 />
@@ -74,8 +78,8 @@ function Learn(){
         case "audio":
             promptElement = 
                 <AudioCard
-                    audio = { cardContent }
-                    infinitive = { infinitive }
+                    audio = { currentQuestion.cardContent }
+                    infinitive = { currentQuestion.infinitive }
                     disabled = { audioDisabled }
                     setDisabled = { setAudioDisabled }
                 />
@@ -85,12 +89,12 @@ function Learn(){
             break;
     }
 
-    switch( activityType ){
+    switch( currentQuestion.activityType ){
         case "alert":
             answerElement = 
                 <AlertConjugations 
-                    pairs = { alertConjugations }
-                    infinitive = { infinitive }
+                    pairs = { currentQuestion.alertConjugations }
+                    infinitive = { currentQuestion.infinitive }
                     disabled = { audioDisabled }
                     setDisabled = { setAudioDisabled }
                 />
@@ -99,10 +103,10 @@ function Learn(){
         case "match":
             answerElement =
                 <MatchCards
-                    pairs = { matchPairs }
+                    pairs = { currentQuestion.matchPairs }
                     setHandleFunctions = { [setHandleMouseMove, setHandleMouseUp] }
                     setButtonVisible = { setButtonVisible }
-                    checkFunction = { checkFunction }
+                    checkFunction = { currentQuestion.checkFunction }
                     setCheckFunction = { setCheckFunction }
                     setChecked = { setAnswerChecked }
                 />
@@ -111,7 +115,7 @@ function Learn(){
         case "select":
             answerElement = 
                 <SelectCards
-                    candidates = { selectCandidates }
+                    candidates = { currentQuestion.selectCandidates }
                     setButtonVisible = { setButtonVisible } 
                     setCheckFunction = { setCheckFunction }    
                     setChecked = { setAnswerChecked }
@@ -121,7 +125,7 @@ function Learn(){
         case "type":
             answerElement =
                 <TypeInput
-                    answer = { typeAnswer }
+                    answer = { currentQuestion.typeAnswer }
                     checked = { answerChecked }
                     setChecked = { setAnswerChecked}
                     setCheckFunction = { setCheckFunction }
@@ -129,47 +133,39 @@ function Learn(){
                 />
     }
 
-    // Send request to backend to retrieve question data
+    // Send request to backend to retrieve lesson data
     useEffect( async () => {
-        const data = await sendRequest({ url: `http://localhost:9000/api/learn?language=${language.name}` })
-        
         setRenderContent( false )
-
-        setActivityType( data.activityType )
-        setExplainerData( data.explainerData )
-        setInfinitive ( data.infinitive )
-
-        switch ( data.activityType ){
-            case "alert":
-                setAlertConjugations( data.alertConjugations )
-                setPromptFormat( data.promptFormat )
-                setCardContent( data.cardContent )
-                break;
-                
-            case "match":
-                setMatchPairs( data.matchPairs )
-                break;
-            
-            case "select":
-                setPromptFormat( data.promptFormat )
-                setCardContent( data.cardContent )
-                setSelectCandidates( data.selectCandidates )
-                break;
-
-            case "type":
-                setPromptFormat( data.promptFormat )
-                setCardContent( data.cardContent )
-                setTypeAnswer( data.typeAnswer )
-                break;
-        }
-
-        setRenderContent( true )
+        const data = await sendRequest({ url: `http://localhost:9000/api/lesson?language=${language.name}` })
+        setLessonData( data )
     }, [])
 
+    // Reset state when question index is updated
+    useEffect(() => { 
+        if ( lessonData.length ){
+            setRenderContent( false )
+
+            setAudioDisabled( false )
+            setCheckFunction( null )
+            setAnswerChecked( false )
+            setButtonVisible( false )
+            setHandleMouseMove( null )
+            setHandleMouseUp( null )
+        }
+
+    }, [ lessonData, questionIndex ])
+
+    // In order to force rerender, set render boolean to true after it has set to false
+    useEffect(() => {
+        if ( !renderContent && lessonData.length ){
+            setRenderContent( true )
+        } 
+    }, [ lessonData, renderContent ])
+    
     // Show continue button after 5 seconds if activity type = 'alert'
     useEffect(() => {
 
-        if ( activityType === "alert" ){
+        if ( currentQuestion.activityType === "alert" ){
             let timeout;
 
             setAnswerChecked( true )
@@ -179,11 +175,11 @@ function Learn(){
             }, 5000)
         }
 
-    }, [ activityType ])
+    }, [ questionIndex ])
 
     const handleKeyPress = e => {
         if ( e.key === "Enter" && buttonVisible ){
-            if ( answerChecked ) return window.location.reload()
+            if ( answerChecked ) return setQuestionIndex( current => current + 1 )
             return checkFunction()
         } 
     }
@@ -196,20 +192,26 @@ function Learn(){
             onMouseUp = { handleMouseUp }
             tabIndex = { -1 }>
 
-            { activityType && <ProgressBar visible = { activityType !== "alert" }/> }
+            { currentQuestion.activityType && <ProgressBar 
+                visible = { currentQuestion.activityType !== "alert" }
+                progress = { questionIndex / lessonData.length }
+            /> }
 
             { renderContent && <div 
                 id = {styles["content"]}
                 style = {{ perspective: "1000px" }}
-                activity = { activityType }
+                activity = { currentQuestion.activityType }
                 className = { buttonVisible ? styles["button-visible"] : "" }>
 
-                { activityType === "alert" && <AlertBanner type = { explainerData.type } />}
+                { currentQuestion.activityType === "alert" && <AlertBanner type = { currentQuestion.explainerData.type } />}
 
                 {promptElement}
 
                 <ExplainerCard 
-                    data = {{...explainerData, type: `${activityType}-${explainerData.type}` }}
+                    data = {{
+                        ...currentQuestion.explainerData, 
+                        type: `${currentQuestion.activityType}-${currentQuestion.explainerData.type}` 
+                    }}
                 />
 
                 {answerElement}
@@ -223,7 +225,7 @@ function Learn(){
                 <RaisedButton
                     text = { answerChecked ? "Continue" : "Check" }
                     width = { answerChecked ? "11.75em" : "9.5em" }
-                    onClick = { answerChecked ? () => window.location.reload()  : checkFunction }
+                    onClick = { answerChecked ? () => setQuestionIndex( current => current + 1 ) : checkFunction }
                 />
             </div>
         </div>

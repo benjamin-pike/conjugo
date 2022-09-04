@@ -22,10 +22,10 @@
 #progress-bar__foreground{
     position: absolute;
     height: 1.5em;
-    width: 50%;
     background-color: var(--green);
     border-radius: 100vmax;
     overflow: hidden;
+    transition: width 200ms ease;
 }
 
 #progress-bar__foreground::after{
