@@ -682,7 +682,7 @@ app.get("/api/lesson", async (req, res) => {
 
     const createQuestion = async ( verb, complexity, mood, tense, verbData, conjugations, conjugation, subjectsByConjugation ) => {
         
-        const activityType = [ "match", "select", "type", "alert" ][ randomNumber(0, 4) ]
+        const activityType = [ /*"match",*/ "select", "type", /*"alert"*/ ][ randomNumber(0, 2) ]
         
         let question = {
             activityType,

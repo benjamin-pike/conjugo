@@ -1,5 +1,5 @@
 // Hooks
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNav } from "../../store/NavContext";
 import { useLang } from "../../store/LangContext";
 import useHTTP from "../../hooks/useHTTP";
@@ -32,6 +32,7 @@ function Learn(){
     const { language } = useLang()
 
     const [questionIndex, setQuestionIndex] = useState( 0 )
+    const [currentQuestion, setCurrentQuestion] = useState( {} )
     const [lessonData, setLessonData] = useState( [] )
 
     const [renderContent, setRenderContent] = useState( false )
@@ -58,11 +59,14 @@ function Learn(){
     // const [selectCandidates, setSelectCandidates] = useState( [] ) // Array that contains tripartite objects that specify candidates for 'select' activities
     // const [typeAnswer, setTypeAnswer] = useState( "" ) // String that specifies answer for 'type' activities
 
+    // Intialise contentRef
+    const contentRef = useRef( null )
+
     // Elements determined by switch statement
     let promptElement = null; // Contains 'prompt' element ( text or audio card )
     let answerElement = null; // Contains 'answer element ( match boxes [incl. pool], select cards, or text field)
 
-    const currentQuestion = lessonData[ questionIndex ] ?? {}
+    // const currentQuestion = lessonData[ questionIndex ] ?? {}
 
     switch( currentQuestion.promptFormat ){
         case "text":
@@ -143,25 +147,44 @@ function Learn(){
     // Reset state when question index is updated
     useEffect(() => { 
         if ( lessonData.length ){
-            setRenderContent( false )
 
-            setAudioDisabled( false )
-            setCheckFunction( null )
-            setAnswerChecked( false )
-            setButtonVisible( false )
-            setHandleMouseMove( null )
-            setHandleMouseUp( null )
+            if ( contentRef.current ){
+                const contentStyle = contentRef.current.style
+            
+                contentStyle.transition = "transform 5000ms ease, opacity 5000ms ease"
+                contentStyle.transform = "translateX(-5em)"
+                contentStyle.opacity = "0"
+                contentStyle.animation = `${styles["content-in"]} 500ms ease forwards`
+
+                console.log(contentRef.current.style.transform)
+
+                setTimeout(() => {
+                    setRenderContent( false )
+    
+                    setAudioDisabled( false )
+                    // setCheckFunction( null )
+                    setAnswerChecked( false )
+                    setButtonVisible( false )
+                    setHandleMouseMove( null )
+                    setHandleMouseUp( null )
+                }, 5000)
+            }
+
+            
         }
 
     }, [ lessonData, questionIndex ])
 
     // In order to force rerender, set render boolean to true after it has set to false
     useEffect(() => {
-        if ( !renderContent && lessonData.length ){
+        if ( !renderContent && lessonData.length){
+            setCurrentQuestion( lessonData[ questionIndex ] )
             setRenderContent( true )
         } 
-    }, [ lessonData, renderContent ])
-    
+    }, [ lessonData, renderContent, contentRef.current ])
+
+    contentRef.current && console.log(contentRef.current.style.transition)
+
     // Show continue button after 5 seconds if activity type = 'alert'
     useEffect(() => {
 
@@ -197,7 +220,8 @@ function Learn(){
                 progress = { questionIndex / lessonData.length }
             /> }
 
-            { renderContent && <div 
+            { renderContent && <div
+                ref = { contentRef }
                 id = {styles["content"]}
                 style = {{ perspective: "1000px" }}
                 activity = { currentQuestion.activityType }

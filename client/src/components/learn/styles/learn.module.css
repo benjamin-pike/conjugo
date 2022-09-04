@@ -31,14 +31,36 @@
     z-index: -0.5;
 } */
 
+@keyframes content-in{
+    0%{
+        opacity: 0;
+        transform: translateX(5em);
+    }
+    100%{
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes content-out{
+    0%{
+        opacity: 1;
+        transform: translateX(0em);
+    }
+    100%{
+        opacity: 0;
+        transform: translateX(-5em);
+    }
+}
+
 #content{
     display: flex;
     gap: 2em;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    /* transform: translateY(2em); */
-    transition: transform 500ms ease;
+    animation: content-in 500ms ease forwards;
+    transition: opacity 500ms ease, transform 500ms ease;
 }
 
 #content:not( [activity = "alert"] ){
