@@ -59,8 +59,8 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    animation: content-in 500ms ease forwards;
-    transition: opacity 500ms ease, transform 500ms ease;
+    /* animation: content-in 500ms ease forwards; */
+    /* transition: opacity 500ms ease, transform 500ms ease; */
 }
 
 #content:not( [activity = "alert"] ){
@@ -72,6 +72,13 @@
 }
 
 /* CONTINUE BUTTON */
+@keyframes button-out{
+    to {
+        transform: translateY( 1em ); 
+        opacity: 0;
+    }
+}
+
 #button-continue__wrapper{
     margin-top: 2em;
     opacity: 0;
@@ -85,7 +92,6 @@
     transform: translateY( 2.5em );
 }
 
-#content.button-visible,
 #button-continue__wrapper.button-visible{
     transform: translateY(0)
 }

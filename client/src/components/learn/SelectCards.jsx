@@ -4,43 +4,7 @@ import styles from "./styles/select-cards.module.css"
 
 function Cards( props ){
 
-    // const candidates = useRef( [
-    //     { subject: "yo", conjugation: "hablo", correct: true },
-    //     { subject: "nosotros", conjugation: "hablamos", correct: true },
-    //     { subject: "ella", conjugation: "hablare", correct: false },
-    //     { subject: "tu", conjugation: "hable", correct: false },
-    //     { subject: "vosotros", conjugation: "hablan", correct: false },
-    //     { subject: "ellos", conjugation: "habla", correct: false },
-    // ].sort(() => Math.random() - 0.5) )
-    // const candidates = useRef( props.candidates )
-    const candidates = { current: props.candidates}
-
-    // const candidates = useRef( [
-    //     { subject: null, conjugation: "hablo", correct: true },
-    //     { subject: null, conjugation: "hablamos", correct: false },
-    //     { subject: null, conjugation: "hableis", correct: false },
-    //     { subject: null, conjugation: "habla", correct: false },
-    //     { subject: null, conjugation: "hablan", correct: false },
-    //     { subject: null, conjugation: "habla", correct: false },
-    // ].sort(() => Math.random() - 0.5) )
-
-    // const candidates = useRef( [
-    //     { subject: "to", conjugation: "hear", correct: true },
-    //     { subject: "to", conjugation: "see", correct: false },
-    //     { subject: "to", conjugation: "be", correct: false },
-    //     { subject: "to", conjugation: "smell", correct: false },
-    //     { subject: "to", conjugation: "talk", correct: false },
-    //     { subject: "to", conjugation: "exercise", correct: false },
-    // ].sort(() => Math.random() - 0.5) )
-
-    // const candidates = useRef( [
-    //     { subject: "yo", conjugation: null, correct: false },
-    //     { subject: "tu", conjugation: null, correct: true },
-    //     { subject: "el", conjugation: null, correct: false },
-    //     { subject: "nosotros", conjugation: null, correct: false },
-    //     { subject: "vosotros", conjugation: null, correct: false },
-    //     { subject: "ellos", conjugation: null, correct: false },
-    // ].sort(() => Math.random() - 0.5) )
+    const candidates = { current: props.candidates }
 
     const multiSelect = 1 !== Object.values( candidates.current ).reduce( ( sum, candidate ) => candidate.correct ? sum + 1 : sum, 0 )
 
@@ -54,7 +18,7 @@ function Cards( props ){
 
     let [topRow, bottomRow] = [null, null]
 
-    const handleClick = index => {
+    const updateButtonStates = index => {
         setButtonStates( states => {
             if ( multiSelect ){
                 states[ index ] = states[ index ] === "active" ? "inactive" : "active"
@@ -65,6 +29,17 @@ function Cards( props ){
 
             return {...states}
         })
+    }
+
+    const handleClick = index => updateButtonStates( index )
+
+    props.handleKeyPress.current = e => {
+        console.log(cards[ e.key - 1])
+    }
+
+    props.handleKeyPress.current = e => {
+        if ( Object.keys( buttonStates ).includes( ( e.key - 1 ).toString() ) ) 
+            updateButtonStates( (e.key - 1 ).toString() )
     }
 
     const cards = candidates.current.map( ( candidate, index ) =>

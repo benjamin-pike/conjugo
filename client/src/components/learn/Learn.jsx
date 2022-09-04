@@ -46,27 +46,14 @@ function Learn(){
     const [handleMouseMove, setHandleMouseMove] = useState( null );
     const [handleMouseUp, setHandleMouseUp] = useState( null );
 
-    // Configure variables that determine question layout
-    // const [activityType, setActivityType] = useState( "" ) // Should be one of either 'match', 'select', or 'type'
-    // const [promptFormat, setPromptFormat] = useState( "" ) // Should be one of either 'text', 'audio', or empty string
-    // const [infinitive, setInfinitive] = useState( [] ) // Array that contains the relevant keys to select audio files
-    // const [cardContent, setCardContent] = useState( "" ) // String that is passed to text/audio cards to specify content 
-    // const [explainerData, setExplainerData] = useState( "" ) // String that denotes content of explainer card
-
-    // // Initialise empty variables for the three activity types
-    // const [alertConjugations, setAlertConjugations] = useState( [] )
-    // const [matchPairs, setMatchPairs] = useState( [] ) // Array that contains array pairs of strings necessary for 'match' activities
-    // const [selectCandidates, setSelectCandidates] = useState( [] ) // Array that contains tripartite objects that specify candidates for 'select' activities
-    // const [typeAnswer, setTypeAnswer] = useState( "" ) // String that specifies answer for 'type' activities
-
     // Intialise contentRef
     const contentRef = useRef( null )
+    const buttonRef = useRef( null )
+    const handleKeyPressRef = useRef( null )
 
     // Elements determined by switch statement
     let promptElement = null; // Contains 'prompt' element ( text or audio card )
     let answerElement = null; // Contains 'answer element ( match boxes [incl. pool], select cards, or text field)
-
-    // const currentQuestion = lessonData[ questionIndex ] ?? {}
 
     switch( currentQuestion.promptFormat ){
         case "text":
@@ -120,6 +107,7 @@ function Learn(){
             answerElement = 
                 <SelectCards
                     candidates = { currentQuestion.selectCandidates }
+                    handleKeyPress = { handleKeyPressRef }
                     setButtonVisible = { setButtonVisible } 
                     setCheckFunction = { setCheckFunction }    
                     setChecked = { setAnswerChecked }
@@ -146,34 +134,31 @@ function Learn(){
 
     // Reset state when question index is updated
     useEffect(() => { 
-        if ( lessonData.length ){
+        if ( questionIndex ){
 
-            if ( contentRef.current ){
-                const contentStyle = contentRef.current.style
-            
-                contentStyle.transition = "transform 5000ms ease, opacity 5000ms ease"
-                contentStyle.transform = "translateX(-5em)"
-                contentStyle.opacity = "0"
-                contentStyle.animation = `${styles["content-in"]} 500ms ease forwards`
-
-                console.log(contentRef.current.style.transform)
-
-                setTimeout(() => {
-                    setRenderContent( false )
-    
-                    setAudioDisabled( false )
-                    // setCheckFunction( null )
-                    setAnswerChecked( false )
-                    setButtonVisible( false )
-                    setHandleMouseMove( null )
-                    setHandleMouseUp( null )
-                }, 5000)
+            if (contentRef.current) { 
+                contentRef.current.style.setProperty( "animation", `${styles['content-out']} 500ms ease forwards` );
+                buttonRef.current.style.setProperty( "animation", `${styles['button-out']} 500ms ease forwards` );
             }
 
-            
+            setTimeout(() => {
+                setAudioDisabled( false )
+                setCheckFunction( null )
+                setAnswerChecked( false )
+                setButtonVisible( false )
+                setHandleMouseMove( null )
+                setHandleMouseUp( null )
+                
+                setRenderContent( false )
+            }, 500)
+
+
+            setTimeout(() => {
+                buttonRef.current.style.setProperty( "animation", "" );
+            }, 550)
         }
 
-    }, [ lessonData, questionIndex ])
+    }, [ questionIndex ])
 
     // In order to force rerender, set render boolean to true after it has set to false
     useEffect(() => {
@@ -182,8 +167,6 @@ function Learn(){
             setRenderContent( true )
         } 
     }, [ lessonData, renderContent, contentRef.current ])
-
-    contentRef.current && console.log(contentRef.current.style.transition)
 
     // Show continue button after 5 seconds if activity type = 'alert'
     useEffect(() => {
@@ -205,6 +188,8 @@ function Learn(){
             if ( answerChecked ) return setQuestionIndex( current => current + 1 )
             return checkFunction()
         } 
+
+        if (handleKeyPressRef.current) handleKeyPressRef.current( e )
     }
 
     return(
@@ -223,26 +208,30 @@ function Learn(){
             { renderContent && <div
                 ref = { contentRef }
                 id = {styles["content"]}
-                style = {{ perspective: "1000px" }}
+                style = {{ 
+                    perspective: "1000px",
+                    animation: questionIndex ? `${ styles["content-in"] } 500ms ease forwards` : ""
+                }}
                 activity = { currentQuestion.activityType }
                 className = { buttonVisible ? styles["button-visible"] : "" }>
 
-                { currentQuestion.activityType === "alert" && <AlertBanner type = { currentQuestion.explainerData.type } />}
+                    { currentQuestion.activityType === "alert" && <AlertBanner type = { currentQuestion.explainerData.type } />}
 
-                {promptElement}
+                    {promptElement}
 
-                <ExplainerCard 
-                    data = {{
-                        ...currentQuestion.explainerData, 
-                        type: `${currentQuestion.activityType}-${currentQuestion.explainerData.type}` 
-                    }}
-                />
+                    <ExplainerCard 
+                        data = {{
+                            ...currentQuestion.explainerData, 
+                            type: `${currentQuestion.activityType}-${currentQuestion.explainerData.type}` 
+                        }}
+                    />
 
-                {answerElement}
+                    {answerElement}
 
             </div> }
 
             <div 
+                ref = { buttonRef }
                 id = { styles["button-continue__wrapper"] }
                 className = { buttonVisible ? styles["button-visible"] : "" }>
                     
