@@ -4,19 +4,14 @@ import styles from "./styles/select-cards.module.css"
 
 function Cards( props ){
 
-    const candidates = { current: props.candidates }
-
-    const multiSelect = 1 !== Object.values( candidates.current ).reduce( ( sum, candidate ) => candidate.correct ? sum + 1 : sum, 0 )
-
-    const cardsRef = useRef( {} )
-
-    const splitRows = candidates.current.some( candidate => candidate.conjugation )
+    const candidates = props.candidates
+    const multiSelect = 1 !== Object.values( candidates ).reduce( ( sum, candidate ) => candidate.correct ? sum + 1 : sum, 0 )
+    const splitRows = candidates.some( candidate => candidate.conjugation ) 
+    const [ cards, topCards, bottomCards ] = [ [], [], [] ]
 
     const [buttonStates, setButtonStates] = useState(
-        Object.fromEntries( candidates.current.map( (_,index) =>  [index, "inactive"] ))
+        Object.fromEntries( candidates.map( ( _,index ) =>  [index, "inactive"] ))
     )
-
-    let [topRow, bottomRow] = [null, null]
 
     const updateButtonStates = index => {
         setButtonStates( states => {
@@ -34,72 +29,90 @@ function Cards( props ){
     const handleClick = index => updateButtonStates( index )
 
     props.handleKeyPress.current = e => {
-        console.log(cards[ e.key - 1])
-    }
-
-    props.handleKeyPress.current = e => {
         if ( Object.keys( buttonStates ).includes( ( e.key - 1 ).toString() ) ) 
-            updateButtonStates( (e.key - 1 ).toString() )
+            updateButtonStates( e.key - 1 )
     }
 
-    const cards = candidates.current.map( ( candidate, index ) =>
-        <div 
-            ref = { ref => cardsRef.current[ index ] = ref }
-            index = { index }
-            className = { styles[ buttonStates[ index ] ] }
-            onClick = { () => handleClick( index ) }>
-
-            <ConjugationCard
-                subject = { candidate.subject ? candidate.subject : null } 
-                conjugation = { candidate.conjugation ? candidate.conjugation : null } 
-                color = { "textcolor" }
-            />
-        </div>
-    )
-
-    const optimiseRows = ( cards ) => {
-        const target = cards.reduce( ( sum, card ) => sum + card.offsetWidth, 0 ) / 2
-        const arr = cards.sort( card => card.getAttribute( "index" ) ).map( card => card.offsetWidth )
-
+    const optimiseRows = ( candidates ) => {
+        const sizes = candidates.map( ( {subject, conjugation } ) => ( subject ? subject.length : 0 ) + conjugation.length + 3 )
+        const target = sizes.reduce( ( sum, size ) => sum + size, 0 ) / 2
         let closest = []
 
-        for ( let n1 = 0; n1 < arr.length; n1++ ) { // Iterate through array of widths using indicies
-            for ( let n2 = 0; n2 < arr.length; n2++ ) { // Iterate through array again
-                let unique = n1 !== n2 // Compare indicies to ensure different values
-                let closer = Math.abs( arr[n1] + arr[n2] - target ) < Math.abs( closest.reduce( ( sum, index ) => sum + arr[index], 0) - target ) //Check if sum of values is closer to target
+        for ( const [i1, v1] of sizes.entries() ) {
+            for ( const [i2, v2] of sizes.entries() ){
+                let unique = i1 !== i2
+                let closer = Math.abs( v1 + v2 - target ) < Math.abs( closest.reduce( ( sum, i ) => sum + sizes[i], 0) - target )
 
-                if ( unique && closer ) closest = [ n1, n2 ] // If sum is closer, update closest array to new values
-            } 
+                if ( unique && closer ) closest = [ i1, i2 ]
+
+                if ( closest.reduce( ( sum, i ) => sum + sizes[i], 0 ) === target ) return closest
+            }
         }
 
-        for ( let n1 = 0; n1 < arr.length; n1++ ) {
-            for ( let n2 = 0; n2 < arr.length; n2++ ) {
-                for ( let n3 = 0; n3 < arr.length; n3++ ) {
+        for ( const [i1, v1] of sizes.entries() ) {
+            for ( const [i2, v2] of sizes.entries() ){
+                for ( const [i3, v3] of sizes.entries() ){
+                    let unique = new Set( [i1, i2, i3] ).size === 3
+                    let closer = Math.abs( v1 + v2 + v3 - target ) < Math.abs( closest.reduce( ( sum, index ) => sum + sizes[index], 0) - target )
 
-                    let unique = n1 !== n2 && n1 !== n3 && n2 !== n3
-                    let closer = Math.abs( arr[n1] + arr[n2] + arr[n3] - target ) < Math.abs( closest.reduce( ( sum, index ) => sum + arr[index], 0) - target )
+                    if ( unique && closer ) closest = [ i1, i2, i3 ]
 
-                    if ( unique && closer ) closest = [ n1, n2, n3 ]
+                    if ( closest.reduce( ( sum, i ) => sum + sizes[i], 0 ) === target ) return closest
                 }
-            } 
+            }
         }
 
-        return [
-            closest,
-            [ ...Array( cards.length ).keys() ].filter( index => !closest.includes( index ) )
-        ]
+        return closest
+    }
+
+    if ( splitRows ) {
+        const topIndices = optimiseRows( candidates )
+
+        candidates.forEach( ( candidate, index ) => {            
+            const element =  <div
+                key = { index }
+                index = { index }
+                className = { styles[ buttonStates[ index ] ] }
+                onClick = { () => handleClick( index ) }>
+
+                <ConjugationCard
+                    subject = { candidate.subject ? candidate.subject : null } 
+                    conjugation = { candidate.conjugation ? candidate.conjugation : null } 
+                    color = { "textcolor" }
+                />
+            </div>
+
+            if ( topIndices.includes( index ) ) return topCards.push( element )
+            return bottomCards.push( element )
+        })
+    
+    } else {
+        candidates.map( ( candidate, index ) =>
+            cards.push( <div 
+                key = { index }
+                index = { index }
+                className = { styles[ buttonStates[ index ] ] }
+                onClick = { () => handleClick( index ) }>
+
+                <ConjugationCard
+                    subject = { candidate.subject ? candidate.subject : null } 
+                    conjugation = { candidate.conjugation ? candidate.conjugation : null } 
+                    color = { "textcolor" }
+                />
+            </div> )
+        )
     }
 
     useEffect(() => {
         const checkAnswers = () => {
             setButtonStates( states => {
-                Object.entries( states ).forEach( ( [index, state] )  => {
+                Object.entries( states ).forEach( ( [index, _] )  => {
                     if ( states[ index ] === "active" ){
-                        states[ index ] = candidates.current[ index ].correct ? "active-correct" : "active-incorrect" 
+                        states[ index ] = candidates[ index ].correct ? "active-correct" : "active-incorrect" 
                     }
 
                     if ( states[ index ] === "inactive" ){
-                        states[ index ] = candidates.current[ index ].correct ? "inactive-correct" : "inactive-incorrect" 
+                        states[ index ] = candidates[ index ].correct ? "inactive-correct" : "inactive-incorrect" 
                     }
                 })
 
@@ -110,12 +123,8 @@ function Cards( props ){
         }
 
         props.setCheckFunction( () => checkAnswers )
-    }, [ props.candidates ])
+    }, [ candidates ])
 
-    if ( splitRows && cardsRef.current && !topRow ){
-        [ topRow, bottomRow ] = optimiseRows( Object.values( cardsRef.current ) ).map( row => row.map( index => cards[ index ] ))
-    }
-    
     props.setButtonVisible( Object.values( buttonStates ).some( state => state !== "inactive" ) )
 
     return(
@@ -123,22 +132,22 @@ function Cards( props ){
             { splitRows ? 
             <>
                 <div className = { styles["cards__row"] }>
-                    { topRow.length ? topRow : cards.slice( 0, Math.ceil( cards.length / 2 ) )}  
+                    { topCards }  
                 </div>
                 <div className = { styles["cards__row"] }>
-                    { bottomRow.length ? bottomRow : cards.slice( Math.ceil( cards.length / 2 ), cards.length ) }   
+                    { bottomCards }   
                 </div> 
             </> 
             :
             <div className = { styles["cards__row"] }>
                 { cards } 
             </div> }
+            
             <svg>
                 <rect rx = "0.4em" />
             </svg>
         </div>
     );
-
 }
 
 export default Cards;
