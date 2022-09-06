@@ -7,6 +7,7 @@ function Pool( props ){
 
     const [conjugations, setConjugations] = useState( [] )
     const [selectedCard, setSelectedCard] = useState( null )
+    const [focusedCard, setFocusedCard] = useState( null )
 
     const poolRef = useRef()
     const svgRef = useRef()
@@ -19,8 +20,8 @@ function Pool( props ){
             transition: "left 200ms ease, top 200ms ease"
         })
 
-        if ( props.boxStates[subject] && props.boxStates[subject] !== conjugation ){
-            const displacedConjugation = props.boxStates[subject]
+        if ( props.boxStates[subject].answer && props.boxStates[subject].answer !== conjugation ){
+            const displacedConjugation = props.boxStates[subject].answer
             const displacedCard = props.cards[displacedConjugation]
 
             Object.assign( displacedCard.style, {
@@ -70,13 +71,13 @@ function Pool( props ){
     const updateState = ( subject, conjugation ) => {
         props.setBoxStates( state => {
             for ( let [s, c] of Object.entries( state ) ){
-                if ( conjugation === c ){
-                    state[s] = ""
+                if ( conjugation === c.answer ){
+                    state[s] = { answer: "", correct: null }
                     break
                 }
             }
             
-            if ( subject ) state[ subject ] = conjugation
+            if ( subject ) state[ subject ] = { answer: conjugation, correct: null }
 
             return {...state}
         })
@@ -85,7 +86,7 @@ function Pool( props ){
     const handleMouseDown = e => {
         const card = props.cards[e.target.id]
 
-        if ( card.classList.contains( styles["active"] ) ) card.classList.remove( styles["active"] )
+        if ( focusedCard ) setFocusedCard( null )
 
         Object.assign( card.style, { position: "absolute", zIndex: "100000" } )
 
@@ -106,9 +107,7 @@ function Pool( props ){
                     const left = e.clientX - (selectedCard.posX * selectedCard.element.offsetWidth)
                     const top = e.clientY - (selectedCard.posY * selectedCard.element.offsetHeight)
     
-                    Object.assign( selectedCard.element.style, { left: left + "px", top: top + "px" } )
-                    
-                    return
+                    return Object.assign( selectedCard.element.style, { left: left + "px", top: top + "px" } )
                 }
                 
                 const conjugation = selectedCard.element.id
@@ -149,7 +148,7 @@ function Pool( props ){
         const cardId = Object.keys(props.cards).find( id => id[0] === key )
 
         if ( selectedCard === null ){   
-            if ( !Object.values( props.boxStates ).includes( cardId ) ){
+            if ( !Object.values( props.boxStates ).map( obj => obj.answer ).includes( cardId ) ){
                 const card = props.cards[ cardId ]
 
                 setSelectedCard( {
@@ -157,9 +156,7 @@ function Pool( props ){
                     id: cardId,
                 } )
 
-                card.classList.add( styles["active"] )
-                
-                return
+                return setFocusedCard( cardId )
             } 
                 
             const card = props.cards[ cardId ]
@@ -167,9 +164,8 @@ function Pool( props ){
             
             Object.assign( card.style, { position: "absolute", zIndex: "100000" } )
 
-            returnToPool( cardId, card )
+            return returnToPool( cardId, card )
 
-            return
         }
 
         const card = selectedCard.element
@@ -187,7 +183,7 @@ function Pool( props ){
 
         moveToBox( boxId, conjugation, box, card )            
 
-        setTimeout(() => {card.classList.remove( styles["active"] )}, 250)
+        setTimeout(() => setFocusedCard( null ), 250)
 
         return
     }
@@ -197,8 +193,10 @@ function Pool( props ){
     }
 
     useEffect(() => {
-        props.setButtonVisible( Object.values( props.boxStates ).every( value => value ) )
+        props.setButtonVisible( Object.values( props.boxStates ).every( value => value.answer ) )
     }, [ props.boxStates ])
+
+    const cardStates = props.checked && Object.fromEntries( Object.values( props.boxStates ).map( ({ answer , correct }) => [ answer, correct ] ) )
 
     const elements = conjugations.map( (conjugation, index) => {
 
@@ -215,8 +213,10 @@ function Pool( props ){
                 ref = { ref => props.cards[ id ] = ref }
                 id = { id }
                 className = { styles["pool__card"] }
+                moveable = { (!props.checked).toString() }
                 onMouseDown = { handleMouseDown }>
                 <ConjugationCard
+                    status = { cardStates ? (cardStates[ id ] === true ? "correct" : "incorrect" ) : (focusedCard === id ? "active" : "" ) }
                     subject = { conjugation }
                 />
             </div>

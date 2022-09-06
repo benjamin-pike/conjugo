@@ -31,6 +31,13 @@
     --green-dark: rgb(0,194,0);
     --blue-dark: rgb(0,90,252);
     --purple-dark: rgb(124,0,252);
+
+    --red-highlight: rgb(247,208,216);
+    --orange-highlight: rgb(247,221,204);
+    --yellow-highlight: rgb(247,233,199);
+    --green-highlight: rgb(216,236,206);
+    --blue-highlight: rgb(203,221,243);
+    --purple-highlight: rgb(230,204,243);
 }
 
 * {

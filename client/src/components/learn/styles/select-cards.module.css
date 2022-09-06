@@ -35,12 +35,15 @@
     justify-content: center;
 }
 
-.active,
-.inactive{
+[ selectable = "true" ]{
     position: relative;
     cursor: pointer;
 }
 
+[ selectable = "false" ]{
+    pointer-events: none;
+}
+/* 
 .active p span,
 .active-correct p span,
 .active-incorrect p span,
@@ -69,4 +72,4 @@
 .inactive-correct,
 .inactive-incorrect{
     pointer-events: none;
-}
+} */

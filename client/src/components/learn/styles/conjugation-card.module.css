@@ -116,3 +116,28 @@ button.card__conjugations__face:hover .card_conjugations__conjugation{
         opacity: 0;
     }
 }
+
+[status = "active"]{
+    background-color: var(--blue-highlight);
+    outline: 0.05em solid var(--blue);
+}
+
+[status = "correct"]{
+    background-color: var(--green-highlight);
+    outline: 0.05em solid var(--green-dark);
+}
+
+[status = "incorrect"]{
+    background-color: var(--red-highlight);
+    outline: 0.05em solid var(--red);
+}
+
+[status = "warning"]{
+    background-color: var(--yellow-highlight);
+    outline: 0.05em solid var(--yellow-dark);
+}
+
+[status = "active"] span{ color: var(--blue) !important }
+[status = "correct"] span{ color: var(--green-dark) !important }
+[status = "incorrect"] span{ color: var(--red) !important }
+[status = "warning"] span{ color: var(--yellow-dark) !important }

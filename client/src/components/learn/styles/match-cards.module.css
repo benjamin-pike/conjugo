@@ -14,10 +14,10 @@
     100% { transform: translateX( 0 ) }
 }
 
-.pool__card > div{
-    background-color: var(--offwhite);
-    transition: background-color 200ms ease;
+[ moveable = "false" ]{
+    pointer-events: none;
 }
+
 
 .active > div{
     background-color: var(--blue) !important;

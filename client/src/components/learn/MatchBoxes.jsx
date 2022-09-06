@@ -9,7 +9,7 @@ function Boxes( props ){
     const boxes = props.boxCards.map( subject => 
         <div 
             ref = { ref => props.boxes[subject] = ref }
-            className = { styles["cards__box"] + " " + styles[`${props.boxStates[subject] ? "filled" : "empty"}`] }
+            className = { styles["cards__box"] + " " + styles[`${props.boxStates[subject].answer ? "filled" : "empty"}`] }
             style = { props.dimensions.width ? {
                 width: props.dimensions.width - 0.05 + "em",
                 height: props.dimensions.height + "em"

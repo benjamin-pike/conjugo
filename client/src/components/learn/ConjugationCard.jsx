@@ -9,22 +9,7 @@ function ConjugationCard( props ){
     const c1Ref = useRef()
     const c2Ref = useRef()
 
-    const { sendRequest } = useHTTP()
     const { language } = useLang()
-
-    // const processAudio = async () => {
-    //     const [infinitive, complexity, mood, tense] = props.audioPath
-
-    //     const data = await sendRequest({ url: `http://localhost:9000/api/reference/audio?language=spanish&verb=${infinitive}&complexity=${complexity}&mood=${mood}&tense=${tense}&conjugation=${props.conjugation}` })
-    //     const audio = new Audio(`data:audio/mp3;base64, ${data.audio}`)
-        
-    //     audio.play()
-        
-    //     return new Promise( resolve => 
-    //         audio.onloadedmetadata = () => 
-    //             resolve( audio.duration )
-    //     )
-    // }
 
     const handleClick = async (e) => {
 
@@ -89,7 +74,9 @@ function ConjugationCard( props ){
     );
 
     return (
-        <div className = {styles["card__conjugations__face"]}>
+        <div 
+            className = {styles["card__conjugations__face"]}
+            status = { props.status ?? "" }>
             <p>
                 {props.subject && <span 
                         className = {`${styles["card_conjugations__subject"]}${props.conjugation ? " " + styles["bipartite"] : ""}`}>

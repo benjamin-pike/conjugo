@@ -100,6 +100,7 @@ function Learn(){
                     setButtonVisible = { setButtonVisible }
                     checkFunction = { currentQuestion.checkFunction }
                     setCheckFunction = { setCheckFunction }
+                    checked = { answerChecked } 
                     setChecked = { setAnswerChecked }
                 />
             break;
@@ -110,7 +111,8 @@ function Learn(){
                     candidates = { currentQuestion.selectCandidates }
                     handleKeyPress = { handleKeyPressRef }
                     setButtonVisible = { setButtonVisible } 
-                    setCheckFunction = { setCheckFunction }    
+                    setCheckFunction = { setCheckFunction }
+                    checked = { answerChecked } 
                     setChecked = { setAnswerChecked }
                 />
             break;

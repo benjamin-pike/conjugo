@@ -41,31 +41,33 @@ function Cards( props ){
 
     const boxCards = props.pairs.map( pair => pair[0] );
     const poolCards = optimiseRows([...props.pairs].sort( () => Math.random() - 0.5 ) ).map( pair => pair[1]);
-    
+
     const [boxDimensions, setBoxDimensions] = useState( {width: 0, height: 0} )
     const [cardWidths, setCardWidths] = useState( {} )
 
     const [boxStates, setBoxStates] = useState(
-        Object.fromEntries( boxCards.map( target => [target, ""] ))
+        Object.fromEntries( boxCards.map( target => [target, { answer: "", correct: null }] ))
     )
+
+    console.log(boxStates)
 
     useEffect(() => {
         const checkAnswers = () => {
-            boxCards.forEach( ( subject, i ) => {
-                const boxValue = boxStates[subject]
-                
-                if ( boxValue ){
-                    const card = cards.current[boxValue]
-
-                    if ( boxValue.split("_")[1] === props.pairs[i][1] ){
-                        return card.classList.add(styles["correct"])
+            setBoxStates( states => {
+                boxCards.forEach( ( subject, i ) => {
+                    const boxValue = states[subject].answer
+                    
+                    if ( boxValue ){    
+                        if ( boxValue.split("_")[1] === props.pairs[i][1] ){
+                            return states[subject].correct = true
+                        }
+    
+                        states[subject].correct = false
                     }
+                })
 
-                    return card.classList.add(styles["incorrect"])
-                }
+                return { ...states }
             })
-
-            
 
             setTimeout( () => props.setChecked( true ), 0 )
         }
@@ -107,6 +109,7 @@ function Cards( props ){
             handleKeyPress = { props.handleKeyPress }
             setHandleMouseAction = { props.setHandleMouseAction }
             setButtonVisible = { props.setButtonVisible }
+            checked = { props.checked }
         />
         <Boxes 
             styles = { styles }

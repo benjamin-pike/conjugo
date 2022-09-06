@@ -85,12 +85,13 @@ function Cards( props ){
                 <div
                     key = { rowIndex * candidates[0].length + candidateIndex }
                     index = { rowIndex * candidates[0].length + candidateIndex }
-                    className = { styles[ buttonStates[ rowIndex * candidates[0].length + candidateIndex ] ] }
+                    selectable = { (!props.checked).toString() }
                     onClick = { () => handleClick( rowIndex * candidates[0].length + candidateIndex ) }>
 
                     <ConjugationCard
                         subject = { candidate.subject ? candidate.subject : null } 
                         conjugation = { candidate.conjugation ? candidate.conjugation : null } 
+                        status = { buttonStates[ rowIndex * candidates[0].length + candidateIndex ] }
                         color = { "textcolor" }
                     />
                 </div>
@@ -101,12 +102,13 @@ function Cards( props ){
             <div 
                 key = { index }
                 index = { index }
-                className = { styles[ buttonStates[ index ] ] }
+                selectable = { (!props.checked).toString() }
                 onClick = { () => handleClick( index ) }>
 
                 <ConjugationCard
                     subject = { candidate.subject ? candidate.subject : null } 
                     conjugation = { candidate.conjugation ? candidate.conjugation : null } 
+                    status = { buttonStates[ index] }
                     color = { "textcolor" }
                 />
             </div>
@@ -117,11 +119,11 @@ function Cards( props ){
             setButtonStates( states => {
                 Object.entries( states ).forEach( ( [index, _] )  => {
                     if ( states[ index ] === "active" ){
-                        states[ index ] = candidates.flat()[ index ].correct ? "active-correct" : "active-incorrect" 
+                        states[ index ] = candidates.flat()[ index ].correct ? "correct" : "incorrect" 
                     }
 
                     if ( states[ index ] === "inactive" ){
-                        states[ index ] = candidates.flat()[ index ].correct ? "inactive-correct" : "inactive-incorrect" 
+                        states[ index ] = candidates.flat()[ index ].correct ? "warning" : "not-selected"
                     }
                 })
 
@@ -135,7 +137,7 @@ function Cards( props ){
     }, [])
 
     // If any button is active, show 'continue' button
-    props.setButtonVisible( Object.values( buttonStates ).some( state => state !== "inactive" ) )
+    props.setButtonVisible( Object.values( buttonStates ).some( state => state !== "" ) )
 
     return(
         <div id = { styles["cards__container"] }>
