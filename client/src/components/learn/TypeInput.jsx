@@ -79,6 +79,7 @@ function TypeInput( props ){
                     onChange = { handleChange }
                     spellCheck = "false"
                     autoComplete = "off"
+                    autoFocus
                     value = { text }
                     readOnly = { correct !== null }
                     isChecked = { props.checked ? "true" : "false" }

@@ -42,9 +42,9 @@ function Learn(){
     const [answerChecked, setAnswerChecked] = useState( false ) // Denotes whether answer has been checked
     const [buttonVisible, setButtonVisible] = useState( false ) // Denotes whether check/continue should be visible
 
-    // Functions that are necessary for function of 'match' activities
-    const [handleMouseMove, setHandleMouseMove] = useState( null );
-    const [handleMouseUp, setHandleMouseUp] = useState( null );
+    // Necessary for function of 'match' activities
+    const [handleMouseAction, setHandleMouseAction] = useState( null )
+    // const handleMouseAction = useRef( null )
 
     // Intialise contentRef
     const contentRef = useRef( null )
@@ -96,7 +96,7 @@ function Learn(){
                 <MatchCards
                     pairs = { currentQuestion.matchPairs }
                     handleKeyPress = { handleKeyPressRef }
-                    setHandleFunctions = { [setHandleMouseMove, setHandleMouseUp] }
+                    setHandleMouseAction = { setHandleMouseAction }
                     setButtonVisible = { setButtonVisible }
                     checkFunction = { currentQuestion.checkFunction }
                     setCheckFunction = { setCheckFunction }
@@ -147,8 +147,6 @@ function Learn(){
                 setCheckFunction( null )
                 setAnswerChecked( false )
                 setButtonVisible( false )
-                setHandleMouseMove( null )
-                setHandleMouseUp( null )
                 
                 setRenderContent( false )
             }, 500)
@@ -197,8 +195,8 @@ function Learn(){
         <div 
             id = {styles["learn"]} 
             onKeyPress = { handleKeyPress }
-            onMouseMove = { handleMouseMove }
-            onMouseUp = { handleMouseUp }
+            onMouseMove = { handleMouseAction }
+            onMouseUp = { handleMouseAction }
             tabIndex = { -1 }>
 
             { currentQuestion.activityType && <ProgressBar 

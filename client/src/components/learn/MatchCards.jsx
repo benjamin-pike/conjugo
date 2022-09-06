@@ -11,31 +11,61 @@ function Cards( props ){
     const containers = useRef( {} )
     const boxes = useRef( {} )
 
-    const poolCards = props.pairs.map( pair => pair[0] );
-    const boxCards = props.pairs.map( pair => pair[1] );
+    const optimiseRows = ( candidates ) => {
+        const sizes = candidates.map( ( [_, poolCard ] ) => poolCard.length + 3 )
+        const target = sizes.reduce( ( sum, size ) => sum + size, 0 ) / 2
+        let closest = []
+
+        for ( const [i1, v1] of sizes.entries() ) {
+            for ( const [i2, v2] of sizes.entries() ){
+                for ( const [i3, v3] of sizes.entries() ){
+                    let unique = new Set( [i1, i2, i3] ).size === 3
+                    let closer = Math.abs( v1 + v2 + v3 - target ) < Math.abs( closest.reduce( ( sum, index ) => sum + sizes[index], 0) - target )
+
+                    if ( unique && closer ) closest = [ i1, i2, i3 ]
+
+                    if ( closest.reduce( ( sum, i ) => sum + sizes[i], 0 ) === target ) 
+                        return [
+                            ...closest.map( index => candidates[ index ] ), 
+                            ...[ ...Array( candidates.length ).keys() ].filter( index => !closest.includes( index ) ).map( index => candidates[ index ] )
+                        ]
+                }
+            }
+        }
+    
+        return [
+            ...closest.map( index => candidates[ index ] ), 
+            ...[ ...Array( candidates.length ).keys() ].filter( index => !closest.includes( index ) ).map( index => candidates[ index ] )
+        ]
+    }
+
+    const boxCards = props.pairs.map( pair => pair[0] );
+    const poolCards = optimiseRows([...props.pairs].sort( () => Math.random() - 0.5 ) ).map( pair => pair[1]);
     
     const [boxDimensions, setBoxDimensions] = useState( {width: 0, height: 0} )
     const [cardWidths, setCardWidths] = useState( {} )
 
     const [boxStates, setBoxStates] = useState(
-        Object.fromEntries( poolCards.map( target => [target, ""] ))
+        Object.fromEntries( boxCards.map( target => [target, ""] ))
     )
 
     useEffect(() => {
         const checkAnswers = () => {
-            poolCards.forEach( ( subject, i ) => {
+            boxCards.forEach( ( subject, i ) => {
                 const boxValue = boxStates[subject]
                 
                 if ( boxValue ){
                     const card = cards.current[boxValue]
 
-                    if ( boxValue.split("_")[1] === boxCards[i] ){
+                    if ( boxValue.split("_")[1] === props.pairs[i][1] ){
                         return card.classList.add(styles["correct"])
                     }
 
                     return card.classList.add(styles["incorrect"])
                 }
             })
+
+            
 
             setTimeout( () => props.setChecked( true ), 0 )
         }
@@ -65,8 +95,8 @@ function Cards( props ){
     return <>
         <Pool
             styles = { styles }
-            poolCards = { poolCards }
             boxCards = { boxCards }
+            poolCards = { poolCards }
             cards = { cards.current }
             containers = { containers.current }
             boxes = { boxes.current }
@@ -75,14 +105,13 @@ function Cards( props ){
             cardWidths = { cardWidths }
             cardHeight = { boxDimensions.height }
             handleKeyPress = { props.handleKeyPress }
-            setHandleFunctions = { props.setHandleFunctions }
+            setHandleMouseAction = { props.setHandleMouseAction }
             setButtonVisible = { props.setButtonVisible }
         />
         <Boxes 
             styles = { styles }
-            poolCards = { poolCards } 
-            boxCards = { boxCards } 
             boxes = { boxes.current }
+            boxCards = { boxCards } 
             boxStates = { boxStates }
             dimensions = { boxDimensions }
         />

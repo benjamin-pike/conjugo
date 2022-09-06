@@ -4,9 +4,9 @@ function Boxes( props ){
 
     const styles = props.styles
 
-    const subjects = props.poolCards.map( subject => <ConjugationCard subject = {subject} /> )
+    const subjects = props.boxCards.map( subject => <ConjugationCard subject = {subject} /> )
 
-    const boxes = props.poolCards.map( subject => 
+    const boxes = props.boxCards.map( subject => 
         <div 
             ref = { ref => props.boxes[subject] = ref }
             className = { styles["cards__box"] + " " + styles[`${props.boxStates[subject] ? "filled" : "empty"}`] }
