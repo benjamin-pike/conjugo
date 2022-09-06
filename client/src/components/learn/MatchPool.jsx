@@ -1,20 +1,89 @@
 import { useState, useEffect, useRef } from "react";
-
 import ConjugationCard from "./ConjugationCard";
 
 function Pool( props ){
 
     const styles = props.styles
-
-    const [conjugations, setConjugations] = useState( [] ) 
-
+    const [conjugations, setConjugations] = useState( [] )
     const [selectedCard, setSelectedCard] = useState( null )
 
     const poolRef = useRef()
     const svgRef = useRef()
+
+    const moveToBox = ( subject, conjugation, box, card ) => {
+        console.log(subject, conjugation, box, card)
+
+        card.style.left = box.offsetLeft + "px";
+        card.style.top = box.offsetTop + "px";
+
+        if ( props.boxStates[subject] && props.boxStates[subject] !== conjugation ){
+            const displacedConjugation = props.boxStates[subject]
+            const displacedCard = props.cards[displacedConjugation]
+
+            displacedCard.style.position = "absolute"
+            displacedCard.style.left = box.offsetLeft + "px"
+            displacedCard.style.top = box.offsetTop + "px"
+
+            displacedCard.style.transition = "left 200ms ease, top 200ms ease"
+
+            props.containers[displacedCard.id].appendChild( displacedCard )
+
+            displacedCard.style.left = props.containers[displacedConjugation].offsetLeft + "px"
+            displacedCard.style.top = props.containers[displacedConjugation].offsetTop + "px"
+
+            setTimeout( () => {
+                displacedCard.style.transition = ""
+                displacedCard.style.position = ""
+            }, 200 )
+        }
+
+        setTimeout( () => { 
+            card.style.transition = ""
+            card.style.zIndex = "10"
+            card.style.position = ""
+
+            box.appendChild(card)
+        }, 200)
+
+        updateState( subject, conjugation )
+        setSelectedCard( null )
+    }
+
+    const returnToPool = ( conjugation, card ) => {
+        card.style.left = props.containers[conjugation].offsetLeft + "px"
+        card.style.top = props.containers[conjugation].offsetTop + "px"
+
+        setTimeout(() => {
+            card.style.left = ""
+            card.style.top = ""
+            card.style.transition = ""
+            card.style.zIndex = "10"
+            card.style.position = ""
+        }, 200)
+
+        updateState( null, conjugation )
+        setSelectedCard( null )
+    }
+
+    const updateState = ( subject, conjugation ) => {
+        props.setBoxStates( state => {
+            for ( let [s, c] of Object.entries( state ) ){
+                if ( conjugation === c ){
+                    state[s] = ""
+                    break
+                }
+            }
+            
+            if ( subject ) state[ subject ] = conjugation
+
+            return {...state}
+        })
+    }
     
     const handleMouseDown = e => {
         const card = props.cards[e.target.id]
+
+        if ( card.classList.contains( styles["active"] ) ) card.classList.remove( styles["active"] )
 
         card.style.position = "absolute"
         card.style.zIndex = "100000"
@@ -51,8 +120,6 @@ function Pool( props ){
                     y: ( cardBounds.top + cardBounds.bottom ) / 2
                 }
 
-                let matchedSubject = null;
-
                 selectedCard.element.style.transition = "left 200ms ease, top 200ms ease"
             
                 for ( let [i, subject] of Object.keys( props.boxes ).entries() ){
@@ -62,70 +129,15 @@ function Pool( props ){
                     const horizontallyAligned = center.x > boundaries.left && center.x < boundaries.right
                     const verticallyAligned = center.y > boundaries.top && center.y < boundaries.bottom
 
-                    if ( horizontallyAligned && verticallyAligned ){
-                        matchedSubject = subject
-
-                        selectedCard.element.style.left = box.offsetLeft + "px"
-                        selectedCard.element.style.top = box.offsetTop + "px"
-
-                        if ( props.boxStates[subject] && props.boxStates[subject] !== conjugation ){
-                            const displacedConjugation = props.boxStates[subject]
-                            const displacedCard = props.cards[displacedConjugation]
-
-                            displacedCard.style.position = "absolute"
-                            displacedCard.style.left = box.offsetLeft + "px"
-                            displacedCard.style.top = box.offsetTop + "px"
-
-                            displacedCard.style.transition = "left 200ms ease, top 200ms ease"
-
-                            props.containers[displacedCard.id].appendChild( displacedCard )
-
-                            displacedCard.style.left = props.containers[displacedConjugation].offsetLeft + "px"
-                            displacedCard.style.top = props.containers[displacedConjugation].offsetTop + "px"
-
-                            setTimeout( () => {
-                                displacedCard.style.transition = ""
-                                displacedCard.style.position = ""
-                            }, 200 )
-                        }
-
-                        setTimeout( () => { 
-                            box.appendChild(selectedCard.element)
-                            }, 200)
-
+                    if ( horizontallyAligned && verticallyAligned ){                        
+                        moveToBox( subject, conjugation, box, selectedCard.element )
+                        updateState( subject, conjugation )
                         break
-
                     } else if ( i === Object.keys( props.boxes ).length - 1 ) {
-                        selectedCard.element.style.left = props.containers[conjugation].offsetLeft + "px"
-                        selectedCard.element.style.top = props.containers[conjugation].offsetTop + "px"
-
-                        setTimeout(() => {
-                            selectedCard.element.style.left = ""
-                            selectedCard.element.style.top = ""
-                        }, 200)
+                        returnToPool( conjugation, selectedCard.element )   
+                        updateState( null, conjugation )
                     }
                 }
-
-                props.setBoxStates( state => {
-                    for ( let [s, c] of Object.entries( state ) ){
-                        if ( conjugation === c ){
-                            state[s] = ""
-                            break
-                        }
-                    }
-                    
-                    if ( matchedSubject ) state[matchedSubject] = conjugation
-
-                    return {...state}
-                })
-                
-                setTimeout( () => {
-                    selectedCard.element.style.transition = ""
-                    selectedCard.element.style.zIndex = "10"
-                    selectedCard.element.style.position = ""
-                }, 200 )
-
-                setSelectedCard( null )
             }
         }
         
@@ -134,6 +146,55 @@ function Pool( props ){
 
     }, [ selectedCard ])
 
+    props.handleKeyPress.current = e => {
+        const key = e.key
+        const cardId = Object.keys(props.cards).find( id => id[0] === key )
+
+        if ( selectedCard === null ){   
+            if ( !Object.values( props.boxStates ).includes( cardId ) ){
+                const card = props.cards[ cardId ]
+
+                setSelectedCard( {
+                    element: card,
+                    id: cardId,
+                } )
+
+                card.classList.add( styles["active"] )
+
+            } else {
+                const card = props.cards[ cardId ]
+                props.containers[ cardId ].appendChild( card )
+    
+                card.style.position = "absolute"
+                card.style.zIndex = "100000"
+    
+                card.style.transition = "left 200ms ease, top 200ms ease"
+
+                returnToPool( cardId, card )
+            }
+
+
+        } else {
+            const card = selectedCard.element
+            const conjugation = selectedCard.id
+
+            const boxId = props.poolCards[ key - 1 ]
+            const box = props.boxes[ boxId ]
+        
+            card.style.left = card.offsetLeft + "px"
+            card.style.top = card.offsetTop + "px"
+
+            card.style.position = "absolute"
+            card.style.zIndex = "100000"
+
+            card.style.transition = "left 200ms ease, top 200ms ease, background-color 200ms ease"
+    
+            moveToBox( boxId, conjugation, box, card )            
+
+            setTimeout(() => {card.classList.remove( styles["active"] )}, 250)
+        }
+    }
+    
     if ( !conjugations.length ){
         setConjugations( [...props.boxCards].sort(() => Math.random() - 0.5) )
     }
@@ -164,15 +225,7 @@ function Pool( props ){
             </div>
         </div>
     })
-
-    // useEffect(() => {
-    //     svgRef.current.style.left = poolRef.current.offsetLeft - 1
-    //     svgRef.current.style.top = poolRef.current.offsetTop
-
-    //     svgRef.current.style.width = poolRef.current.offsetWidth + 2
-    //     svgRef.current.style.height = poolRef.current.offsetHeight
-    // }, [ conjugations ])
-
+    
     return(
         <div
             ref = { poolRef }

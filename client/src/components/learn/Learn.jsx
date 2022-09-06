@@ -95,6 +95,7 @@ function Learn(){
             answerElement =
                 <MatchCards
                     pairs = { currentQuestion.matchPairs }
+                    handleKeyPress = { handleKeyPressRef }
                     setHandleFunctions = { [setHandleMouseMove, setHandleMouseUp] }
                     setButtonVisible = { setButtonVisible }
                     checkFunction = { currentQuestion.checkFunction }

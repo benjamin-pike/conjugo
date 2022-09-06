@@ -14,6 +14,15 @@
     100% { transform: translateX( 0 ) }
 }
 
+.pool__card > div{
+    background-color: var(--offwhite);
+    transition: background-color 200ms ease;
+}
+
+.active > div{
+    background-color: var(--blue) !important;
+}
+
 .correct,
 .incorrect{
     pointer-events: none;
@@ -36,6 +45,7 @@
     animation: incorrect-shake 500ms ease forwards;
 }
 
+.active p > span,
 .correct p > span,
 .incorrect p > span{
     color: var(--offwhite);

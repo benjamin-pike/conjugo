@@ -74,6 +74,7 @@ function Cards( props ){
             setBoxStates = { setBoxStates }
             cardWidths = { cardWidths }
             cardHeight = { boxDimensions.height }
+            handleKeyPress = { props.handleKeyPress }
             setHandleFunctions = { props.setHandleFunctions }
             setButtonVisible = { props.setButtonVisible }
         />
