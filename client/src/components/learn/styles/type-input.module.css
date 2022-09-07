@@ -13,7 +13,7 @@
 #input__input{
     box-sizing: border-box;
     background-color: rgba(255, 255, 255, 0.25);
-    border-radius: 0.4rem 0.4rem 0.05em 0.05em;
+    border-radius: 0.4rem 0.4rem;
     padding: 0.5em 0.25em;
     border: none;
     outline: none;
@@ -23,7 +23,41 @@
     color: var(--textcolor);
     width: 100%;
     box-shadow: 0.25rem 0.25rem 0.25rem 0.125rem var(--shadow);
-    transition: border-bottom 200ms ease;
+    transition:
+        background-color 200ms ease 50ms,
+        outline 200ms ease 50ms,
+        color 200ms ease 50ms;
+}
+
+#input__input:focus{
+    background-color: var(--blue-highlight);
+    outline: 0.05rem solid var(--blue);
+    color: var(--blue);
+}
+
+#input__input:focus + #input__dots > line{
+    stroke: var(--blue);
+}
+
+#input__input[ correct = "true" ]{
+    background-color: var(--green-highlight);
+    outline: 0.05rem solid var(--green);
+    color: var(--green-dark);
+}
+
+#input__input[ correct = "true" ] + #input__dots > line{
+    stroke: var(--green-dark);
+    opacity: 0.35;
+}
+
+#input__input[ correct = "false" ]{
+    background-color: var(--red-highlight);
+    outline: 0.05rem solid var(--red);
+    color: var(--red);
+}
+
+#input__input[ correct = "false" ] + #input__dots > line{
+    stroke: var(--red);
 }
 
 #input__underline{
@@ -40,26 +74,30 @@
         opacity 200ms ease;
 }
 
-#input__input:focus[ isChecked = "false" ] + #input__underline{
+/* #input__input:focus[ isChecked = "false" ] + #input__underline{
     background-color: var(--yellow) !important;
     opacity: 0.75 !important;
-}
+} */
 
 #input__dots{
     position: absolute;
     pointer-events: none;
     height: 0.5em;
-    top: 46%; left: 50%;
+    top: 80%; left: 50%;
     transform: translateX( -50% );
     transition: border-bottom 200ms ease;
 }
 
 #input__dots > line{
-    stroke: var(--textcolor50);
+    stroke: var(--textcolor);
     stroke-width: 0.25em;
     stroke-linecap: round;
     height: 1em;
-    transform: translate(0.125em, 0.125em)
+    transform: translate(0.125em, 0.125em);
+    opacity: 0.25;
+    transition: 
+        stroke 200ms ease,
+        opactiy 200ms ease;
 }
 
 #special_character_buttons__container{

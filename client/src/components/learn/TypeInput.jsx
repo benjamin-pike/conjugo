@@ -80,29 +80,22 @@ function TypeInput( props ){
                     spellCheck = "false"
                     autoComplete = "off"
                     autoFocus
+                    correct = { correct !== null && correct.toString()}
                     value = { text }
                     readOnly = { correct !== null }
                     isChecked = { props.checked ? "true" : "false" }
-                    style = {{ 
-                        width: width + "ch",
-                        color: `var(--${ correct === null ? "textcolor" : correct ? "green" : "red" })`,
-                    }}
+                    style = {{ width: width + "ch" }}
                 />
-                <div 
-                    id = { styles[ "input__underline" ] }
-                    style = {{
-                        backgroundColor: `var(--${ correct === null ? "textcolor50" : correct ? "green" : "red" })`
-                    }}/>
-            </div>
-            <svg 
-                id = { styles[ "input__dots"] }
-                style = {{ width:  4 * width - 12 + "ch" }}>
+                <svg 
+                    id = { styles[ "input__dots"] }
+                    style = {{ width:  4 * width - 12 + "ch" }}>
 
-                <line 
-                    x1 = "0" x2 = "100%" 
-                    style = {{ strokeDasharray: `0 calc( ( ${4 * width - 12 + "ch"} - 0.25em ) / ${ 3 * width - 9 } )` }}
-                />
-            </svg>
+                    <line 
+                        x1 = "0" x2 = "100%" 
+                        style = {{ strokeDasharray: `0 calc( ( ${4 * width - 12 + "ch"} - 0.25em ) / ${ 3 * width - 9 } )` }}
+                    />
+                </svg>
+            </div>
             <div id = { styles[ "special_character_buttons__container"]}>
                 { specialChars[ language.name ].length > 6 && <button
                     id = { styles[ "special_character_buttons__arrow-left"]}

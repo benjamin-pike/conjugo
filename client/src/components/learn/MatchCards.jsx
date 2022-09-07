@@ -49,8 +49,6 @@ function Cards( props ){
         Object.fromEntries( boxCards.map( target => [target, { answer: "", correct: null }] ))
     )
 
-    console.log(boxStates)
-
     useEffect(() => {
         const checkAnswers = () => {
             setBoxStates( states => {

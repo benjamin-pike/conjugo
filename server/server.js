@@ -683,9 +683,9 @@ app.get("/api/lesson", async (req, res) => {
     const createQuestion = async ( verb, complexity, mood, tense, verbData, conjugations, conjugation, subjectsByConjugation ) => {
         
         const activityType = [ 
-            "match",
+            // "match",
             // "select", 
-            // "type",
+            "type",
             /*"alert"*/ 
         ][ randomNumber(0, 1) ]
         
