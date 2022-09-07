@@ -7,8 +7,9 @@ import styles from "./styles/audio-card.module.css"
 function AudioCard( props ){
 
     const { language } = useLang()
-    const [audio, setAudio] = useState( { play: () => {}, duration: null, waveData: [] })
+    const [audio, setAudio] = useState( { play: () => {}, duration: null, waveData: [] } )
     const [opacity, setOpacity] = useState()
+    const [audioPlayed, setAudioPlayed] = useState( false )
 
     const barsRef = useRef()
 
@@ -52,7 +53,7 @@ function AudioCard( props ){
         setOpacity( filteredData.map( () => Math.random() ) )
     }, [])
 
-    const handleClick = () => {
+    const playAudio = () => {
         if ( !props.disabled ){
             const context = new AudioContext();
             const sourceNode = new AudioBufferSourceNode( context );
@@ -80,6 +81,13 @@ function AudioCard( props ){
             props.setDisabled( true )
             setTimeout( () => props.setDisabled( false ), ( audio.duration * 1000 ) - 200 )
         }
+    }
+
+    const handleClick = () => playAudio()
+
+    if ( !audioPlayed && audio.duration && barsRef.current ){
+        setTimeout( () => playAudio(), 500 )
+        setAudioPlayed( true )
     }
 
     return(

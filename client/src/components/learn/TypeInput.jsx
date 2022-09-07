@@ -12,6 +12,7 @@ function TypeInput( props ){
     const [text, setText] = useState( "" )
     const [correct, setCorrect] = useState( null )
     const [scrolled, setScrolled] = useState( false )
+    const [inputIsFocused, setInputIsFocused] = useState( true )
     const [activeSpecial, setActiveSpecial] = useState([])
     const width = useState( 3 + Math.floor( Math.random() * 3 ) + props.answer.length )[0]
 
@@ -31,8 +32,6 @@ function TypeInput( props ){
 
     const specialType = (e, letter) => {
         if ( correct === null ){
-            const index = specialChars[ language.name ].indexOf( letter )
-
             setText( current => current + letter )
             inputRef.current.focus()
         }
@@ -72,19 +71,25 @@ function TypeInput( props ){
         <div
             id = { styles[ "input__wrapper" ] }
             style = {{ width: 4 * width + "ch" }}>
-            <div id = { styles["input__container"]}>
+            <div id = { styles["input__container"]} correct = { correct !== null && correct.toString()} >
                 <input
                     ref = { inputRef }
-                    id = { styles[ "input__input" ] } 
+                    id = { styles[ "input__input" ] }
+                    className = { inputIsFocused ? styles["focused"] : "" } 
                     onChange = { handleChange }
                     spellCheck = "false"
                     autoComplete = "off"
                     autoFocus
-                    correct = { correct !== null && correct.toString()}
+
                     value = { text }
                     readOnly = { correct !== null }
                     isChecked = { props.checked ? "true" : "false" }
                     style = {{ width: width + "ch" }}
+                    onFocus = { () => setInputIsFocused( true ) }
+                    onBlur = { e => { 
+                        if ( e.relatedTarget.className !== styles[ "special_character_button" ] ) 
+                            setInputIsFocused( false ) 
+                    }}
                 />
                 <svg 
                     id = { styles[ "input__dots"] }
@@ -96,7 +101,7 @@ function TypeInput( props ){
                     />
                 </svg>
             </div>
-            <div id = { styles[ "special_character_buttons__container"]}>
+            <div id = { styles[ "special_character_buttons__container"]} className = { correct !== false ? "" : styles["hidden"] }>
                 { specialChars[ language.name ].length > 6 && <button
                     id = { styles[ "special_character_buttons__arrow-left"]}
                     onClick = { handleClickLeft }
@@ -130,6 +135,14 @@ function TypeInput( props ){
 
                     <FontAwesomeIcon icon = { faAngleRight } />
                 </button> }
+            </div>
+            <div id = { styles[ "correct-answer"]} className = { correct !== false ? styles["hidden"] : "" }>
+                <p>Correct answer:</p>
+                <span>{props.answer}</span>
+                
+                <svg id = { styles[ "correct-answer__dots"] }>
+                    <line   x1 = "0" x2 = "100%" />
+                </svg>
             </div>
         </div>
     );

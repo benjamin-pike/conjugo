@@ -29,34 +29,34 @@
         color 200ms ease 50ms;
 }
 
-#input__input:focus{
+#input__input.focused{
     background-color: var(--blue-highlight);
     outline: 0.05rem solid var(--blue);
     color: var(--blue);
 }
 
-#input__input:focus + #input__dots > line{
+#input__input.focused + #input__dots > line{
     stroke: var(--blue);
 }
 
-#input__input[ correct = "true" ]{
-    background-color: var(--green-highlight);
+#input__container[ correct = "true" ] #input__input{
+    background-color: var(--green-highlight) !important;
     outline: 0.05rem solid var(--green);
     color: var(--green-dark);
 }
 
-#input__input[ correct = "true" ] + #input__dots > line{
+#input__container[ correct = "true" ] #input__dots > line{
     stroke: var(--green-dark);
     opacity: 0.35;
 }
 
-#input__input[ correct = "false" ]{
-    background-color: var(--red-highlight);
+#input__container[ correct = "false" ] #input__input{
+    background-color: var(--red-highlight) !important;
     outline: 0.05rem solid var(--red);
     color: var(--red);
 }
 
-#input__input[ correct = "false" ] + #input__dots > line{
+#input__container[ correct = "false" ] #input__dots > line{
     stroke: var(--red);
 }
 
@@ -212,3 +212,106 @@
     border-radius: 0 100vmax 100vmax 0;
     padding-right: 0.65em;
 }
+
+#correct-answer{
+    pointer-events: none;
+    position: relative;
+    margin-top: -3.75em;
+    background-color: var(--yellow-highlight);
+    box-shadow: 0.25rem 0.25rem 0.25rem 0.125rem var(--shadow);
+    border-radius: 0.4em;
+    outline: 0.05em solid var(--yellow);
+    padding: 1em 1.25em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#correct-answer > p{
+    padding: 0;
+    margin: 0;
+    color: var(--yellow-dark);
+    font-weight: 600;
+    font-size: 1.2em;
+    line-height: 1.2em;
+    margin-right: 0.5em;
+}
+
+#correct-answer > span{
+    color: var(--yellow-dark);
+    font-weight: 600;
+    font-size: 1.2em;
+    line-height: 1.2em;
+    padding: 0.3em 0.75em;
+    border-radius: 100vmax;
+    outline: 0.05em solid var(--yellow);
+    background-color: rgba( 255, 255, 255, 0.5 );
+}
+
+#correct-answer__dots{
+    width: 8.7em;
+    position: absolute;
+    left: 1.6em;
+    top: 2.8em;
+    height: 0.25em;
+}
+
+#correct-answer__dots > line{
+    stroke: var(--yellow-dark);
+    stroke-width: 0.2em;
+    stroke-linecap: round;
+    stroke-dasharray: 0 0.77em;
+    height: 1em;
+    transform: translate(0.125em, 0.125em);
+    opacity: 0.3;
+}
+
+/* TRANSITION ON INCORRECT ANSWER */
+#special_character_buttons__container{
+    transition: 
+        opacity 500ms ease 200ms, 
+        transform 500ms ease 200ms;
+}
+
+#correct-answer{
+    transition: 
+        opacity 500ms ease 700ms, 
+        transform 500ms ease 700ms;
+}
+
+#special_character_buttons__container.hidden{
+    transform: translateX( -2em );
+    opacity: 0;
+}
+
+#correct-answer.hidden{
+    transform: translateX( 2em );
+    opacity: 0;
+}
+
+/* ANIMATE ANSWER */
+@keyframes correct-pulse{
+    0% { scale: 1 }
+    25% { scale: 1.025 }
+    50% { scale: 1 }
+    75% { scale: 1.025 }
+    100% { scale: 1 }
+}
+
+@keyframes incorrect-shake{
+    0% { translate: 0 }
+    12.5% { translate: 0.25rem }
+    37.5% { translate: -0.25rem }
+    62.5% { translate: 0.25rem }
+    87.5% { translate: -0.25rem }
+    100% { translate: 0 }
+}
+
+#input__container[ correct = "true" ]{
+    animation: correct-pulse 500ms ease alternate 200ms;
+}
+
+#input__container[ correct = "false" ]{
+    animation: incorrect-shake 500ms ease 200ms;
+}
+
