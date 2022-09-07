@@ -137,7 +137,7 @@ function Cards( props ){
     }, [])
 
     // If any button is active, show 'continue' button
-    props.setButtonVisible( Object.values( buttonStates ).some( state => state !== "" ) )
+    props.setButtonVisible( Object.values( buttonStates ).some( state => state !== "inactive" ) )
 
     return(
         <div id = { styles["cards__container"] }>

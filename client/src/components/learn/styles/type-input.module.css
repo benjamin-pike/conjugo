@@ -12,7 +12,7 @@
 
 #input__input{
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.25);
+    background-color: var(--offwhite);
     border-radius: 0.4rem 0.4rem;
     padding: 0.5em 0.25em;
     border: none;
@@ -73,11 +73,6 @@
         background-color 200ms ease,
         opacity 200ms ease;
 }
-
-/* #input__input:focus[ isChecked = "false" ] + #input__underline{
-    background-color: var(--yellow) !important;
-    opacity: 0.75 !important;
-} */
 
 #input__dots{
     position: absolute;

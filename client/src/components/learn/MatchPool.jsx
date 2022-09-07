@@ -145,6 +145,14 @@ function Pool( props ){
 
     props.handleKeyPress.current = e => {
         const key = e.key
+
+        if ( ![ "1", "2", "3", "4", "5", "6" ].includes( key ) ) {
+            if ( focusedCard ) setFocusedCard( null )
+            if ( selectedCard ) setSelectedCard( null )
+            
+            return
+        }
+
         const cardId = Object.keys(props.cards).find( id => id[0] === key )
 
         if ( selectedCard === null ){   

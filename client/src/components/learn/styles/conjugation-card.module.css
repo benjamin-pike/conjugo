@@ -118,18 +118,20 @@ button.card__conjugations__face:hover .card_conjugations__conjugation{
 }
 
 @keyframes correct-pulse{
-    0% { transform: scale( 1 ) }
-    50% { transform: scale( 1.05 ) }
-    100% { transform: scale( 1 ) }
+    0% { scale: 1 }
+    25% { scale: 1.025 }
+    50% { scale: 1 }
+    75% { scale: 1.025 }
+    100% { scale: 1 }
 }
 
 @keyframes incorrect-shake{
-    0% { transform: rotate( 0 )  }
-    12.5% { transform: rotate( 2.5deg ) }
-    37.5% { transform: rotate( -2.5deg ) }
-    62.5% { transform: rotate( 2.5deg ) }
-    87.5% { transform: rotate( -2.5deg ) }
-    100% { transform: rotate( 0 ) }
+    0% { translate: 0 }
+    12.5% { translate: 0.25rem }
+    37.5% { translate: -0.25rem }
+    62.5% { translate: 0.25rem }
+    87.5% { translate: -0.25rem }
+    100% { translate: 0 }
 }
 
 [status = "active"]{
@@ -147,11 +149,6 @@ button.card__conjugations__face:hover .card_conjugations__conjugation{
     background-color: var(--red-highlight);
     outline: 0.05em solid var(--red);
     animation: incorrect-shake 500ms ease;
-}
-
-[status = "inactive"]{
-    background-color: var(--offwhite);
-    outline: 0.05em solid var(--shadow);
 }
 
 [status = "warning"]{

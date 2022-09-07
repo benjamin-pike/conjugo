@@ -234,7 +234,7 @@ function Learn(){
             <div 
                 ref = { buttonRef }
                 id = { styles["button-continue__wrapper"] }
-                className = { buttonVisible ? styles["button-visible"] : "" }>
+                className = { buttonVisible ? styles["button-visible"] : styles["button-hidden"] }>
                     
                 <RaisedButton
                     text = { answerChecked ? "Continue" : "Check" }
