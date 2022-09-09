@@ -126,12 +126,12 @@ button.card__conjugations__face:hover .card_conjugations__conjugation{
 }
 
 @keyframes incorrect-shake{
-    0% { translate: 0 }
-    12.5% { translate: 0.25rem }
-    37.5% { translate: -0.25rem }
-    62.5% { translate: 0.25rem }
-    87.5% { translate: -0.25rem }
-    100% { translate: 0 }
+    0% { rotate: 0 }
+    12.5% { rotate: 2deg }
+    37.5% { rotate: -2deg }
+    62.5% { rotate: 2deg }
+    87.5% { rotate: -2deg }
+    100% { rotate: 0 }
 }
 
 [status = "active"]{

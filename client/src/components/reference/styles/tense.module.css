@@ -163,6 +163,14 @@
     user-select: text;
 }
 
+.conjugation.irregular{
+    color: var(--red);
+}
+
+.conjugation.stem-changing{
+    color: var(--orange);
+}
+
 .subject-line__button{
     cursor: pointer;
     margin-left: 0.5em;

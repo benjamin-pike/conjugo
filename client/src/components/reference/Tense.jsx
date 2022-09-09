@@ -6,7 +6,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleQuestion, faClipboard, faVolumeHigh } from '@fortawesome/free-solid-svg-icons'
 import subjectsMap from "../../assets/js/subjects_map";
+import regularitySchema from "../../assets/js/regularity-schema";
 import styles from "./styles/tense.module.css"
+
+const normalize = (str) => str.normalize("NFD").replace(/\p{Diacritic}/gu, "")
 
 function Subject(props){
 
@@ -14,6 +17,51 @@ function Subject(props){
     const [display, setDisplay] = useState(false)
     const { language } = useLang()
     const subjectLineRef = useRef()
+
+    const displayRegularity = true
+    let regularity = 'r'
+
+    Object.keys( regularitySchema[ language.name ] ).forEach( ending => {
+        if ( verb.endsWith( ending ) && complexity == "simple" ){
+            const stem = verb.slice( 0, verb.length - ending.length )
+            const regularEnding = regularitySchema[language.name][ending][mood][tense][props.subjectKey]
+            const expected = stem + regularEnding
+            const observed = tense !== "negative" ? conjugation : conjugation.slice( 3, conjugation.length )
+
+            const vowels = ["a", "e", "i", "o", "u"]
+
+            if ( observed !== expected ){
+                regularity = 'i'
+
+                switch( language.name) {
+                    case "spanish":
+                        if ( normalize(observed) === expected ){
+                            regularity = 'sc'
+                            break
+                        }
+
+                        const lastIndex = ( stem.length - 1) - stem
+                            .split("").reverse().findIndex( (char, index) => index !== 0 && vowels.includes( char ) )
+
+                        const substitutions = { e: ["ie", "i"], i: ["ie"], o: ["ue"], u: ["ue"] } 
+
+                        if ( Object.keys( substitutions ).includes( stem[ lastIndex ] ) ){
+                            const substitutes = substitutions[ stem[ lastIndex ] ]
+
+                            substitutes.forEach( substitute => { 
+                                const stemChange = 
+                                    stem.slice( 0, lastIndex ) + substitute + stem.slice( lastIndex + 1, stem.length )
+
+                                if ( observed === stemChange + regularEnding ) regularity = 'sc'
+                            })
+                        }
+
+                        break
+                }
+                
+            }
+        }
+    })
 
     const toggleDisplay = (e, display) => {
         const width = subjectLineRef.current.offsetWidth
@@ -47,7 +95,11 @@ function Subject(props){
                         <p className = {styles["subject"]}>
                             {props.text}
                         </p>
-                        <p className = {styles["conjugation"]}>
+                        <p 
+                            className = {`${styles["conjugation"]}${
+                                displayRegularity && regularity !== "r" ? 
+                                    regularity == "i" ? " " + styles["irregular"] : " " + styles["stem-changing"] 
+                                : "" }`}>
                             {props.conjugation}
                         </p>
                     </div>
@@ -136,7 +188,8 @@ function Tense(props){
                             }
 
                             return <Subject
-                                key = {uuidv4()} 
+                                key = {uuidv4()}
+                                subjectKey = { subject.key }
                                 language = {props.language}
                                 conjugation = {conjugation}
                                 route = {[...props.route, conjugation]}
