@@ -8,6 +8,7 @@ import { faCircleQuestion, faClipboard, faVolumeHigh } from '@fortawesome/free-s
 import subjectsMap from "../../assets/js/subjects_map";
 import regularitySchema from "../../assets/js/regularity-schema";
 import styles from "./styles/tense.module.css"
+import { useEffect } from "react";
 
 const normalize = (str) => str.normalize("NFD").replace(/\p{Diacritic}/gu, "")
 
@@ -17,6 +18,12 @@ function Subject(props){
     const [display, setDisplay] = useState(false)
     const { language } = useLang()
     const subjectLineRef = useRef()
+    const [cardWidth, setCardWidth] = useState( 0 ) 
+
+    const card = props.cardRef.current
+    const grid = card ? card.parentElement : null
+
+    if ( !cardWidth && card ) setCardWidth( Number( getComputedStyle( card ).width.slice(0, -2) ) )
 
     const displayRegularity = true
     let regularity = 'r'
@@ -69,24 +76,216 @@ function Subject(props){
         const padding = (height / 1.75) * 5.5
         const offset = height
         
-        if ( display ) return setDisplay(`${width + padding + offset}px`)
+        if ( display ) return setDisplay(width + padding + offset)
 
-        return setDisplay("")
+        return setDisplay( "" )
     }
 
     const transition = useTransition(display, {
         from: { width: "0px" },
-        enter: { width: display },
+        enter: { width: display.toString() + "px" },
         leave: { width: "0px" },
 
         config: { duration: 250, easing: easings.easeInOutSine },
     });
 
+    const clearStyles = () => {}
+    // const clearStyles = () => {
+    //     if ( card ){
+    //         card.removeAttribute( "style" )
+    
+    //         if ( card.previousElementSibling ){
+    //             card.previousElementSibling.removeAttribute( "style" )
+    //             if ( card.previousElementSibling.previousElementSibling )
+    //                 card.previousElementSibling.previousElementSibling.removeAttribute( "style" )
+    //         }
+            
+    //         if( card.nextElementSibling ){
+    //             card.nextElementSibling.removeAttribute( "style" )
+    //             if( card.nextElementSibling.nextElementSibling )
+    //                 card.nextElementSibling.nextElementSibling.removeAttribute( "style" )
+    //         } 
+    //     }
+    // }
+
+
+
+    const handleMouseEnter = () => {
+        const width = subjectLineRef.current.offsetWidth
+        const height = subjectLineRef.current.offsetHeight
+        const padding = (height / 1.75) * 5.5
+
+        const x = width + padding + height
+        
+        if ( grid && x && x > cardWidth ) {
+            const offset = x - cardWidth
+            const columns = Math.floor( grid.offsetWidth/cardWidth )
+
+            const column = ( Array.prototype.indexOf.call( grid.children, card ) % columns ) + 1
+    
+            card.style.width = x + "px"
+    
+            let neighbour;
+            let nextNeighbour;
+            let leftNeighbour;
+            let rightNeighbour;
+    
+            switch( columns ){
+                case 3:
+                    switch( column ){
+                        case 1:
+                            neighbour = card.nextElementSibling
+                            nextNeighbour = neighbour.nextElementSibling
+    
+                            neighbour.style.width = ( cardWidth - ( offset / 2 ) ) + "px"
+                            nextNeighbour.style.width = ( cardWidth - ( offset / 2 ) ) + "px"
+    
+                            neighbour.style.transform = `translateX(${ offset }px)`
+                            nextNeighbour.style.transform = `translateX(${( offset / 2 )}px)`
+                            
+                            break
+                        
+                        case 2:
+                            leftNeighbour = card.previousElementSibling;
+                            rightNeighbour = card.nextElementSibling;
+    
+                            leftNeighbour.style.width = ( cardWidth - ( offset / 2 ) ) + "px"
+                            rightNeighbour.style.width = ( cardWidth - ( offset / 2 ) ) + "px"
+    
+                            card.style.transform = `translateX(-${( offset / 2 )}px)`
+                            rightNeighbour.style.transform = `translateX(${( offset / 2 )}px)`
+    
+                            break
+                        
+                        case 3:
+                            neighbour = card.previousElementSibling
+                            nextNeighbour = neighbour.previousElementSibling
+    
+                            neighbour.style.width = ( cardWidth - ( offset / 2 ) ) + "px"
+                            nextNeighbour.style.width = ( cardWidth - ( offset / 2 ) ) + "px"
+                            
+                            card.style.transform = `translateX(-${ offset }px)`
+                            neighbour.style.transform = `translateX(-${( offset / 2 )}px)`
+    
+                            break
+                    }
+    
+                    break
+            }
+        }
+        
+        
+        
+        setDisplay(width + padding + height)
+    }
+
+    const handleMouseLeave = () => {
+        if ( card ){
+            card.removeAttribute( "style" )
+    
+            if ( card.previousElementSibling ){
+                card.previousElementSibling.removeAttribute( "style" )
+                if ( card.previousElementSibling.previousElementSibling )
+                    card.previousElementSibling.previousElementSibling.removeAttribute( "style" )
+            }
+            
+            if( card.nextElementSibling ){
+                card.nextElementSibling.removeAttribute( "style" )
+                if( card.nextElementSibling.nextElementSibling )
+                    card.nextElementSibling.nextElementSibling.removeAttribute( "style" )
+            } 
+        }
+
+        setDisplay( "" )
+    }
+
+
+    useEffect(() => {
+        // if ( grid && display && display > cardWidth ) {
+        //     const offset = display - cardWidth
+        //     const columns = Math.floor( grid.offsetWidth/cardWidth )
+    
+        //     const column = Math.floor( ( card.offsetLeft - grid.offsetLeft ) / cardWidth ) + 1
+    
+        //     card.style.width = display + "px"
+    
+        //     let neighbour;
+        //     let nextNeighbour;
+        //     let leftNeighbour;
+        //     let rightNeighbour;
+    
+        //     switch( columns ){
+        //         case 3:
+        //             switch( column ){
+        //                 case 1:
+        //                     neighbour = card.nextElementSibling
+        //                     nextNeighbour = neighbour.nextElementSibling
+    
+        //                     neighbour.style.width = ( neighbour.offsetWidth - ( offset / 2 ) ) + "px"
+        //                     nextNeighbour.style.width = ( nextNeighbour.offsetWidth - ( offset / 2 ) ) + "px"
+    
+        //                     neighbour.style.transform = `translateX(${ offset }px)`
+        //                     nextNeighbour.style.transform = `translateX(${( offset / 2 )}px)`
+                            
+        //                     break
+                        
+        //                 case 2:
+        //                     leftNeighbour = card.previousElementSibling;
+        //                     rightNeighbour = card.nextElementSibling;
+    
+        //                     leftNeighbour.style.width = ( leftNeighbour.offsetWidth - ( offset / 2 ) ) + "px"
+        //                     rightNeighbour.style.width = ( rightNeighbour.offsetWidth - ( offset / 2 ) ) + "px"
+    
+        //                     card.style.transform = `translateX(-${( offset / 2 )}px)`
+        //                     rightNeighbour.style.transform = `translateX(${( offset / 2 )}px)`
+    
+        //                     break
+                        
+        //                 case 3:
+        //                     neighbour = card.previousElementSibling
+        //                     nextNeighbour = neighbour.previousElementSibling
+    
+        //                     neighbour.style.width = ( neighbour.offsetWidth - ( offset / 2 ) ) + "px"
+        //                     nextNeighbour.style.width = ( nextNeighbour.offsetWidth - ( offset / 2 ) ) + "px"
+                            
+        //                     card.style.transform = `translateX(-${ offset }px)`
+        //                     neighbour.style.transform = `translateX(-${( offset / 2 )}px)`
+    
+        //                     break
+        //             }
+    
+        //             break
+        //     }
+        // }
+
+        return () => {
+            // if ( card ){
+            //     card.removeAttribute( "style" )
+        
+            //     if ( card.previousElementSibling ){
+            //         card.previousElementSibling.removeAttribute( "style" )
+            //         if ( card.previousElementSibling.previousElementSibling )
+            //             card.previousElementSibling.previousElementSibling.removeAttribute( "style" )
+            //     }
+                
+            //     if( card.nextElementSibling ){
+            //         card.nextElementSibling.removeAttribute( "style" )
+            //         if( card.nextElementSibling.nextElementSibling )
+            //             card.nextElementSibling.nextElementSibling.removeAttribute( "style" )
+            //     } 
+            // }
+        }
+
+    }, [ display ])
+
+
     return(
         <li 
             className = {styles["subject-line__wrapper"]}
-            onMouseEnter = { e => toggleDisplay(e, true) }
-            onMouseLeave = { e => toggleDisplay(e, false) }>
+            // onMouseEnter = { e => toggleDisplay(e, true) }
+            // onMouseLeave = { e => { toggleDisplay(e, false); clearStyles() }}>
+            onMouseEnter = { handleMouseEnter }
+            onMouseLeave = { handleMouseLeave }>
             <div 
                 ref = { subjectLineRef }
                 className = {styles["subject-line__container"]}>
@@ -135,6 +334,7 @@ function Subject(props){
 function Tense(props){
 
     const { language } = useLang()
+    const cardRef = useRef( null )
 
     const handleHover = e => {
         const p = e.target
@@ -158,7 +358,7 @@ function Tense(props){
     }
 
     return(
-        <div className = {styles["tense-card"]}>
+        <div ref = { cardRef } className = {styles["tense-card"]}>
             <div className= {styles["tense-card__content"]}>
                 <div className = {styles["tense-card__header"]}>
                     <p 
@@ -195,6 +395,7 @@ function Tense(props){
                                 route = {[...props.route, conjugation]}
                                 text = {text}
                                 color = {subject.color}
+                                cardRef = { cardRef }
                             />
                         }
                     })}
