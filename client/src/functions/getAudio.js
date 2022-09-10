@@ -1,6 +1,6 @@
 import infinitives from "../assets/js/infinitives-object.js"
 
-async function getAudio( language, infinitive, conjugation, instantPlay = false ){
+export default async ( language, infinitive, conjugation, instantPlay = false ) => {
 
     const context = new AudioContext();
     const sourceNode = new AudioBufferSourceNode( context );
@@ -23,5 +23,3 @@ async function getAudio( language, infinitive, conjugation, instantPlay = false 
         duration: audioBuffer.duration
     }
 }
-
-export default getAudio

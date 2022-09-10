@@ -55,6 +55,7 @@ function Conjugations(props){
                                 route = {[props.verb, complexity, mood, tense]}
                                 imperative = {mood === "imperative" ? true : false}
                                 language = {props.language}
+                                regularityVisible = { props.regularityVisible }
                                 setEnglishTenseNames = { setEnglishTenseNames }
                             />
                             }

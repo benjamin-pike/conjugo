@@ -94,7 +94,12 @@
 }
 
 .subject-line__wrapper{
+    position: relative;
     height: 1.75em;
+}
+
+.subject-line__wrapper:nth-last-of-type( 2n ){
+    background-color: rgba( 255, 255, 255, 0.25 );
 }
 
 .subject-line__container{
@@ -111,7 +116,7 @@
     height: 1.75em;
     width: 0%;
     border-radius: 0 0.875em 0.875em 0;
-    margin: -1.75em 1em 0 -1.75em;
+    margin: -1.75em 0.5em 0 -1.75em;
     overflow: hidden;
     z-index: 100;
 }
@@ -164,12 +169,14 @@
     user-select: text;
 }
 
-.conjugation.irregular{
+.irregular .subject-line__inactive p{
     color: var(--red);
+    /* line-height: 1.75em; */
 }
 
-.conjugation.stem-changing{
+.stem-changing .subject-line__inactive p{
     color: var(--orange);
+    /* line-height: 1.75em; */
 }
 
 .subject-line__button{

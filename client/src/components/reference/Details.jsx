@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useLang } from '../../store/LangContext';
 import getAudio from '../../functions/getAudio';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faVolumeHigh, faStar as fasFaStar, faEarthEurope, faListUl, faShapes, faEye, faChevronCircleDown, faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons';
+import { faVolumeHigh, faStar as fasFaStar, faEarthEurope, faListUl, faShapes, faEye, faChevronCircleDown, faChevronCircleLeft, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { faStar as farFaStar } from '@fortawesome/free-regular-svg-icons'
 
 import Tooltip from "./Tooltip";
@@ -173,8 +173,12 @@ function Details(props){
                 <p>{regularityText}</p>
 
                 {props.state.content.regularity !== "r" && <button 
-                    id = { styles["verb-details__regularity-toggle"] }>
-                    <FontAwesomeIcon icon = { faEye } />
+                    id = { styles["verb-details__regularity-toggle"] }
+                    onClick = { () => props.setRegularityVisible( current => !current ) }>
+                    {props.regularityVisible ? 
+                        <FontAwesomeIcon icon = { faEyeSlash } id = { styles["regularity-toggle__active"] } />
+                        : <FontAwesomeIcon icon = { faEye } id = { styles["regularity-toggle__inactive"] } />
+                    }
                 </button>}
 
                 <Tooltip text = {"Regularity"} color = {regularityColor} direction = {"top"} />

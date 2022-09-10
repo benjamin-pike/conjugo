@@ -29,6 +29,7 @@
 .conjugations-section__body{
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(17.5em, 1fr));
+    min-width: 19.5em;
     column-gap: 1em;
     row-gap: 1em;
     padding: 1em;
