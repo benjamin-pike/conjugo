@@ -55,6 +55,7 @@ function Subject(props){
 
                 if ( observed !== expected ){
                     regularity = 'i'
+                    let verbSwitch;
     
                     switch( language.name) {
                         case "spanish":
@@ -62,22 +63,42 @@ function Subject(props){
                                 regularity = 'sc'
                                 break
                             }
+
+                            const substitutions = [ ["e", "ie"], ["e", "i"], ["i", "ie"], ["o", "ue"], ["u", "ue"] ]
     
-                            const lastIndex = ( stem.length - 1) - stem
-                                .split("").reverse().findIndex( (char, index) => index !== 0 && vowels.includes( char ) )
-    
-                            const substitutions = { e: ["ie", "i"], i: ["ie"], o: ["ue"], u: ["ue"] } 
-    
-                            if ( Object.keys( substitutions ).includes( stem[ lastIndex ] ) ){
-                                const substitutes = substitutions[ stem[ lastIndex ] ]
-    
-                                substitutes.forEach( substitute => { 
-                                    const stemChange = 
-                                        stem.slice( 0, lastIndex ) + substitute + stem.slice( lastIndex + 1, stem.length )
-    
-                                    if ( observed === stemChange + regularEnding ) regularity = 'sc'
-                                })
+                            const replaceLast = (str, from, to) => 
+                                str.lastIndexOf( from ) === -1 ? str : str.slice( 0, str.lastIndexOf( from ) ) + to + str.slice( str.lastIndexOf( from ) + 1, str.length )
+
+                            verbSwitch = stem => substitutions.some(( [from, to] ) => 
+                                normalizeText( replaceLast( stem, from, to ) + regularEnding ) === normalizeText( observed ) )
+
+                            if ( verb.endsWith( "uir" ) && !["g", "q"].includes( stem.at ( -2 ) ) ) stem += "y"
+
+                            if ( tense === "present" && props.subjectKey === "yo" ){
+                                if ( verb.endsWith( "ger" ) || verb.endsWith( "gir") ) { stem = stem.slice( 0, stem.length - 1 ) + "j" }
+                                
+                                else if ( verb.endsWith( "guir" ) ) { stem = stem.slice( 0, stem.length - 1 ) }
+                                
+                                else if ( verb.endsWith( "quir" ) ) { stem = stem.slice( 0, stem.length - 2 ) + "c" }
+                                
+                                else if ( verb.endsWith( "ger" ) ) { stem = stem.slice( 0, stem.length - 1 ) + "j" }
+                                
+                                else if ( verb.endsWith( "cer" ) || verb.endsWith( "cir") ){
+                                    stem = stem.slice( 0, stem.length - 1 ) + "z"
+                                    if ( vowels.includes( normalizeText( stem.at( -2 ) ) ) || !verb.endsWith( "mecer" ) )
+                                        stem += "c"
+                                }                                
                             }
+
+                            if ( tense === "preterite" && props.subjectKey === "yo" ){
+                                if ( stem.endsWith( "c" ) ) { stem = stem.slice( 0, stem.length - 1 ) + "qu" }
+                                
+                                else if ( stem.endsWith( "g" ) ) { stem += "u" }
+                                
+                                else if ( stem.endsWith( "z" ) ) stem = stem.slice( 0, stem.length - 1 ) + "c"
+                            }
+                            
+                            if ( verbSwitch( stem ) ) regularity = 'sc'
     
                             break
                     
@@ -112,7 +133,7 @@ function Subject(props){
                                 stem = verb.slice( prefix.length - 1, verb.length - ending.length )
                             }
 
-                            const verbSwitch = ending => [ ["e", "i"], ["e", "ie"], ["a", "ä"] ].some( ([a, b]) => observed === stem.replace(a, b) + ending + prefix )
+                            verbSwitch = ending => [ ["e", "i"], ["e", "ie"], ["a", "ä"] ].some( ([a, b]) => observed === stem.replace(a, b) + ending + prefix )
 
                             if ( verbSwitch( regularEnding ) ) regularity = 'sc'
     
@@ -133,6 +154,25 @@ function Subject(props){
                             break
 
                         case "italian":
+                            if ( ending === "ire" && tense === "present" )
+                                if ( observed === stem + "isc" + regularEnding ) 
+                                regularity = 'sc'
+
+                            if ( ["care", "gare"].includes( verb.slice( -4, verb.length ) ) && ["i", "e"].includes( regularEnding.at( 0 ) ) ) 
+                                stem += "h"
+                            
+                            if ( stem.at( -1 ) === "i" )
+                                stem = stem.slice( 0, stem.length - 1 )
+                            
+                            if ( stem.at( -1 ) === "c" && ["o", "a"].includes( regularEnding.at( 0 ) ) )
+                                stem += "i"
+                            
+                            
+                            // if ( ending === "ire" && stem.at( -1 ) === "c" && regularEnding.at( 0 ) === "o" ) 
+                            //     stem += "i"
+
+                            if ( observed === stem + regularEnding ) 
+                                regularity = 'sc'
     
                             break
     

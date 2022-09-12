@@ -34,7 +34,7 @@ function Search(props){
                 
                 if (slice === content){
                     primary.push(verb)
-                } else if (slice.includes(content)) {
+                } else if (verb[0].includes(content)) {
                     secondary.push(verb)
                 }
             }
