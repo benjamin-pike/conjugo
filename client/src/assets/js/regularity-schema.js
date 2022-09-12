@@ -670,16 +670,6 @@ export default {
                     "wir": "ten",
                     "ihr": "tet",
                     "Sie": "ten"
-                },
-                "future": {
-                    "ich": " spielen",
-                    "du": " spielen",
-                    "er": "spielen",
-                    "sie": "spielen",
-                    "es": "spielen",
-                    "wir": "n spielen",
-                    "ihr": "t spielen",
-                    "Sie": "n spielen"
                 }
             },
             "subjunctive": {
@@ -702,26 +692,6 @@ export default {
                     "wir": "ten",
                     "ihr": "tet",
                     "Sie": "ten"
-                },
-                "future": {
-                    "ich": " spielen",
-                    "du": "st spielen",
-                    "er": " spielen",
-                    "sie": " spielen",
-                    "es": " spielen",
-                    "wir": "n spielen",
-                    "ihr": "t spielen",
-                    "Sie": "n spielen"
-                },
-                "conditional": {
-                    "ich": " spielen",
-                    "du": "st spielen",
-                    "er": " spielen",
-                    "sie": " spielen",
-                    "es": " spielen",
-                    "wir": "n spielen",
-                    "ihr": "t spielen",
-                    "Sie": "n spielen"
                 }
             },
             "imperative": {
@@ -736,186 +706,66 @@ export default {
                     "wir": "en",
                     "ihr": "t",
                     "Sie": "en"
-                }
-            }
-        },
-        "un": {
-            "indicative": {
-                "present": {
-                    "ich": "ue",
-                    "du": "ust",
-                    "er": "ut",
-                    "sie": "ut",
-                    "es": "ut",
-                    "wir": "un",
-                    "ihr": "ut",
-                    "Sie": "un"
-                },
-                "imperfect": {
-                    "ich": "at",
-                    "du": "atst",
-                    "er": "at",
-                    "sie": "at",
-                    "es": "at",
-                    "wir": "aten",
-                    "ihr": "atet",
-                    "Sie": "aten"
-                },
-                "future": {
-                    "ich": "erde tun",
-                    "du": "irst tun",
-                    "er": "ird tun",
-                    "sie": "ird tun",
-                    "es": "ird tun",
-                    "wir": "erden tun",
-                    "ihr": "erdet tun",
-                    "Sie": "erden tun"
-                }
-            },
-            "subjunctive": {
-                "present": {
-                    "ich": "ue",
-                    "du": "uest",
-                    "er": "ue",
-                    "sie": "ue",
-                    "es": "ue",
-                    "wir": "uen",
-                    "ihr": "uet",
-                    "Sie": "uen"
-                },
-                "imperfect": {
-                    "ich": "äte",
-                    "du": "ätest",
-                    "er": "äte",
-                    "sie": "äte",
-                    "es": "äte",
-                    "wir": "äten",
-                    "ihr": "ätet",
-                    "Sie": "äten"
-                },
-                "future": {
-                    "ich": "erde tun",
-                    "du": "erdest tun",
-                    "er": "erde tun",
-                    "sie": "erde tun",
-                    "es": "erde tun",
-                    "wir": "erden tun",
-                    "ihr": "erdet tun",
-                    "Sie": "erden tun"
-                },
-                "conditional": {
-                    "ich": "ürde tun",
-                    "du": "ürdest tun",
-                    "er": "ürde tun",
-                    "sie": "ürde tun",
-                    "es": "ürde tun",
-                    "wir": "ürden tun",
-                    "ihr": "ürdet tun",
-                    "Sie": "ürden tun"
-                }
-            },
-            "imperative": {
-                "affirmative": {
-                    "du": "ue",
-                    "wir": "un",
-                    "ihr": "ut",
-                    "Sie": "un"
-                },
-                "negative": {
-                    "du": "ue",
-                    "wir": "un",
-                    "ihr": "ut",
-                    "Sie": "un"
                 }
             }
         },
         "eln": {
             "indicative": {
                 "present": {
-                    "ich": "le",
-                    "du": "elst",
-                    "er": "elt",
-                    "sie": "elt",
-                    "es": "elt",
-                    "wir": "eln",
-                    "ihr": "elt",
-                    "Sie": "eln"
+                    "ich": "e",
+                    "du": "st",
+                    "er": "t",
+                    "sie": "t",
+                    "es": "t",
+                    "wir": "en",
+                    "ihr": "t",
+                    "Sie": "en"
                 },
                 "imperfect": {
-                    "ich": "elte",
-                    "du": "eltest",
-                    "er": "elte",
-                    "sie": "elte",
-                    "es": "elte",
-                    "wir": "elten",
-                    "ihr": "eltet",
-                    "Sie": "elten"
-                },
-                "future": {
-                    "ich": "ntwickeln",
-                    "du": "ntwickeln",
-                    "er": "twickeln",
-                    "sie": "twickeln",
-                    "es": "twickeln",
-                    "wir": "entwickeln",
-                    "ihr": "entwickeln",
-                    "Sie": "entwickeln"
+                    "ich": "te",
+                    "du": "test",
+                    "er": "te",
+                    "sie": "te",
+                    "es": "te",
+                    "wir": "ten",
+                    "ihr": "tet",
+                    "Sie": "ten"
                 }
             },
             "subjunctive": {
                 "present": {
-                    "ich": "le",
-                    "du": "lest",
-                    "er": "le",
-                    "sie": "le",
-                    "es": "le",
-                    "wir": "len",
-                    "ihr": "let",
-                    "Sie": "len"
+                    "ich": "e",
+                    "du": "est",
+                    "er": "e",
+                    "sie": "e",
+                    "es": "e",
+                    "wir": "en",
+                    "ihr": "et",
+                    "Sie": "en"
                 },
                 "imperfect": {
-                    "ich": "elte",
-                    "du": "eltest",
-                    "er": "elte",
-                    "sie": "elte",
-                    "es": "elte",
-                    "wir": "elten",
-                    "ihr": "eltet",
-                    "Sie": "elten"
-                },
-                "future": {
-                    "ich": "ntwickeln",
-                    "du": " entwickeln",
-                    "er": "ntwickeln",
-                    "sie": "ntwickeln",
-                    "es": "ntwickeln",
-                    "wir": "entwickeln",
-                    "ihr": "entwickeln",
-                    "Sie": "entwickeln"
-                },
-                "conditional": {
-                    "ich": "ntwickeln",
-                    "du": " entwickeln",
-                    "er": "ntwickeln",
-                    "sie": "ntwickeln",
-                    "es": "ntwickeln",
-                    "wir": "entwickeln",
-                    "ihr": "entwickeln",
-                    "Sie": "entwickeln"
+                    "ich": "te",
+                    "du": "test",
+                    "er": "te",
+                    "sie": "te",
+                    "es": "te",
+                    "wir": "ten",
+                    "ihr": "tet",
+                    "Sie": "ten"
                 }
             },
             "imperative": {
                 "affirmative": {
-                    "du": "le",
-                    "wir": "eln",
-                    "ihr": "elt",
-                    "Sie": "eln"
+                    "du": "e",
+                    "wir": "en",
+                    "ihr": "t",
+                    "Sie": "en"
                 },
                 "negative": {
-                    "du": "le",
-                    "wir": "eln",
-                    "ihr": "elt",
-                    "Sie": "eln"
+                    "du": "e",
+                    "wir": "en",
+                    "ihr": "t",
+                    "Sie": "en"
                 }
             }
         },
@@ -940,16 +790,6 @@ export default {
                     "wir": "ten",
                     "ihr": "tet",
                     "Sie": "ten"
-                },
-                "future": {
-                    "ich": " spielen",
-                    "du": " spielen",
-                    "er": "spielen",
-                    "sie": "spielen",
-                    "es": "spielen",
-                    "wir": "n spielen",
-                    "ihr": "t spielen",
-                    "Sie": "n spielen"
                 }
             },
             "subjunctive": {
@@ -972,26 +812,66 @@ export default {
                     "wir": "ten",
                     "ihr": "tet",
                     "Sie": "ten"
+                }
+            },
+            "imperative": {
+                "affirmative": {
+                    "du": "e",
+                    "wir": "en",
+                    "ihr": "t",
+                    "Sie": "en"
                 },
-                "future": {
-                    "ich": " spielen",
-                    "du": "st spielen",
-                    "er": " spielen",
-                    "sie": " spielen",
-                    "es": " spielen",
-                    "wir": "n spielen",
-                    "ihr": "t spielen",
-                    "Sie": "n spielen"
+                "negative": {
+                    "du": "e",
+                    "wir": "en",
+                    "ihr": "t",
+                    "Sie": "en"
+                }
+            }
+        },
+        "un": {
+            "indicative": {
+                "present": {
+                    "ich": "e",
+                    "du": "st",
+                    "er": "t",
+                    "sie": "t",
+                    "es": "t",
+                    "wir": "en",
+                    "ihr": "t",
+                    "Sie": "en"
                 },
-                "conditional": {
-                    "ich": " spielen",
-                    "du": "st spielen",
-                    "er": " spielen",
-                    "sie": " spielen",
-                    "es": " spielen",
-                    "wir": "n spielen",
-                    "ihr": "t spielen",
-                    "Sie": "n spielen"
+                "imperfect": {
+                    "ich": "te",
+                    "du": "test",
+                    "er": "te",
+                    "sie": "te",
+                    "es": "te",
+                    "wir": "ten",
+                    "ihr": "tet",
+                    "Sie": "ten"
+                }
+            },
+            "subjunctive": {
+                "present": {
+                    "ich": "e",
+                    "du": "est",
+                    "er": "e",
+                    "sie": "e",
+                    "es": "e",
+                    "wir": "en",
+                    "ihr": "et",
+                    "Sie": "en"
+                },
+                "imperfect": {
+                    "ich": "te",
+                    "du": "test",
+                    "er": "te",
+                    "sie": "te",
+                    "es": "te",
+                    "wir": "ten",
+                    "ihr": "tet",
+                    "Sie": "ten"
                 }
             },
             "imperative": {
