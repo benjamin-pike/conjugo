@@ -127,7 +127,7 @@ function Reference(){
             
             <div id = {styles["left-content"]} 
                 style = {{
-                    width: displayLeft ? "20vw" : "0",
+                    width: displayLeft ? "25vw" : "0",
                     minWidth: displayLeft ? "15em" : "0",
                     opacity: displayLeft ? "100%" : "0%",
                 }}>
