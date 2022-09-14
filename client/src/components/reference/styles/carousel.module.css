@@ -104,8 +104,8 @@
 .verb-card-face > p{
     cursor: pointer;
     white-space: nowrap;
-    padding: 0.5em 1em;
-    border-radius: 3em;
+    /* padding: 0.5em 1em; */
+    /* border-radius: 3em; */
     color: var(--textcolor);
     transition: 
         color 100ms ease,
@@ -132,4 +132,46 @@
 
 #verb-card-face__focused > p{
     color: var(--offwhite);
+}
+
+#verb-card-face__focused > .divider{
+    background-color: var(--offwhite);
+}
+
+.infinitive{
+    /* padding: 0.5em 1em; */
+    border-radius: 100vmax;
+    /* background-color: var(--shadow); */
+    /* box-shadow: 0.1em 0.1em 0em var(--shadow) inset; */
+}
+
+
+.rank{
+    position: relative;
+    /* margin-right: auto; */
+    font-weight: 500;
+    padding: 0 1.5em;
+    /* box-shadow: 0.1em 0 white; */
+    /* background-color: var(--red); */
+    /* color: var(--offwhite) !important; */
+    /* border-radius: 0 1em 1em 0; */
+    /* border-right: 0.1em solid var(--textcolor50); */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.divider{
+    margin-right: auto;
+    margin-left: 0;
+    width: 0.1em;
+    height: 30%;
+    background-color: var(--textcolor50);
+    border-radius: 100vmax;
+}
+
+.infinitive{
+    margin-right: auto;
+    padding-right: 0.5em;
 }

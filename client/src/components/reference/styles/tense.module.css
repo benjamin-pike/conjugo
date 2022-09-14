@@ -38,7 +38,6 @@
     border-radius: 2em;
     border: 0.5em solid var(--offwhite);
     transform: translateY(1em);
-    /* color: var(--offwhite); */
 }
 
 .tense-name > span{
@@ -99,7 +98,7 @@
 }
 
 .subject-line__wrapper:nth-last-of-type( 2n ){
-    background-color: rgba( 255, 255, 255, 0.25 );
+    background-color: rgba( 255, 255, 255, 0.35 );
 }
 
 .subject-line__container{
@@ -136,10 +135,6 @@
     height: 1.75em;
 }
 
-/* .subject-line:hover > .subject-line__active{
-    width: calc(100% + 0.5em);
-} */
-
 .subject-line__content{
     height: 100%;
     margin-left: 1.75em;
@@ -169,14 +164,40 @@
     user-select: text;
 }
 
-.irregular .subject-line__inactive p{
-    color: var(--red);
-    /* line-height: 1.75em; */
+.conjugation > span{
+    white-space: pre;
 }
 
-.stem-changing .subject-line__inactive p{
+.irregular[complexity = "simple" ] .subject-line__inactive p,
+.irregular span.participle-past{
+    color: var(--red);
+}
+
+.stem-changing[complexity = "simple" ] .subject-line__inactive p,
+.stem-changing span.participle-past{
     color: var(--orange);
-    /* line-height: 1.75em; */
+}
+
+.subject-line__wrapper::before{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    inset: 0;
+}
+
+.irregular::before{
+    background-color: var(--red);
+    opacity: 0.075;
+}
+
+.stem-changing::before{
+    background-color: var(--orange);
+    opacity: 0.075;
+}
+
+.irregular, .stem-changing{
+    background-color: rgba( 255, 255, 255, 0.15 );
 }
 
 .subject-line__button{

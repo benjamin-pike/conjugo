@@ -63,10 +63,12 @@ function Carousel(props){
                                 props.postStarred(props.state.starredVerbs)
                                 props.dispatch({ type: props.ACTIONS.UPDATE_VERB, payload: { focus: infinitive[1] } })
                             }}>
-                            
-                            <p>
+                            <p className = { styles["rank"] } style = {{ width: `${infinitive[1].toString().length}ch` }}>{ infinitive[1] }</p>
+                            <div className = { styles["divider"] } />
+                            <p className = { styles["infinitive"] }>{ infinitive[0] }</p>
+                            {/* <p>
                                 <span style = {{fontWeight: 500}}>{infinitive[1]}</span> • {infinitive[0]}
-                            </p>
+                            </p> */}
                             {props.state.starredVerbs && props.state.starredVerbs.includes(infinitive[0]) && <div className = {styles["verb-card__right-bar"]} />}
                         </div>
                 </div>
