@@ -5,7 +5,9 @@ import styles from "./styles/carousel.module.css"
 function CarouselCard( props ){
 
     const [verb, rank] = props.infinitive
-    const verbWidth = useMemo( () => measureText(verb, 0), [] )
+    // const verbWidth = useMemo( () => measureText(verb, 10), [] )
+    const verbWidth = measureText(verb, 10)
+    console.log(verbWidth)
 
     return(
         <div

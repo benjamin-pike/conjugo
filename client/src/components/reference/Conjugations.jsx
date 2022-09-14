@@ -37,7 +37,7 @@ function Conjugations(props){
     return(
         <>
             {sections.map(section => 
-                <div className = {styles["conjugations-section"]} key = {uuidv4()}>
+                <div className = {styles["conjugations-section"]} key = "conjugations">
                     <h1 id = {styles[`conjugations-section__title__${section}`]} className = {styles['conjugations-section__title']}>
                         {section[0].toUpperCase() + section.slice(1)}
                     </h1>
@@ -48,7 +48,7 @@ function Conjugations(props){
                         
                         if ((section === mood && !sections.includes(complexity)) || (section === complexity)){
                             return <Tense
-                                key = {uuidv4()}
+                                key = {`${complexity}-${mood}-${tense}`}
                                 tense = {tenseNames[item][props.language][ englishTenseNames ? "english" : "target" ]}
                                 color = {tenseColors[tense]}
                                 conjugations = {props.conjugations[complexity][mood][tense]}

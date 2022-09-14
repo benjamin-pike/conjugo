@@ -128,7 +128,7 @@ function Reference(){
             <div id = {styles["left-content"]} 
                 style = {{
                     width: displayLeft ? "25vw" : "0",
-                    minWidth: displayLeft ? "15em" : "0",
+                    minWidth: displayLeft ? "17.5em" : "0",
                     opacity: displayLeft ? "100%" : "0%",
                 }}>
 
@@ -191,6 +191,7 @@ function Reference(){
                     <div id = {styles["conjugations__content"]}>
                         {renderContent ?
                             <Conjugations
+                                key = {state.verb}
                                 verb = {state.verb} 
                                 conjugations = {state.content.conjugations}
                                 language = {language.name}

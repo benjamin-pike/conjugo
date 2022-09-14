@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import { useLang } from "../../store/LangContext";
-import { v4 as uuidv4 } from 'uuid';
 import Subject from "./Subject"
 import subjectsMap from "../../assets/js/subjects_map";
 import styles from "./styles/tense.module.css"
@@ -9,6 +8,7 @@ function Tense(props){
 
     const { language } = useLang()
     const cardRef = useRef( null )
+    const extension = {}
 
     const [activeLine, setActiveLine] = useState( { width: 0, id: "" } )
 
@@ -30,6 +30,7 @@ function Tense(props){
     if ( language.name === "italian" && props.route[1] === "compound" ){
         if ( props.conjugations["lui"] !== props.conjugations["lei"] ){
             // props.conjugations["lui"] = props.conjugations["lui"].slice(0, -1) + "(o/a)"
+            extension["lui"] = "a"
         }
     }
 
@@ -68,6 +69,7 @@ function Tense(props){
                                 subjectKey = { subject.key }
                                 language = { props.language }
                                 conjugation = { conjugation }
+                                extension = { extension[subject.key] }
                                 route = { [...props.route, conjugation] }
                                 text = { text }
                                 color = { subject.color }

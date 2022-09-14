@@ -77,7 +77,7 @@ function Subject(props){
 
                                 if ( verb.endsWith( "uir" ) && !["g", "q"].includes( stem.at ( -2 ) ) ) stem += "y"
 
-                                if ( tense === "present" && props.subjectKey === "yo" ){
+                                if ( tense === "present" && mood === "subjunctive" && props.subjectKey === "yo" ){
                                     if ( verb.endsWith( "ger" ) || verb.endsWith( "gir") ) { stem = stem.slice( 0, stem.length - 1 ) + "j" }
                                     
                                     else if ( verb.endsWith( "guir" ) ) { stem = stem.slice( 0, stem.length - 1 ) }
@@ -443,13 +443,18 @@ function Subject(props){
                         <p 
                             className = { styles["conjugation"] }>
                             { complexity !== "compound" ? 
-                                props.conjugation : 
+                                <>
+                                    { props.conjugation.trim() }
+                                    { props.extension && <span className = {styles["extension"]}>{props.extension}</span> }
+                                </>
+                                : 
                                 <>
                                     <span>{ `${props.conjugation.split(" ")[0]} ` }</span>
-                                    <span className = { styles["participle-past"] }>{ `${props.conjugation.split(" ")[1]} ` }</span>
+                                    <span className = { styles["participle-past"] }>{ `${props.conjugation.split(" ")[1]}` }</span>
                                     { props.conjugation.split(" ").length === 3 && 
-                                        <span>{props.conjugation.split(" ")[2]}</span> 
+                                        <span>{" " + props.conjugation.split(" ")[2]}</span> 
                                     }
+                                    { props.extension && <span className = {styles["extension"]}>{props.extension}</span> }
                                 </>
                             }
                         </p>
@@ -463,6 +468,7 @@ function Subject(props){
                         </p>
                         <p className = {styles["conjugation"]}>
                             {props.conjugation}
+                            { props.extension && <span className = {styles["extension"]}>{props.extension}</span> }
                         </p>
                         <div className = {styles["subject-line__button"]}
                             onClick = {() => navigator.clipboard.writeText(props.conjugation)}

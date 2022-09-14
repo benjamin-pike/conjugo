@@ -71,6 +71,10 @@
     opacity: 0 !important;
 }
 
+#verb-details__regularity-toggle:hover ~ .tooltip{
+    opacity: 0 !important;
+}
+
 #verb-details__infinitive-audio,
 #verb-details__infinitive-star,
 #verb-details__translation-toggle,
