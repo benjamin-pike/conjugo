@@ -1,18 +1,17 @@
 import express from 'express';
 import { Request, Response, NextFunction } from 'express';
+import {
+    getConjugations,
+    getStarred, 
+    updateStarred 
+} from '../controllers/referenceControllers';
 
 const router = express.Router();
 
-router.get('/conjugations', async (req: Request, res: Response) => {
-    res.send('Conjugations');
-});
+router.get('/conjugations/:language/:verb', getConjugations);
 
-router.get('/starred', async (req: Request, res: Response) => {
-    res.send('Starred');
-});
-
-router.put('/starred', async (req: Request, res: Response) => {
-    res.send('Starred');
-});
+router.get('/starred/:language', getStarred);
+router.put('/starred/:language/:verb', updateStarred);
+router.delete('/starred/:language/:verb', updateStarred);
 
 module.exports = router;

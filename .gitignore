@@ -24,9 +24,11 @@
 /server/.DS_Store
 /server/.env
 /server/src/static
+/server-ts/.env
 /_development
 /_mongo
 
+*.env
 *.log
 *.pid
 *.pid.lock
