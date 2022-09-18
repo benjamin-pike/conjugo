@@ -1,29 +1,17 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateStarred = exports.getStarred = exports.getConjugations = void 0;
-const client_1 = require("@prisma/client");
-const prisma = new client_1.PrismaClient();
+const conjugations_1 = __importDefault(require("../assets/conjugations"));
 // @desc   Get all conjugations of a given verb
 // @route  GET /reference/conjugations/:language/:verb
 // @access Private
 const getConjugations = async (req, res) => {
     const { language, verb } = req.params;
-    // get conjugations from database using prisma
-    const v = await prisma.verb.create({
-        data: {
-            infinitive: verb,
-            rank: 1
-        }
-    });
-    const verbData = await prisma.verb.findFirst({
-        where: {
-            infinitive: verb
-        }
-    });
-    console.log(verbData);
-    res.send(200);
-    // get verb from database using prisma
-    // insert language into verb object using spread operator and send to client using res.json
+    const verbData = conjugations_1.default[language] && conjugations_1.default[language][verb];
+    res.send(Object.assign({ language, verb }, verbData));
 };
 exports.getConjugations = getConjugations;
 // @desc   Get array of starred verbs for a given language

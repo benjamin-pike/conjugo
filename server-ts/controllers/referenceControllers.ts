@@ -1,30 +1,14 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import VerbCorpus from '../assets/conjugations'
 
 // @desc   Get all conjugations of a given verb
 // @route  GET /reference/conjugations/:language/:verb
 // @access Private
 const getConjugations = async (req: Request, res: Response) => {
     const { language, verb } = req.params;
-
-    // get conjugations from database using prisma
-    const v = await prisma.verb.create({
-        data: {
-            infinitive: verb,
-            rank: 1
-    }});
-    const verbData = await prisma.verb.findFirst({
-        where: {
-            infinitive: verb
-        }
-    })
-
-    console.log(verbData)
-    res.send(200)
-    // get verb from database using prisma
-    // insert language into verb object using spread operator and send to client using res.json
+    const verbData = VerbCorpus[language] && VerbCorpus[language][verb];
+    
+    res.send({ language, verb, ...verbData });
 }
 
 // @desc   Get array of starred verbs for a given language
