@@ -132,6 +132,10 @@ const register = async (req: Request<{}, {}, { [key: string]: string }>, res: Re
             }
         });
 
+        await prisma.savedVerbs.create({
+            data: { userId: user.id }
+        });
+
         status = 201;
         message = 'User created';
     }

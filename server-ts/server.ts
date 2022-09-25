@@ -1,9 +1,8 @@
 import express from 'express';
 import { Request, Response, NextFunction } from 'express';
-import checkAuth from './middleware/check-auth';
+import checkAuth from './middleware/auth.middleware';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
 import cors from 'cors';
 
 dotenv.config()
@@ -27,7 +26,7 @@ app.get('/api', async (req: Request, res: Response) => {
     res.send('Hello World!');
 })
 
-app.use('/auth', require('./routes/authRoutes'))
-app.use('/api/learn', require('./routes/learnRoutes'))
-app.use('/api/practice', require('./routes/practiceRoutes'))
-app.use('/api/reference', require('./routes/referenceRoutes'))
+app.use('/auth', require('./routes/auth.routes'))
+app.use('/api/learn', require('./routes/learn.routes'))
+app.use('/api/practice', require('./routes/practice.routes'))
+app.use('/api/reference', require('./routes/reference.routes'))

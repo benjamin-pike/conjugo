@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
+import { PrismaClient } from '@prisma/client';
 import VerbCorpus from '../assets/conjugations'
+
+const prisma = new PrismaClient()
 
 // @desc   Get all conjugations of a given verb
 // @route  GET /reference/conjugations/:language/:verb
@@ -14,29 +17,56 @@ const getConjugations = async (req: Request, res: Response) => {
 // @desc   Get array of starred verbs for a given language
 // @route  GET /reference/starred/:language/
 // @access Private
-const getStarred = async (req: Request, res: Response) => {
+const getStarred = async (req: Request<{ language: string }>, res: Response) => {
     const { language } = req.params;
-    // get starred verbs from database using prisma
-    // send to client using res.json
+
+    if (!VerbCorpus[language]) return res.sendStatus(404)
+
+    const data = await prisma.savedVerbs.findUnique({
+        where: { userId: req.body.user.id },
+        select: { [language]: true }
+    }) as { [key: string]: string[] };
+
+    if (!data) return res.sendStatus(500)
+
+    res.json(data[language]);
 }
 
 // @desc   Add a verb to the starred verbs array for a given language
-// @route  PUT /reference/starred/:language/
+// @route  PUT or DELETE /reference/starred/:language/
 // @access Private
 const updateStarred = async (req: Request, res: Response) => {
     const { language, verb } = req.params;
-    // get starred verbs from database using prisma
 
-    if ( req.method === 'PUT' ) {
-        // add verb to starred verbs array
+    if (!VerbCorpus[language] || !VerbCorpus[language][verb] ) 
+        return res.sendStatus(404)
+
+    let data = await prisma.savedVerbs.findUnique({
+        where: { userId: req.body.user.id },
+        select: { [language]: true }
+    }) as { [key: string]: string[] };
+
+    if (!data) return res.sendStatus(500)
+
+    const savedVerbs = data[language]
+
+    if (req.method === 'PUT') {
+        if (!savedVerbs.includes(verb)) savedVerbs.push(verb)
     }
 
-    if ( req.method === 'DELETE' ) {
-        // remove verb from starred verbs array
+    if (req.method === 'DELETE') {
+        const index = savedVerbs.indexOf(verb)
+        if (index > -1) savedVerbs.splice(index, 1)
     }
 
-    // update database using prisma
-    // send to client using res.json
+    const updatedArray = await prisma.savedVerbs.update({
+        where: { userId: req.body.user.id },
+        data: { [language]: savedVerbs }
+    })
+    
+    if (!updatedArray) return res.sendStatus(500)
+
+    res.sendStatus(200)
 }
 
 export { getConjugations, getStarred, updateStarred };
