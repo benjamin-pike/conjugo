@@ -1,10 +1,5 @@
 import express from 'express';
-import { Request, Response, NextFunction } from 'express';
-import {
-    getConjugations,
-    getStarred, 
-    updateStarred 
-} from '../controllers/referenceControllers';
+import { getConjugations, getStarred,  updateStarred } from '../controllers/reference.controllers';
 
 const router = express.Router();
 

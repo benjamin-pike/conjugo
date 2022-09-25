@@ -6,28 +6,27 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model People {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  username  String   @unique
-  email     String   @unique
-  password  String
-  firstName String
-  lastName  String
-  dob       DateTime
-  image     String
-  token     String
-  createdAt DateTime @default(now())
+model User {
+  id           String         @id @default(cuid())
+  username     String         @unique
+  email        String         @unique
+  password     String
+  fname        String
+  lname        String
+  dob          DateTime
+  image        String         
+  createdAt    DateTime       @default(now())
+  lastLogin    DateTime       @default(now())
+  RefreshToken RefreshToken[]
 }
 
-model Verb {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  infinitive   String
-  rank         Int
-  reguarity    String?
-  translations Json?
-  conjugations Json?
+model RefreshToken {
+  id     String   @id
+  exp    DateTime
+  user   User     @relation(fields: [userId], references: [id])
+  userId String
 }
