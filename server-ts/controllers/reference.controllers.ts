@@ -7,7 +7,7 @@ const prisma = new PrismaClient()
 // @desc   Get all conjugations of a given verb
 // @route  GET /reference/conjugations/:language/:verb
 // @access Private
-const getConjugations = async (req: Request, res: Response) => {
+export const getConjugations = async (req: Request, res: Response) => {
     const { language, verb } = req.params;
     const verbData = VerbCorpus[language] && VerbCorpus[language][verb];
     
@@ -17,7 +17,7 @@ const getConjugations = async (req: Request, res: Response) => {
 // @desc   Get array of starred verbs for a given language
 // @route  GET /reference/starred/:language/
 // @access Private
-const getStarred = async (req: Request<{ language: string }>, res: Response) => {
+export const getSavedVerbs = async (req: Request<{ language: string }>, res: Response) => {
     const { language } = req.params;
 
     if (!VerbCorpus[language]) return res.sendStatus(404)
@@ -35,7 +35,7 @@ const getStarred = async (req: Request<{ language: string }>, res: Response) => 
 // @desc   Add a verb to the starred verbs array for a given language
 // @route  PUT or DELETE /reference/starred/:language/
 // @access Private
-const updateStarred = async (req: Request, res: Response) => {
+export const updatedSavedVerbs = async (req: Request, res: Response) => {
     const { language, verb } = req.params;
 
     if (!VerbCorpus[language] || !VerbCorpus[language][verb] ) 
@@ -68,5 +68,3 @@ const updateStarred = async (req: Request, res: Response) => {
 
     res.sendStatus(200)
 }
-
-export { getConjugations, getStarred, updateStarred };

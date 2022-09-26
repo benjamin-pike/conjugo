@@ -1,22 +1,12 @@
 import express from 'express';
-import { Request, Response, NextFunction } from 'express';
+import { getPracticeConfig, updatePracticeConfig, generatePracticeSession, calculatePracticeResults } from '../controllers/practice.controllers';
 
 const router = express.Router();
 
-router.get('/configure', async (req: Request, res: Response) => {
-    res.send('Configure');
-});
+router.get('/configure/:language', getPracticeConfig);
+router.put('/configure', updatePracticeConfig);
+router.get('/session', generatePracticeSession);
+router.post('/results', calculatePracticeResults);
 
-router.put('/configure', async (req: Request, res: Response) => {
-    res.send('Configure');
-});
-
-router.get('/conjugations', async (req: Request, res: Response) => {
-    res.send('Conjugations');
-});
-
-router.post('/results', async (req: Request, res: Response) => {
-    res.send('Results');
-});
-
-module.exports = router;
+// module.exports = router;
+export default router;

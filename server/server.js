@@ -44,7 +44,6 @@ app.get('/api/configure', async (req, res) => { // Send current configuration up
     catch(err){
         res.sendStatus(400)
     }
-
 })
 
 app.post('/api/configure', async (req, res) => { // Recieve updated configuration upon post
