@@ -1,26 +1,33 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { VerbCorpus } from '../assets/conjugations'
+import { exclude } from '../utils/object.utils';
+import validVerbs from '../assets/verbs.assets';
 
 const prisma = new PrismaClient()
 
 // @desc   Get all conjugations of a given verb
 // @route  GET /reference/conjugations/:language/:verb
 // @access Private
+// @params language: string, verb: string
 export const getConjugations = async (req: Request, res: Response) => {
     const { language, verb } = req.params;
-    const verbData = VerbCorpus[language] && VerbCorpus[language][verb];
+    const verbData = await prisma.verbCorpus.findUnique({
+        where: { language_infinitive: { language, infinitive: verb } }
+    })
+
+    if (!verbData) return res.sendStatus(500)
     
-    res.send({ language, verb, ...verbData });
+    res.json( exclude(verbData, ['id']) );
 }
 
-// @desc   Get array of starred verbs for a given language
-// @route  GET /reference/starred/:language/
+// @desc   Get array of saved verbs for a given language
+// @route  GET /reference/saved/:language/
 // @access Private
+// @params language: string
 export const getSavedVerbs = async (req: Request<{ language: string }>, res: Response) => {
     const { language } = req.params;
 
-    if (!VerbCorpus[language]) return res.sendStatus(404)
+    if (!validVerbs[language]) return res.sendStatus(404)
 
     const data = await prisma.savedVerbs.findUnique({
         where: { userId: req.body.user.id },
@@ -32,13 +39,14 @@ export const getSavedVerbs = async (req: Request<{ language: string }>, res: Res
     res.json(data[language]);
 }
 
-// @desc   Add a verb to the starred verbs array for a given language
-// @route  PUT or DELETE /reference/starred/:language/
+// @desc   Add a verb to the saved verbs array for a given language
+// @route  PUT or DELETE /reference/saved/:language/
 // @access Private
+// @params language: string, verb: string
 export const updatedSavedVerbs = async (req: Request, res: Response) => {
     const { language, verb } = req.params;
 
-    if (!VerbCorpus[language] || !VerbCorpus[language][verb] ) 
+    if (!validVerbs[language] || !validVerbs[language].includes(verb) ) 
         return res.sendStatus(404)
 
     let data = await prisma.savedVerbs.findUnique({
@@ -61,10 +69,11 @@ export const updatedSavedVerbs = async (req: Request, res: Response) => {
 
     const updatedArray = await prisma.savedVerbs.update({
         where: { userId: req.body.user.id },
-        data: { [language]: savedVerbs }
+        data: { [language]: savedVerbs },
+        select: { [language]: true }
     })
     
     if (!updatedArray) return res.sendStatus(500)
 
-    res.sendStatus(200)
+    res.json(updatedArray)
 }

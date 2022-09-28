@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "PracticeConfig" ALTER COLUMN "verbs" SET DEFAULT 0,
+ALTER COLUMN "target" SET DEFAULT 0,
+ALTER COLUMN "time" SET DEFAULT 0;

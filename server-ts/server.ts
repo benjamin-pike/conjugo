@@ -28,7 +28,7 @@ app.listen(port, () => { // Log to console when server starts
 
 app.use('/api', checkAuth) // Check authentication for all routes under /api
 
-app.get('/api', async (req: Request, res: Response) => { // Test route
+app.get('/api', async (_req: Request, res: Response) => { // Test route
     res.send('Hello World!');
 })
 

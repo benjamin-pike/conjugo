@@ -51,9 +51,9 @@ model PracticeConfig {
   language String
   subjects String[]
   tenses   String[]
-  verbs    Int      @default(0)
-  target   Int      @default(0)
-  time     Int      @default(0)
+  verbs    Int      @default(20)
+  target   Int      @default(10)
+  time     Int      @default(120)
   user     User     @relation(fields: [userId], references: [id])
   userId   String
 
