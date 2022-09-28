@@ -10,3 +10,14 @@ export const exclude = (originalObject: anyObject, excludedKeys: string[]): anyO
         return filteredObject
     }, {} )
 }
+
+export const include = (originalObject: anyObject, includedKeys: string[]): anyObject => {
+    return Object.keys(originalObject).reduce((filteredObject: anyObject, key: string) => {
+        
+        if (includedKeys.includes(key)) {
+            filteredObject[key] = originalObject[key]
+        }
+        
+        return filteredObject
+    }, {} )
+}

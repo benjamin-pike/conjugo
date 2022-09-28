@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import VerbCorpus from '../assets/conjugations'
+import { VerbCorpus } from '../assets/conjugations'
 
 const prisma = new PrismaClient()
 

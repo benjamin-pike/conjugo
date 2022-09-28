@@ -4,7 +4,7 @@ import { getPracticeConfig, updatePracticeConfig, generatePracticeSession, calcu
 const router = express.Router();
 
 router.get('/configure/:language', getPracticeConfig);
-router.put('/configure', updatePracticeConfig);
+router.put('/configure/:language', updatePracticeConfig);
 router.get('/session', generatePracticeSession);
 router.post('/results', calculatePracticeResults);
 

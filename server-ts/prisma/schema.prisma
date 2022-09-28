@@ -50,7 +50,7 @@ model PracticeConfig {
   id       String   @id @default(cuid())
   language String
   subjects String[]
-  tense    String[]
+  tenses   String[]
   verbs    Int      @default(0)
   target   Int      @default(0)
   time     Int      @default(0)
@@ -59,4 +59,18 @@ model PracticeConfig {
 
   @@unique([userId, language])
   @@index([userId])
+}
+
+model VerbCorpus {
+  id           String @id @default(cuid())
+  language     String
+  infinitive   String
+  rank         Int
+  regularity   String
+  translations Json
+  conjugations Json
+  participles  Json
+
+  @@unique([language, infinitive])
+  @@index([language, infinitive])
 }
