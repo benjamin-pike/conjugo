@@ -22,7 +22,6 @@ import {
     subjectsConst as validSubjectsConst,
     subjectsGenericConst as validSubjectsGeneric
 } from "../assets/subjects.assets";
-import languages from "../assets/languages.assets";
 
 const prisma = new PrismaClient();
 
@@ -30,7 +29,7 @@ const prisma = new PrismaClient();
 // @desc   Get the current practice configuration that is stored in the database
 // @route  GET /practice/configure/:language
 // @access Private
-// @params language: string
+// @params { language: string }
 export const getPracticeConfig = async (req: Request, res: Response) => {
 	const { language } = req.params;
 
@@ -63,6 +62,7 @@ export const getPracticeConfig = async (req: Request, res: Response) => {
 // @desc   Update the practice configuration that is stored in the database
 // @route  PUT /practice/configure/:language
 // @access Private
+// @params { language: string }
 // @body   { language: string, subjects: string[], tenses: string[], verbs: int, target: int, time: int }
 export const updatePracticeConfig = async (req: Request, res: Response) => {
 	const { language } = req.params;
@@ -208,21 +208,22 @@ export const generatePracticeSession = async (req: Request, res: Response) => {
 // @desc   Calculate the score of a practice session
 // @route  POST /practice/results/:language
 // @access Private
+// @params { language: string }
+// @body   { results: { infinitive: string, subject: string, tense: string, accuracy: number, time: number, hinted: boolean }[] }
 export const calculatePracticeResults = async (req: Request, res: Response) => {
+
     const { language } = req.params;
 
     if (!validLanguages.includes(language)) return res.sendStatus(400);
 
     const resultsPayload = z.array(
 			z.object({
-				accuracy: z.number().min(0).max(100),
-				hinted: z.boolean(),
+                infinitive: z.string(infinitivesConst[language]),
+                subject: z.string(validSubjectsConst[language]),
+                tense: z.enum(validTensesConst[language]),
+				accuracy: z.number().min(0).max(1),
 				time: z.number().int(),
-				answer: z.object({
-					infinitive: z.string(infinitivesConst[language]),
-					subject: z.string(validSubjectsConst[language]),
-					tense: z.enum(validTensesConst[language])
-				})
+				hinted: z.boolean()
 			})
 		);
 
@@ -232,7 +233,7 @@ export const calculatePracticeResults = async (req: Request, res: Response) => {
 
     const performance = parsedData.data;
 
-    const meanAccuracy = performance.reduce((acc, curr) => acc + curr.accuracy, 0) / performance.length;
+    const meanAccuracy = performance.reduce((acc, curr) => acc + curr.accuracy, 0) / performance.length; // (0-1)
 
     const config = await prisma.practiceConfig.findUnique({
         where: {
@@ -263,23 +264,32 @@ export const calculatePracticeResults = async (req: Request, res: Response) => {
     const configScore = ( 1/3 ) * ( subjectScore + tenseScore + verbScore ) * pressureScore
 
     // Calculate the new XP value based on the accuracy and config complexity  
-    const currentXP = 100
-    const newXP = currentXP + Math.round(500 * configScore * meanAccuracy)
+    const xpData = await prisma.xp.findUnique({
+        where: { userId: req.body.user.id },
+        select: { [language]: true }
+    }) as { [key: string]: number };
+
+    if (!xpData) return res.sendStatus(500);
+
+    const currentXP = xpData[language];
+    const newXP = currentXP + Math.round(100 * configScore * meanAccuracy) * 5
+
+    const updatedXP = await prisma.xp.update({
+        where: { userId: req.body.user.id },
+        data: { [language]: newXP }
+    });
+
+    if (!updatedXP) return res.sendStatus(500);
 
     return res.json({
         xp: { current: currentXP, new: newXP },
         accuracy: meanAccuracy,
-        config: {
-            subjects: [subjects.length, 
-                subjects.length / 6],
-            tenses: [tenses.length, 
-                tenses.length / validTenses[language].length],
-            verbs: [verbs, 
-                100 * verbs ** 0.5 / 2000 ** 0.5],
-            target: [target, 
-                100 * target / 50],
-            time: [time, 
-                100 * (330 - time) / 300]
+        config: { // Tuples contain true (absolute) values and the adjusted (relative) values displayed on the results sliders
+            subjects: [subjects.length, subjectsNormalized * 100],
+            tenses: [tenses.length, tensesNormalized * 100],
+            verbs: [verbs, 100 * verbs ** 0.5 / 2000 ** 0.5],
+            target: [target, 100 * target / 50],
+            time: [time, 100 * (330 - time) / 300]
         }
     })
 };

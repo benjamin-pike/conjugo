@@ -8,7 +8,7 @@ const prisma = new PrismaClient()
 // @desc   Get all conjugations of a given verb
 // @route  GET /reference/conjugations/:language/:verb
 // @access Private
-// @params language: string, verb: string
+// @params { language: string, verb: string }
 export const getConjugations = async (req: Request, res: Response) => {
     const { language, verb } = req.params;
     const verbData = await prisma.verbCorpus.findUnique({
@@ -23,7 +23,7 @@ export const getConjugations = async (req: Request, res: Response) => {
 // @desc   Get array of saved verbs for a given language
 // @route  GET /reference/saved/:language/
 // @access Private
-// @params language: string
+// @params { language: string }
 export const getSavedVerbs = async (req: Request<{ language: string }>, res: Response) => {
     const { language } = req.params;
 
@@ -42,7 +42,7 @@ export const getSavedVerbs = async (req: Request<{ language: string }>, res: Res
 // @desc   Add a verb to the saved verbs array for a given language
 // @route  PUT or DELETE /reference/saved/:language/
 // @access Private
-// @params language: string, verb: string
+// @params { language: string, verb: string }
 export const updatedSavedVerbs = async (req: Request, res: Response) => {
     const { language, verb } = req.params;
 

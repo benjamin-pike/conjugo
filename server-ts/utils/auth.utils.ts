@@ -1,4 +1,5 @@
-import jwt, { Jwt } from 'jsonwebtoken';
+import { Response } from 'express'
+import jwt from 'jsonwebtoken';
 import { JwtPayload } from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import cuid from 'cuid';
@@ -45,4 +46,21 @@ export const verifyToken = (token: string, tokenType: 'access' | 'refresh') => {
     catch (err: any) {
         return { payload: null, expired: err.name === 'TokenExpiredError' }
     }
+}
+
+export const setTokenCookies = async (res: Response, userId: string) => {
+    const accessToken = createAccessToken(userId);
+    const refreshToken = await createRefreshToken(userId);
+
+    if (!refreshToken) return res.sendStatus(500);
+
+    res.cookie('accessToken', accessToken, { 
+        maxAge: 3600000, // 1 hour 
+        httpOnly: true 
+    });
+
+    res.cookie('refreshToken', refreshToken, { 
+        maxAge: 3.156e+10, // 1 year
+        httpOnly: true 
+    });
 }

@@ -3,7 +3,8 @@ import { PrismaClient } from '@prisma/client';
 import { JwtPayload } from 'jsonwebtoken'; 
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
-import { createAccessToken, createRefreshToken, verifyToken } from '../utils/auth.utils';
+import { z } from 'zod';
+import { createAccessToken, createRefreshToken, verifyToken, setTokenCookies } from '../utils/auth.utils';
 
 dotenv.config()
 const prisma = new PrismaClient();
@@ -11,7 +12,8 @@ const prisma = new PrismaClient();
 // @desc   Login user
 // @route  POST /auth/login
 // @access Public
-const login = async (req: Request, res: Response) => {
+// @body   { emailUsername: string, passwordLogin: string }
+export const login = async (req: Request, res: Response) => {
     const { emailUsername: identifier, passwordLogin: password } = req.body;
 
     if (!identifier || !password) {
@@ -30,20 +32,7 @@ const login = async (req: Request, res: Response) => {
 
     if (!user || !valid) return res.status(401).send('invalid credentials');
 
-    const accessToken = createAccessToken(user.id);
-    const refreshToken = await createRefreshToken(user.id);
-
-    if (!refreshToken) return res.status(500).send('server error');
-
-    res.cookie('accessToken', accessToken, { 
-        maxAge: 3600000, // 1 hour 
-        httpOnly: true 
-    });
-
-    res.cookie('refreshToken', refreshToken, { 
-        maxAge: 3.156e+10, // 1 year
-        httpOnly: true 
-    });
+    await setTokenCookies(res, user.id);
 
     return res.status(200).json({
         username: user.username,
@@ -52,138 +41,142 @@ const login = async (req: Request, res: Response) => {
     });
 }
 
+// @desc   Logout user
+// @route  POST /auth/logout
+// @access Private
+export const logout = async (req: Request, res: Response) => {
+	const refreshToken = req.cookies.refreshToken;
+
+	if (!refreshToken) return res.sendStatus(401);
+
+	const { payload } = verifyToken(refreshToken, "refresh");
+
+	if (!payload) return res.sendStatus(500);
+
+	const { jti: tokenId } = payload as JwtPayload;
+
+	const deletedRefreshToken = prisma.refreshToken.delete({
+		where: { id: tokenId }
+	});
+
+	if (!deletedRefreshToken) res.sendStatus(500);
+
+	res.clearCookie("accessToken");
+	res.clearCookie("refreshToken");
+
+	res.sendStatus(200);
+};
+
 // @desc   Register user
 // @route  POST /auth/register
 // @access Public
-const register = async (req: Request<{}, {}, { [key: string]: string }>, res: Response) => {
-    const { 
-        fname, 
-        lname, 
-        username, 
-        dob, 
-        email, 
-        passwordRegister, 
-        passwordConfirm 
-    } = req.body;
+// @body   { fname: string, lname: string username: string, dob: string, 
+//           email: string, passwordRegister: string, passwordConfirm: string }
+export const register = async (req: Request<{}, {}, { [key: string]: string }>, res: Response) => {
+    // Name regex
+        // 1. Must be between 2 and 50 characters
+        // 2. Must only contain letters, spaces, hyphens, and apostrophes
+        // 3. Must start and end with a letter
+    const nameRegex = /^[\p{Letter}'][ \p{Letter}'-]{0,48}[\p{Letter}]$/u
+    
+    // Username regex
+        // 1. Must be between 3 and 20 characters
+        // 2. Must only contain alphanumeric characters, periods, hyphens, and underscores
+        // 3. Must start with a letter
+        // 4. Must end with an alphanumeric character
+        // 5. Cannot contain two special characters periods in a row
+    const usernameRegex = /^(?!.*[._-]{2}).[a-zA-Z][a-zA-Z0-9_.-]{0,17}[a-zA-Z0-9]$/
+    
+    // Password regex
+        // 1. Must be between 8 and 50 characters
+        // 2. Must contain at least one uppercase letter
+        // 3. Must contain at least one lowercase letter
+        // 4. Must contain at least one number
+        // 5. Must contain at least one special character
+    const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*\-+]).{8,50}$/
 
-    const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-    const passwordRequired = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*\-+]).{0,}$/
-    const passwordValid = /^[a-zA-Z0-9#?!@$%^&*\-+]+$/
+    const registerPayload = z.object({
+        fname: z.string().regex(nameRegex),
+        lname: z.string().regex(nameRegex),
+        username: z.string().regex(usernameRegex),
+        dob: z.date().min(new Date("1900-01-01")).max(new Date()),
+        email: z.string().trim().email().max(320),
+        passwordRegister: z.string().regex(passwordRegex),
+        passwordConfirm: z.literal(req.body.passwordRegister)
+    });
 
-    let status = 500;
-    let message = 'server error';
+    const parsedData = registerPayload.safeParse({...req.body, dob: new Date(req.body.dob)});
+
+    if (!parsedData.success) return res.sendStatus(400);
+
+    const userData = parsedData.data
+
+    const hash = await bcrypt.hash(userData.passwordRegister, Number(process.env.SALT_ROUNDS));
 
     try {
-
-        const valid = 
-            // Check if all fields are filled
-            !fname || !lname || !username || !dob || !email || !passwordRegister || !passwordConfirm  ||
-            
-            // Check all fields are filled after trimming whitespace
-            Object.values(req.body).some( value => value.trim().length === 0 ) ||
-            
-            // Check array of field-specific conditions – if any are false, form is invalid
-            [ 
-                // First name
-                /^[A-Za-z]+$/.test(fname), // Check for invalid characters
-                fname.trim().length <= 32, // Check length is less than or equal to 32 characters
-                
-                // Last name
-                /^[A-Za-z]+$/.test(lname), // Check for invalid characters
-                lname.trim().length <= 32, // Check length is less than or equal to 32 characters
-                
-                // Username
-                /^[A-Za-z0-9_\-\.]+$/.test(username),  // Check for invalid characters
-                /^[A-za-z].*/.test(username), // Check for invalid first character
-                /^.*[A-za-z0-9]$/.test(username), // Check for invalid last character
-                !/^!?.*[_\-\.]{2}.*$/.test(username), // Check for invalid consecutive characters
-                username.trim().length <= 32, // Check length is less than or equal to 32 characters
-                username.trim().length > 6, // Check length is greater than or equal to 6 characters
-                
-                // Date of birth
-                /^\d{4}-\d{2}-\d{2}$/.test(dob), // Check date is in YYYY-MM-DD format
-                Date.parse(dob) > Date.parse("1900-01-01"), // Check date is after 1900
-                Date.parse(dob) < (new Date()).getTime(), // Check date is before today
-                
-                // Email
-                emailPattern.test(email), // Check for invalid email
-                
-                // Password
-                passwordRequired.test(passwordRegister), // Check for required characters
-                passwordValid.test(passwordRegister), // Check for invalid characters
-                passwordRegister.length >= 8, // Check length is greater than or equal to 8 characters
-                passwordRegister === passwordConfirm // Check password and password confirmation match
-            ].every( (condition: boolean) => condition === true ) // Check all conditions are met
-
-        if (!valid) throw new Error('invalid input')
-
-        // If valid input, attempt to create user
-        const hash = await bcrypt.hash(passwordRegister, Number(process.env.SALT_ROUNDS));
-
         const user = await prisma.user.create({
             data: {
-                fname,
-                lname,
-                username,
-                email,
-                dob: new Date(dob),
+                fname: userData.fname,
+                lname: userData.lname,
+                username: userData.username,
+                dob: userData.dob,
+                email: userData.email,
                 password: hash,
-                image: "",
+                image: ''
             }
-        });
+        })
 
-        await prisma.savedVerbs.create({
-            data: { userId: user.id }
-        });
+        try {
+            await prisma.savedVerbs.create({ // Create 'saved verbs' entry for user
+                data: { userId: user.id }
+            });
+    
+            await prisma.xp.create({ // Create 'xp' entry for user
+                data: { userId: user.id }
+            });
+        } 
 
-        status = 201;
-        message = 'User created';
+        catch { return res.sendStatus(500) }
+
+        await setTokenCookies(res, user.id);
+
+        return res.sendStatus(201)
     }
 
     catch (err: any) {
-        if (err.code === 'P2002') {
-            message = `${err.meta.target[0]} already exists`;
-            status = 400;
-        }
+        if (err.code === 'P2002')
+            return res.status(400).send(`${err.meta.target[0]} already exists`)
 
-        else if (err.message === 'invalid input') {
-            message = 'invalid input';
-            status = 400;
-        }
-
-        else console.log(err)
+        return res.sendStatus(50)
     }
-    
-    res.status(status).send(message);
 }
 
 // @desc   Acquire token
 // @route  POST /auth/token
 // @access Public
-const token = async (req: Request, res: Response) => {
+export const token = async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken;
 
-    if (!refreshToken) return res.status(401).send('no refresh token');
+    if (!refreshToken) return res.sendStatus(401);
 
     const {payload, expired} = verifyToken(refreshToken, 'refresh')
 
-    if (!payload) return res.status(500).send('sever error');
-    if (expired) return res.status(401).send('token expired');
+    if (!payload) return res.sendStatus(500);
+    if (expired) return res.sendStatus(401);
 
-    const verifiedToken = payload as JwtPayload
-    const { jti: tokenId, id: userId } = verifiedToken;
+    const { jti: tokenId, id: userId } = payload as JwtPayload;
 
     const isStored = Boolean(await prisma.refreshToken.findUnique({
         where: { id: tokenId }
     }));
 
-    if (!isStored) return res.status(401).send('invalid refresh token');
+    if (!isStored) return res.sendStatus(401);
 
     const user = await prisma.user.findUnique({
         where: { id: userId }
     });
 
-    if (!user) return res.status(500).send('sever error');
+    if (!user) return res.sendStatus(500);
 
     const newAccessToken = createAccessToken(userId);
     const newRefreshToken = await createRefreshToken(userId);
@@ -192,7 +185,7 @@ const token = async (req: Request, res: Response) => {
         where: { id: tokenId }
     }))
 
-    if (!isDeleted || !newRefreshToken) return res.status(500).send('server error');
+    if (!isDeleted || !newRefreshToken) return res.sendStatus(500);
 
     // Return access token
     res.cookie('aceessToken', newAccessToken, {
@@ -205,7 +198,5 @@ const token = async (req: Request, res: Response) => {
         httpOnly: true
     })
 
-    res.status(200).send('token refreshed');
+    res.sendStatus(200);
 }
-
-export { login, register, token }
