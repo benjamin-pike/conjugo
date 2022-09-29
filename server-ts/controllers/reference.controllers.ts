@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { exclude } from '../utils/object.utils';
-import validVerbs from '../assets/verbs.assets';
+import validVerbs from '../assets/infinitives.assets';
 
 const prisma = new PrismaClient()
 
