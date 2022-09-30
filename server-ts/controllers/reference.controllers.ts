@@ -11,7 +11,7 @@ const prisma = new PrismaClient()
 // @params { language: string, verb: string }
 export const getConjugations = async (req: Request, res: Response) => {
     const { language, verb } = req.params;
-    const verbData = await prisma.verbCorpus.findUnique({
+    const verbData = await prisma.verb.findUnique({
         where: { language_infinitive: { language, infinitive: verb } }
     })
 

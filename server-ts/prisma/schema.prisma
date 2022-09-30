@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,23 +12,24 @@ model User {
   username       String           @unique
   email          String           @unique
   password       String
-  fname          String
-  lname          String
   dob            DateTime
-  image          String
   createdAt      DateTime         @default(now())
   lastLogin      DateTime         @default(now())
+  fname          String
+  image          String
+  lname          String
+  practiceConfig PracticeConfig[]
   RefreshTokens  RefreshToken[]
   SavedVerbs     SavedVerbs?
-  practiceConfig PracticeConfig[]
   XP             xp?
+  UserProgress   UserProgress[]
 }
 
 model RefreshToken {
   id     String   @id
   exp    DateTime
-  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model SavedVerbs {
@@ -41,8 +39,8 @@ model SavedVerbs {
   german     String[] @default([])
   italian    String[] @default([])
   portuguese String[] @default([])
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
@@ -51,19 +49,19 @@ model PracticeConfig {
   id       String   @id @default(cuid())
   language String
   subjects String[]
-  tenses   String[]
   verbs    Int      @default(20)
   target   Int      @default(10)
   time     Int      @default(120)
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   String
+  tenses   String[]
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, language])
   @@index([userId])
 }
 
-model VerbCorpus {
-  id           String @id @default(cuid())
+model Verb {
+  id           String @id(map: "VerbCorpus_pkey") @default(cuid())
   language     String
   infinitive   String
   rank         Int
@@ -73,6 +71,7 @@ model VerbCorpus {
   participles  Json
 
   @@unique([language, infinitive])
+  @@unique([language, rank])
   @@index([language, infinitive])
 }
 
@@ -83,9 +82,19 @@ model xp {
   german     Int    @default(0)
   italian    Int    @default(0)
   portuguese Int    @default(0)
+  userId     String @unique
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model UserProgress {
+  id         String @id @default(cuid())
+  language   String
+  knownVerbs Int    @default(3)
   user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String
 
-  @@unique([userId])
+  @@unique([userId, language])
   @@index([userId])
 }

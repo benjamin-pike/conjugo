@@ -166,7 +166,7 @@ export const generatePracticeSession = async (req: Request, res: Response) => {
 						previousEntry?.infinitive
 				  );
 
-		const verbData = await prisma.verbCorpus.findUnique({
+		const verbData = await prisma.verb.findUnique({
 			// Fetch the conjugations and translations of the chosen infinitive from the database
 			where: {
 				language_infinitive: {
@@ -218,8 +218,8 @@ export const calculatePracticeResults = async (req: Request, res: Response) => {
 
     const resultsPayload = z.array(
 			z.object({
-                infinitive: z.string(infinitivesConst[language]),
-                subject: z.string(validSubjectsConst[language]),
+                infinitive: z.enum(infinitivesConst[language]),
+                subject: z.enum(validSubjectsConst[language]),
                 tense: z.enum(validTensesConst[language]),
 				accuracy: z.number().min(0).max(1),
 				time: z.number().int(),

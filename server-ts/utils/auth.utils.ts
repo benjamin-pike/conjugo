@@ -8,7 +8,8 @@ const prisma = new PrismaClient();
 
 export const createAccessToken = (id: string) => {
     return jwt.sign({ id }, process.env.JWT_ACCESS_SECRET, {
-        expiresIn: process.env.JWT_EXPIRATION_ACCESS,
+        expiresIn: process.env.NODE_ENV === 'production' 
+            ? process.env.JWT_EXPIRATION_ACCESS : '1yr'
     });
 }
 
@@ -55,7 +56,8 @@ export const setTokenCookies = async (res: Response, userId: string) => {
     if (!refreshToken) return res.sendStatus(500);
 
     res.cookie('accessToken', accessToken, { 
-        maxAge: 3600000, // 1 hour 
+        maxAge: process.env.NODE_ENV === 'production' 
+            ? 3600000 : 3.156e+10, // 1 hour : 1 year
         httpOnly: true 
     });
 
