@@ -29,3 +29,7 @@
  - Zod (for type validation)
  ---
  NB. Conjugo is not currently hosted, however this is intended in the near future.
+
+Solarized dark             |  Solarized Ocean
+:-------------------------:|:-------------------------:
+![](https://i.imgur.com/llyyt8K.png)  |  ![](https://i.imgur.com/amJKzoL.png)
