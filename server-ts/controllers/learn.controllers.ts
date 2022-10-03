@@ -73,10 +73,31 @@ const collatedSubjects: { [key: string]: (string | string[])[] } = {
 export const lesson = async (req: Request, res: Response) => {
     const { language, complexity, mood, tense } = req.params;
 
+    interface matchContent {
+        pairs: [string, string][]
+    }
+
+    interface selectContent {
+        card: string,
+        subject?: string
+        tense?: string
+        options: { prefix?: string, main: string, correct: boolean }[]
+    }
+
+    interface typeContent {
+        card: string,
+        subject?: string,
+        answer: string,
+    }
+
+    interface alertContent {
+        conjugations: [string, string][]
+    }
+
     const output: {
         format: { [key: string]: string },
         infinitive: string,
-        content: any
+        content: matchContent | selectContent | typeContent | alertContent
     }[] = []
 
     let knownVerbs = await prisma.userProgress.findUnique({
@@ -106,7 +127,7 @@ export const lesson = async (req: Request, res: Response) => {
 
     let candidateInfinitives = await prisma.verb.findMany({
         where: { 
-            rank : { lte: knownVerbs},
+            rank : { lte: knownVerbs },
             language
         },
         select: { infinitive: true }
@@ -136,10 +157,22 @@ export const lesson = async (req: Request, res: Response) => {
             continue;
 
         let infinitive: string = 
-            randomElementNotPrevious(candidateInfinitives, prevQuestion?.infinitive)
+            randomElementNotPrevious(
+                candidateInfinitives, 
+                prevQuestion?.infinitive !== '' 
+                    ? prevQuestion?.infinitive 
+                    : antePrevQuestion?.infinitive
+            )
 
-        if (prevQuestion?.format.action === 'alert')
+        if (prevQuestion?.format.action === 'alert'){
+            if (format.action === 'match' && format.answer === 'translations')
+                continue
+
             infinitive = prevQuestion.infinitive
+        }
+
+        if (format.action === 'match' && format.answer === 'translations')
+            infinitive = ''
 
         if (format.action === 'alert'){
             knownVerbs++
@@ -161,7 +194,8 @@ export const lesson = async (req: Request, res: Response) => {
             candidateInfinitives.push(infinitive)
         }
 
-        candidateInfinitives.splice(candidateInfinitives.indexOf(infinitive), 1)
+        if (infinitive !== '')
+            candidateInfinitives.splice(candidateInfinitives.indexOf(infinitive), 1)
 
         if (candidateInfinitives.length === 0) {
             candidateInfinitives = await prisma.verb.findMany({
@@ -182,7 +216,7 @@ export const lesson = async (req: Request, res: Response) => {
                     [complexity, mood, tense],
                     knownVerbs,
                     candidateInfinitives
-                )
+                ) as matchContent
 
                 break;
             
@@ -194,7 +228,7 @@ export const lesson = async (req: Request, res: Response) => {
                     infinitive,
                     [complexity, mood, tense],
                     knownVerbs,
-                )
+                ) as selectContent
 
                 break;
 
@@ -206,17 +240,17 @@ export const lesson = async (req: Request, res: Response) => {
                     infinitive,
                     [complexity, mood, tense],
                     knownVerbs,
-                )
+                ) as typeContent
                 
                 break;
 
             case 'alert':
-                content = generateAlert(
+                content = await generateAlert(
                     res,
                     language, 
                     infinitive,
                     [complexity, mood, tense]
-                )
+                ) as alertContent
 
                 break
 
@@ -259,10 +293,10 @@ async function generateMatch(
     const output: {pairs: [string, string][]} = {pairs: []}
     
     if (type === 'translations'){
-        const pool = candidateInfinitives && candidateInfinitives?.length <= 6
+        const pool = candidateInfinitives && candidateInfinitives?.length >= 6
             ? candidateInfinitives
             : await prisma.verb.findMany({
-                where: { language, rank: { lte: knownVerbs} },
+                where: { language, rank: { lte: knownVerbs <= 6 ? knownVerbs : 6} },
             }).then(data => data.map(verb => verb.infinitive));
 
         const infinitives = pool.sort(() => Math.random() - 0.5).slice(0, 6)
@@ -481,6 +515,8 @@ async function generateAlert(
 	infinitive: string,
 	tenseRoot: [string, string, string],
 ) {
+    const output: { conjugations: [string, string][] }= { conjugations: [] }
+    
     const allConjugations = 
         await prisma.verb.findUnique({
             where: { language_infinitive: { language, infinitive } },
@@ -493,12 +529,17 @@ async function generateAlert(
 
     const conjugations = allConjugations[complexity][mood][tense]
 
-    return {
-			conjugations: collatedSubjects[language].map((subjects) => [
-				conjugations[subjects[0]],
-				subjects.length < 1 ? `${subjects[0]} • ${subjects[1]}` : subjects[0]
-			])
-		};
+    output.conjugations = 
+        collatedSubjects[language].map((subjects) => [
+            Array.isArray(subjects)
+                ? language !== 'italian' 
+                    ? `${subjects[0]} • ${subjects[1]}`
+                    : subjects[0]
+                : subjects,
+            conjugations[Array.isArray(subjects) ? subjects[0] : subjects],
+        ])
+
+    return output
 }
 
 function getCorrectConjugations( 

@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
 import { createAccessToken, createRefreshToken, verifyToken, setTokenCookies } from '../utils/auth.utils';
+import { randomElement } from '../utils/math.utils';
 
 dotenv.config()
 const prisma = new PrismaClient();
@@ -38,7 +39,7 @@ export const login = async (req: Request, res: Response) => {
         username: user.username,
         fname: user.fname,
         image: user.image
-    });
+    })
 }
 
 // @desc   Logout user
@@ -122,7 +123,9 @@ export const register = async (req: Request<{}, {}, { [key: string]: string }>, 
                 dob: userData.dob,
                 email: userData.email,
                 password: hash,
-                image: ''
+                image: `${userData.fname[0].toLowerCase()}-${
+                    randomElement(['red', 'orange', 'yellow', 'green', 'blue', 'purple'])
+                }.png`
             }
         })
 
@@ -140,14 +143,18 @@ export const register = async (req: Request<{}, {}, { [key: string]: string }>, 
 
         await setTokenCookies(res, user.id);
 
-        return res.sendStatus(201)
+        return res.status(201).json({
+            username: user.username,
+            fname: user.fname,
+            image: user.image
+        })
     }
 
     catch (err: any) {
         if (err.code === 'P2002')
             return res.status(400).send(`${err.meta.target[0]} already exists`)
 
-        return res.sendStatus(50)
+        return res.sendStatus(500)
     }
 }
 
