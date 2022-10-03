@@ -11,6 +11,8 @@ import learnRoutes from './routes/learn.routes'
 import practiceRoutes from './routes/practice.routes'
 import referenceRoutes from './routes/reference.routes'
 
+import { getUser } from './controllers/user.controllers';
+
 dotenv.config() // Configure environment variables
 
 const port = process.env.PORT || 7000; // Set port
@@ -36,3 +38,5 @@ app.use('/auth', authRoutes) // Routes for authentication
 app.use('/api/learn', learnRoutes) // Routes for 'learn' section
 app.use('/api/practice', practiceRoutes) // Routes for 'practice' section
 app.use('/api/reference', referenceRoutes) // Routes for 'reference' section
+
+app.get('/api/user', getUser) // Get user data
