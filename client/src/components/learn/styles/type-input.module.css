@@ -274,6 +274,10 @@
         transform 500ms ease 700ms;
 }
 
+#correct-answer > p{
+    white-space: nowrap;
+}
+
 #special_character_buttons__container.hidden{
     transform: translateX( -2em );
     opacity: 0;

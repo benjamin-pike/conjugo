@@ -6,7 +6,7 @@ function Cards( props ){
     
     // Function takes candidates array and optimises array order to balance answer lengths across top and bottom rows
     const optimiseRows = ( candidates ) => {
-        const sizes = candidates.map( ( {subject, conjugation } ) => ( subject ? subject.length : 0 ) + conjugation.length + 3 )
+        const sizes = candidates.map( ( {prefix, main } ) => ( prefix ? prefix.length : 0 ) + main.length + 3 )
         const target = sizes.reduce( ( sum, size ) => sum + size, 0 ) / 2
         let closest = []
 
@@ -50,7 +50,7 @@ function Cards( props ){
 
     const multiSelect = // Boolean – determines whether multiple answers may be selected (according to no. of correct answers)
         1 !== Object.values( props.candidates ).reduce( ( sum, candidate ) => candidate.correct ? sum + 1 : sum, 0 )
-    const splitRows = props.candidates.some( candidate => candidate.conjugation ) // Boolean – determines whether answers should span two rows
+    const splitRows = props.candidates.some( candidate => candidate.main ) // Boolean – determines whether answers should span two rows
     
     let candidates = splitRows ? optimiseRows( props.candidates ) : props.candidates // Split candidates into two arrays + optimise if necessary
 
@@ -89,8 +89,8 @@ function Cards( props ){
                     onClick = { () => handleClick( rowIndex * candidates[0].length + candidateIndex ) }>
 
                     <ConjugationCard
-                        subject = { candidate.subject ? candidate.subject : null } 
-                        conjugation = { candidate.conjugation ? candidate.conjugation : null } 
+                        subject = { candidate.prefix ? candidate.prefix : null } 
+                        conjugation = { candidate.main ? candidate.main : null } 
                         status = { buttonStates[ rowIndex * candidates[0].length + candidateIndex ] }
                         color = { "textcolor" }
                     />
@@ -106,8 +106,8 @@ function Cards( props ){
                 onClick = { () => handleClick( index ) }>
 
                 <ConjugationCard
-                    subject = { candidate.subject ? candidate.subject : null } 
-                    conjugation = { candidate.conjugation ? candidate.conjugation : null } 
+                    subject = { candidate.prefix ? candidate.prefix : null } 
+                    conjugation = { candidate.main ? candidate.main : null } 
                     status = { buttonStates[ index] }
                     color = { "textcolor" }
                 />

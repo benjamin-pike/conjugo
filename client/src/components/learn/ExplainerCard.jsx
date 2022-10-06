@@ -1,4 +1,5 @@
 import tenseColors from "../../assets/js/map-tense-colors.js";
+import tenseNames from "../../assets/js/map-tense-names.js";
 import subjectColors from "../../assets/js/map-subject-colors.js";
 import styles from "./styles/explainer-card.module.css";
 import { useLang } from "../../store/LangContext";
@@ -7,19 +8,23 @@ function ExplainerCard( props ){
 
     const { language } = useLang() 
 
-    const verb = props.data.verb 
+    const verb = props.infinitive 
     const regularity = 
-        props.data.regularity === "i" ? "irregular" : 
-        props.data.regularity === "sc" ? "stem-changing" : "regular"
-    const translation = props.data.translation 
-    const tense = props.data.tense
-    const subject = props.data.subject
+        props.content.regularity === "i" ? "irregular" : 
+        props.content.regularity === "sc" ? "stem-changing" : "regular"
+    const translation = props.content.translation 
+    const tense = props.content.tense
+    const subject = props.content.subject
 
     const regText = { i: "irregular", sc: "stem-changing", r: "regular"}
     const regColors = { i: "red", sc: "orange", r: "green"}
 
-    switch( props.data.type ){
-        case "alert-new":
+    const { action, answer, prompt } = props.format
+    const activityType = 
+        [action, answer, prompt].filter( item => item !== undefined ).join("-")
+
+    switch( activityType ){
+        case "alert":
             return(
                 <div id = {styles["card__explainer"]}>
                     <p>
@@ -149,7 +154,7 @@ function ExplainerCard( props ){
                 </div>
             );
 
-        case "select-conjugations-tense":
+        case "select-conjugation-tense":
             return(
                 <div id = {styles["card__explainer"]}>
                     <p>
@@ -161,10 +166,10 @@ function ExplainerCard( props ){
                             </span>
                         </span> 
                         that are in the
-                        <span className = {styles["card__explainer__highlight__middle"]} color = { tenseColors[ tense.split(" ")[0] ] }>
+                        <span className = {styles["card__explainer__highlight__middle"]} color = { tenseColors[ tense.split("-").at(-1) ] }>
                             <span className = {styles["card__explainer__background"]}/>
                             <span className = {styles["card__explainer__foreground"]}>
-                                { tense }
+                                { tenseNames[tense][language.name].english.toLowerCase() }
                             </span>
                         </span>
                         tense

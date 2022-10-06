@@ -15,22 +15,6 @@ function VerbCard( props ){
     const cardText = cardTextRef.current
     const pulse = pulseRef.current
 
-    // const processAudio = async () => {
-    //     if ( props.audioPath ){
-    //         const data = await sendRequest({ url: `http://localhost:9000/api/reference/audio?language=spanish&verb=${infinitive}&complexity=${complexity}&mood=${mood}&tense=${tense}&conjugation=${props.text}` })
-    //         const audio = new Audio(`data:audio/mp3;base64, ${data.audio}`)
-            
-    //         audio.play()
-            
-    //         return new Promise( resolve => 
-    //             audio.onloadedmetadata = () => 
-    //                 resolve( audio.duration )
-    //         )
-
-    //         getAudio(  )
-    //     }
-    // }
-
     const handleMouseMove = e => {
         const boundaries = card.getBoundingClientRect()
 

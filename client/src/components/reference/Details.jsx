@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useLang } from '../../store/LangContext';
+import useHTTP from '../../hooks/useHTTP';
 import getAudio from '../../functions/getAudio';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh, faStar as fasFaStar, faEarthEurope, faListUl, faShapes, faEye, faChevronCircleDown, faChevronCircleLeft, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +14,7 @@ import styles from "./styles/details.module.css";
 function Details(props){
     const [translationsOpen, setTranslationsOpen] = useState(false)
     const { language } = useLang()
+    const { sendRequest } = useHTTP()
 
     const rankColor = props.state.content.rank <= 50 ? 'green' : props.state.content.rank <= 200 ? 'yellow' : props.state.content.rank <= 500 ? 'orange' : props.state.content.rank <= 1000 ? 'red' : 'purple'
     const regularityColor = props.state.content.regularity === 'i' ? 'red' : props.state.content.regularity === 'r' ? 'green' : 'orange'
@@ -20,6 +22,21 @@ function Details(props){
 
     const validTranslations = 
         props.state.content.translations.weighted.filter( ( [_, weight] ) => weight > 0.1 ).slice(0, 8)
+
+    const handleStarClick = async () => {
+        const updatedSavedVerbs = await sendRequest({ 
+            url: `/api/reference/saved/${language.name}/${props.state.verb}`,
+            method: props.state.isSaved ? 'DELETE' : 'PUT'
+        })
+
+        props.dispatch({
+            type: props.ACTIONS.UPDATE_CONTENT,
+            payload: { 
+                content: props.state.content, 
+                savedVerbs: updatedSavedVerbs
+            }
+        })
+    }
 
     useEffect(() => { // Control scrolling behaviour of detail tooltips 
         const detailsBar = document.getElementById(styles["verb-details"])
@@ -111,7 +128,7 @@ function Details(props){
                 </button>
                 <button
                     id = { styles["verb-details__infinitive-star"]}
-                    onClick = { () => props.dispatch({ type: props.ACTIONS.TOGGLE_STAR }) }>
+                    onClick = { handleStarClick }>
                         <FontAwesomeIcon 
                             icon = {farFaStar} 
                             id = {styles["star__inactive"]} 
@@ -119,7 +136,7 @@ function Details(props){
                         <FontAwesomeIcon 
                             icon = {fasFaStar} 
                             id = {styles["star__active"]} 
-                            style = {{ opacity: props.state.isStarred ? 1 : 0 }}
+                            style = {{ opacity: props.state.isSaved ? 1 : 0 }}
                         />
                 </button>
 
@@ -188,13 +205,13 @@ function Details(props){
 
             <div className = {styles["detail"]} id = {styles['verb-details__participle-present']}>
                 <FontAwesomeIcon icon = { faChevronCircleDown } className = { styles["verb-details__icon"] }/>
-                <p>{`${props.state.content.conjugations.participle.present}`}</p>
+                <p>{`${props.state.content.participles.present}`}</p>
                 <Tooltip text = {"Present Participle"} color = "purple" direction = {"top"} />
             </div>
 
             <div className = {styles["detail"]} id = {styles['verb-details__participle-past']}>
                 <FontAwesomeIcon icon = { faChevronCircleLeft } className = { styles["verb-details__icon"] }/>
-                <p>{`${props.state.content.conjugations.participle.past.replace('; ', ' • ')}`}</p>
+                <p>{`${props.state.content.participles.past.replace('; ', ' • ')}`}</p>
                 <Tooltip text = {"Past Participle"} color = "purple" direction = {"top"} />
             </div>
         </div>

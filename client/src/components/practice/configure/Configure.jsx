@@ -20,7 +20,7 @@ function Configure(props){
 
     useEffect(async () => {
         const data = await sendRequest({
-            url: `http://localhost:9000/api/configure?language=${language.name}`,
+            url: `/api/practice/configure/${language.name}`,
             method: "get"
         })
 
@@ -30,7 +30,7 @@ function Configure(props){
     const postConfiguration = async ( data ) => {
         if (isValid){
             await sendRequest({
-                url: `http://localhost:9000/api/configure?language=${language.name}`,
+                url: `/api/configure/${language.name}`,
                 method: "post",
                 body: { settings: data }
             })

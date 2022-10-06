@@ -43,7 +43,7 @@ export const getSavedVerbs = async (req: Request<{ language: string }>, res: Res
 // @route  PUT or DELETE /reference/saved/:language/
 // @access Private
 // @params { language: string, verb: string }
-export const updatedSavedVerbs = async (req: Request, res: Response) => {
+export const updateSavedVerbs = async (req: Request, res: Response) => {
     const { language, verb } = req.params;
 
     if (!validVerbs[language] || !validVerbs[language].includes(verb) ) 
@@ -71,9 +71,9 @@ export const updatedSavedVerbs = async (req: Request, res: Response) => {
         where: { userId: req.body.user.id },
         data: { [language]: savedVerbs },
         select: { [language]: true }
-    })
+    }) as { [key: string]: string[] };
     
     if (!updatedArray) return res.sendStatus(500)
 
-    res.json(updatedArray)
+    res.json(updatedArray[language]);
 }

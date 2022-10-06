@@ -18,6 +18,7 @@ function Input(props){
         },
         username: {
             empty: <p>Please enter a <strong>username</strong></p>,
+            characters: <p>Username contains <strong>invalid characters</strong></p>,
             firstChar: <p>The first character of your username<br />must be a letter</p>,
             lastChar: <p>The last character of your username<br />must be a <strong>letter or number</strong></p>,
             consecutive: <p>Your username cannot contain<br />consecutive special characters</p>,
@@ -34,7 +35,7 @@ function Input(props){
             pattern: <p>Invalid email</p>,
             exists: <p>This email is registered with<br />an existing account</p>
         },
-        passwordRegister: {
+        password: {
             empty: <p>Please enter a <strong>password</strong></p>,
             requiredChars: <div>
                 <p>Password must contain at least:</p>
@@ -46,19 +47,16 @@ function Input(props){
                 </ul>
             </div>,
             invalidChars: <p>Password contains invalid characters</p>,
-            minLength: <p>Password must be at least<br />8 characters long</p>
+            minLength: <p>Password must be at least<br />8 characters long</p>,
+            incorrect: <p>The password you entered is incorrect</p>
         },
-        passwordConfirm: {
+        confirmPassword: {
             empty: <p>Please confirm your <strong>password</strong></p>,
             mismatch: <p>Passwords do not match</p>
         },
-        usernameEmail: {
+        identifier: {
             empty: <p>Please enter your <strong>username</strong> or <strong>email</strong></p>,
             notFound: <p>We could not find your account</p>
-        },
-        passwordLogin: {
-            empty: <p>Please enter your <strong>password</strong></p>,
-            incorrect: <p>The password you entered is incorrect</p>
         }
     }
 
@@ -75,7 +73,7 @@ function Input(props){
             e.target.min = ""
         }
 
-        props.formDispatch({
+        props.formRole === 'register' && props.formDispatch({
             type: props.ACTIONS.CHECK_VALIDITY,
             payload: { field: props.name }
         })

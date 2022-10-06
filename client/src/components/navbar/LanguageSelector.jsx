@@ -51,9 +51,8 @@ function Dropdown(props){
     useEffect(() => {
         if (language.name === ""){
             sendRequest({
-                url: "http://localhost:9000/api/language/current",
+                url: "/api/user/current-language",
                 method: "POST",
-                body: { id: auth.id }
             })
         }
     }, [])
@@ -75,7 +74,6 @@ function Dropdown(props){
 
 function DropdownItem(props) {
 
-    const { auth } = useAuth()
     const { language, changeLanguage } = useLang()
 
     const formattedName = props.language[0].toUpperCase() + props.language.slice(1)
@@ -84,7 +82,7 @@ function DropdownItem(props) {
     return (
         <div 
             className = {`${styles["dropdown-item"]} ${fixedHighlight ? styles["dropdown-item__fixed"] : ""}`} 
-            onClick = {() => changeLanguage(props.language, auth.id)}>
+            onClick = {() => changeLanguage(props.language)}>
 
             <img src = {props.flag} alt = {`${props.language}_flag`} />
             

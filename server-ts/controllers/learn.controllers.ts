@@ -81,7 +81,7 @@ export const lesson = async (req: Request, res: Response) => {
         card: string,
         subject?: string
         tense?: string
-        options: { prefix?: string, main: string, correct: boolean }[]
+        options: { prefix?: string, main?: string, correct: boolean }[]
     }
 
     interface typeContent {
@@ -153,6 +153,9 @@ export const lesson = async (req: Request, res: Response) => {
         if (format.action === antePrevQuestion?.format.action)
             continue;
 
+        if (format.action === 'match' && prevQuestion?.format.action === 'match')
+            continue;
+
         if (format.action === 'alert' && (output.length < 3 || output.length > 17))
             continue;
 
@@ -170,6 +173,9 @@ export const lesson = async (req: Request, res: Response) => {
 
             infinitive = prevQuestion.infinitive
         }
+
+        if (language === 'french' && format.prompt === 'audio' && format.answer !== 'translation')
+            continue; // French conjugations are often audibly indistinguishable, hence this is not a good question format
 
         if (format.action === 'match' && format.answer === 'translations')
             infinitive = ''
@@ -293,10 +299,10 @@ async function generateMatch(
     const output: {pairs: [string, string][]} = {pairs: []}
     
     if (type === 'translations'){
-        const pool = candidateInfinitives && candidateInfinitives?.length >= 6
+        const pool = candidateInfinitives && candidateInfinitives.length >= 6
             ? candidateInfinitives
             : await prisma.verb.findMany({
-                where: { language, rank: { lte: knownVerbs <= 6 ? knownVerbs : 6} },
+                where: { language, rank: { lte: knownVerbs >= 6 ? knownVerbs : 6} },
             }).then(data => data.map(verb => verb.infinitive));
 
         const infinitives = pool.sort(() => Math.random() - 0.5).slice(0, 6)
@@ -412,7 +418,7 @@ async function generateSelect(
             if (type.answer === 'subject') {
                 output.card = selectedPairs[0].conjugation
                 output.options = selectedPairs.map(({ subject }, index) => (
-                    { main: subject, correct: index === 0 }
+                    { prefix: subject, correct: index === 0 }
                 ))
             }
         }
@@ -558,19 +564,19 @@ function getCorrectConjugations(
     }
 
     return Object.entries(output).map(([subject, conjugation]) => ({
-        subject, conjugation, correct: true
+        prefix: subject, main: conjugation, correct: true
     }))
 }
 
 function getIncorrectConjugations(
     num: { subjects: number, tenses: number },
     conjugations: { [key: string]: string }, 
-    correct: { subject: string, conjugation: string, correct: boolean }[],
+    correct: { prefix: string, main: string, correct: boolean }[],
     alternativeTenses: { [key: string]: { [key: string]: string } }
 ) {
     const output: { [key: string]: string } = {}
 
-    const usedSubjects = correct.map(({ subject }) => subject)
+    const usedSubjects = correct.map(({ prefix }) => prefix)
     const remainingSubjects = 
         Object.keys(conjugations).filter(subject => !usedSubjects.includes(subject))
 
@@ -599,6 +605,6 @@ function getIncorrectConjugations(
     }
 
     return Object.entries(output).map(([subject, conjugation]) => ({
-        subject, conjugation, correct: false
+        prefix: subject, main: conjugation, correct: false
     }))
 }

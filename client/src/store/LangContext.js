@@ -37,8 +37,7 @@ export function LangProvider( { children } ){
         portuguese: portugueseFlag
     }
 
-    const ls = localStorage
-    const localData = ls.getItem("language")
+    const localData = localStorage.getItem("language")
 
     useEffect(async () => {
         let data;
@@ -46,19 +45,20 @@ export function LangProvider( { children } ){
         if ( localData ){
             data = JSON.parse( localData )
         } else {
-            data = await sendRequest({ url: "http://localhost:9000/api/language/user-data" })
+            data = await sendRequest({ url: "/api/language/user-data" })
         }
 
         if (data){
-            for (let language in data.languages) data.languages[language].flag = flags[language]
+            for (let language in data.languages) 
+                data.languages[language].flag = flags[language]
 
-            ls.setItem("language", JSON.stringify( data ))
+            localStorage.setItem("language", JSON.stringify(data))
             setLanguageData( data )
         }
     }, [])
 
     const changeLanguage = language => {
-        ls.setItem("currentLanguage", language)
+        localStorage.setItem("currentLanguage", language)
         setLanguageData({...languageData, current: language})
     }
 

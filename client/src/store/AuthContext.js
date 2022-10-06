@@ -8,38 +8,30 @@ export function useAuth(){
 
 export function AuthProvider( { children } ){
 
-    const ls = localStorage
+    const user = localStorage.getItem("user")
 
     const [auth, setAuth] = useState({
-        isLoggedIn: ls.getItem('id') && ls.getItem("accessToken") && ls.getItem("refreshToken"),
-        id: ls.getItem('id'),
-        accessToken: ls.getItem("accessToken"),
-        refreshToken: ls.getItem("refreshToken"),
-        userData: JSON.parse(ls.getItem("userData"))
+        isLoggedIn: Boolean(user),
+        user: JSON.parse(user)
     })
 
-    function login(id, accessToken, refreshToken, userData){
+    function login(user){
+        console.log(user)
         setAuth({
             isLoggedIn: true,
-            id: id,
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-            userData: userData
+            user: {
+                username: user.username,
+                fname: user.fname,
+                image: user.image
+            }
         })
 
-        ls.setItem("id", id)
-        ls.setItem("accessToken", accessToken)
-        ls.setItem("refreshToken", refreshToken)
-        ls.setItem("userData", JSON.stringify(userData))
+        localStorage.setItem("user", JSON.stringify(user))
     }
 
     function logout(){
         setAuth({ isLoggedIn: false })
-
-        ls.removeItem("id")
-        ls.removeItem("accessToken")
-        ls.removeItem("refreshToken")
-        ls.removeItem("userData")
+        localStorage.removeItem("user")
     }
 
     const value = {

@@ -8,38 +8,21 @@ function useHTTP(){
         setLoading(true)
         setError(null)
 
-        let accessToken;
-        let refreshToken;
-
-        try{
-            if ( config.token ){
-                accessToken = config.token.access
-                refreshToken = config.token.refresh
-            } else {
-                accessToken = localStorage.getItem('accessToken')
-                refreshToken = localStorage.getItem('refreshToken')
-            }
-        }
-
-        catch ( err ) { setError(401) }
-
         try{
             const response = await fetch(
                 config.url,
                 {
                     method: config.method ? config.method : "GET",
-                    headers: config.headers ? 
-                        {
+                    headers: config.headers
+                    ?    {
                             ...config.headers,
                             "Content-Type": "application/json",
                             "Accept": "application/json",
-                            "Authorization": "Bearer " + accessToken
                         } 
                     :
                         {
                             "Content-Type": "application/json",
                             "Accept": "application/json",
-                            "Authorization": "Bearer " + accessToken
                         },
                     body: config.body ? JSON.stringify(config.body) : null
                 }
@@ -51,7 +34,11 @@ function useHTTP(){
             }
 
             const contentType = response.headers.get("content-type")
-            const data = contentType.includes("json") ? await response.json() : contentType.includes("text") ? await response.text() : null
+            const data = contentType.includes("json") 
+                ? await response.json() 
+                : contentType.includes("text") 
+                    ? await response.text() 
+                    : null
             
             setLoading(false)
             
@@ -59,39 +46,28 @@ function useHTTP(){
         }
 
         catch( err ){
-            console.log(err)
-            if (err.message === "403"){
+            if (err.message === "401"){
                 if ( !retry ){
-                    const tokenResponse = await fetch("http://localhost:8000/token", 
-                    {
-                        method: "post",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Accept": "application/json"
-                        },
-                        body: JSON.stringify({ token: refreshToken })
-                    })
+                    const tokenResponse = await fetch("/token", 
+                        {
+                            method: "post",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json"
+                            }
+                        })
 
-                    if ( tokenResponse.ok ){
-                        const { access: newAccess, refresh: newRefresh } = await tokenResponse.json()
-    
-                        localStorage.setItem('accessToken', newAccess)
-                        localStorage.setItem('refreshToken', newRefresh)
-    
+                    if ( tokenResponse.ok )
                         return sendRequest( config, retry = true )
-                    }
                 }
             }
 
             setError(err.message)
-
-            localStorage.removeItem("id")
-            localStorage.removeItem("accessToken")
-            localStorage.removeItem("refreshToken")
-
             // document.location.reload()
         }
     }
+
+    localStorage.removeItem("user")
 
     return { sendRequest, error, loading }
 }

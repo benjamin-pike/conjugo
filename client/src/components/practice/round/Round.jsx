@@ -25,7 +25,7 @@ function Round(props) {
     const { language: { name: language } } = useLang()
 
     const getRound = async () => {
-        const data = await sendRequest({ url: `http://localhost:9000/api/conjugations?language=${language}` })
+        const data = await sendRequest({ url: `/api/conjugations/${language}` })
         setRound(data)
     }
 

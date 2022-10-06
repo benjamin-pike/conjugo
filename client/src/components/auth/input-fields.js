@@ -49,7 +49,7 @@ const fields = [
         key: 6,
         id: 'password-register',
         class: 'password',
-        name: 'passwordRegister',
+        name: 'password',
         type: 'password',
         placeholder: 'Password',
         role: 'register'
@@ -58,16 +58,16 @@ const fields = [
         key: 7,
         id: 'password-confirm',
         class: 'password',
-        name: 'passwordConfirm',
+        name: 'confirmPassword',
         type: 'password',
         placeholder: 'Confirm Password',
         role: 'register'
     },
     {
         key: 8,
-        id: 'username-email',
-        class: 'username',
-        name: 'usernameEmail',
+        id: 'identifier',
+        class: 'identifier',
+        name: 'identifier',
         type: 'text',
         placeholder: 'Username or Email',
         role: 'login'
@@ -76,7 +76,7 @@ const fields = [
         key: 9,
         id: 'password-login',
         class: 'password',
-        name: 'passwordLogin',
+        name: 'password',
         type: 'password',
         placeholder: 'Password',
         role: 'login'

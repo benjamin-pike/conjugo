@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import $ from "jquery";
 
 var incorrect = false // Set incorrect to false by default
 var complete = false // Set complete to false by default
@@ -31,8 +30,6 @@ function Answer(props){
 
     const [value, setValue] = useState("") // Set default input value to empty string
     const [textColor, setTextColor] = useState("var(--textcolor)") // Set default text color to gray
-
-    useEffect(() => $("#answer-input-box").trigger("focus")) // Focus on text box when component is mounted
 
     function checkInput(event){
         let input = event.target.value.toLowerCase() // Set input to current input value
@@ -88,7 +85,7 @@ function Answer(props){
     }
 
     // Reset on completion
-    $(document).off('keypress').on('keypress', (e) => {
+    document.onkeydown = e => {
         if (e.key === "Enter" && complete){ // Triggers upon enter, if word is complete
             
             props.setResultsData(props.resultsData.concat( //Send data to parent
@@ -118,7 +115,7 @@ function Answer(props){
                 setTimeout(() => props.setStage("results"), 2000)
             }
         }
-    })
+    }
  
     return (
             <div id = {styles["answer-input"]}>
@@ -130,6 +127,7 @@ function Answer(props){
                     readOnly = {complete || props.roundStatus === 'complete' || props.roundStatus === 'timeup'} // Lock input upon completion of word
                     autoComplete = "off" // Disable autocomplete
                     spellCheck = "false" // Disabled spellcheck
+                    autofocus = "true" // Focus on input box
                 />
             </div>
     );

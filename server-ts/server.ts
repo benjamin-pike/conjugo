@@ -7,11 +7,10 @@ import cors from 'cors';
 
 // Routes
 import authRoutes from './routes/auth.routes'
+import userRoutes from './routes/user.routes'
 import learnRoutes from './routes/learn.routes'
 import practiceRoutes from './routes/practice.routes'
 import referenceRoutes from './routes/reference.routes'
-
-import { getUser } from './controllers/user.controllers';
 
 dotenv.config() // Configure environment variables
 
@@ -35,8 +34,7 @@ app.get('/api', async (_req: Request, res: Response) => { // Test route
 })
 
 app.use('/auth', authRoutes) // Routes for authentication
+app.use('/api/user', userRoutes) // Routes for user data
 app.use('/api/learn', learnRoutes) // Routes for 'learn' section
 app.use('/api/practice', practiceRoutes) // Routes for 'practice' section
 app.use('/api/reference', referenceRoutes) // Routes for 'reference' section
-
-app.get('/api/user', getUser) // Get user data

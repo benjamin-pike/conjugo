@@ -5,9 +5,7 @@ import styles from "./styles/carousel.module.css"
 function CarouselCard( props ){
 
     const [verb, rank] = props.infinitive
-    // const verbWidth = useMemo( () => measureText(verb, 10), [] )
     const verbWidth = measureText(verb, 10)
-    console.log(verbWidth)
 
     return(
         <div
@@ -17,10 +15,9 @@ function CarouselCard( props ){
                 <div 
                     className = {styles["verb-card-face"]}
                     id = {props.state.focus === rank ? `${styles["verb-card-face__focused"]}` : ""}
-                    onClick = {() => {
-                        props.postStarred(props.state.starredVerbs)
+                    onClick = {() =>
                         props.dispatch({ type: props.ACTIONS.UPDATE_VERB, payload: { focus: rank } })
-                    }}>
+                    }>
                     <p 
                         className = { styles["rank"] } 
                         style = {{ 
@@ -38,7 +35,7 @@ function CarouselCard( props ){
                         }}>
                             <span>{ verb }</span>
                     </p>
-                    {props.state.starredVerbs && props.state.starredVerbs.includes(verb) && <div className = {styles["verb-card__right-bar"]} />}
+                    {props.state.savedVerbs && props.state.savedVerbs.includes(verb) && <div className = {styles["verb-card__right-bar"]} />}
                 </div>
         </div>
     );

@@ -17,7 +17,7 @@ function NavAvatar(props) {
             }
         }}>
 
-          <img src = {props.img} draggable = 'false' />
+          <img src = {`http://localhost:7000/images/profile_defaults/${props.img}`} draggable = 'false' />
 
           <Dropdown open = {props.open.avatar} img = {props.img}/>
         </div>
@@ -26,7 +26,7 @@ function NavAvatar(props) {
 
 function Dropdown(props){
 
-    const { auth: { userData: {fname} } } = useAuth()
+    const { auth: { user: {fname} } } = useAuth()
 
     const dropdownItems = [
         { key: uuidv4(), text: 'Settings', icon: faGear, function: 'settings' },
@@ -44,7 +44,10 @@ function Dropdown(props){
     return (
         <div id = {styles["avatar-dropdown"]} style = {props.open ? openStyle : null}>
             <div id = {styles["avatar-dropdown__profile"]}>
-                <img src = {props.img} id =  {styles["avatar-dropdown__profile-image"]} />
+                <img 
+                    src = {`http://localhost:7000/images/profile_defaults/${props.img}`} 
+                    id =  {styles["avatar-dropdown__profile-image"]}
+                />
                 <div id = {styles["avatar-dropdown__profile-text"]}>
                     <p id = {styles["avatar-dropdown__profile-name"]}>
                         {fname}

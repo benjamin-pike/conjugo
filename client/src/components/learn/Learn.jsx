@@ -32,7 +32,7 @@ function Learn(){
     const { language } = useLang()
 
     const [questionIndex, setQuestionIndex] = useState( 0 )
-    const [currentQuestion, setCurrentQuestion] = useState( {} )
+    const [currentQuestion, setCurrentQuestion] = useState( {format: {}, content: {}} )
     const [lessonData, setLessonData] = useState( [] )
 
     const [renderContent, setRenderContent] = useState( false )
@@ -54,37 +54,28 @@ function Learn(){
     // Elements determined by switch statement
     let promptElement = null; // Contains 'prompt' element ( text or audio card )
     let answerElement = null; // Contains 'answer element ( match boxes [incl. pool], select cards, or text field)
-
-    switch( currentQuestion.promptFormat ){
-        case "text":
-            promptElement = 
-                <VerbCard
-                    text = { currentQuestion.cardContent }
-                    infinitive = { currentQuestion.infinitive }
-                    disabled = { audioDisabled }
-                    setDisabled = { setAudioDisabled }
-                />
-            break;
-            
-        case "audio":
-            promptElement = 
-                <AudioCard
-                    audio = { currentQuestion.cardContent }
-                    infinitive = { currentQuestion.infinitive }
-                    disabled = { audioDisabled }
-                    setDisabled = { setAudioDisabled }
-                />
-            break;
-            
-        default:
-            break;
+    console.log(lessonData, currentQuestion)
+    if (currentQuestion.format.prompt){
+        promptElement = currentQuestion.format.prompt === "audio" 
+            ? <AudioCard
+                audio = { currentQuestion.content.card }
+                infinitive = { currentQuestion.infinitive }
+                disabled = { audioDisabled }
+                setDisabled = { setAudioDisabled }
+            />
+            : <VerbCard
+                text = { currentQuestion.content.card }
+                infinitive = { currentQuestion.infinitive }
+                disabled = { audioDisabled }
+                setDisabled = { setAudioDisabled }
+            />
     }
 
-    switch( currentQuestion.activityType ){
+    switch(currentQuestion.format.action){
         case "alert":
             answerElement = 
                 <AlertConjugations 
-                    pairs = { currentQuestion.alertConjugations }
+                    pairs = { currentQuestion.content.pairs }
                     infinitive = { currentQuestion.infinitive }
                     disabled = { audioDisabled }
                     setDisabled = { setAudioDisabled }
@@ -94,7 +85,7 @@ function Learn(){
         case "match":
             answerElement =
                 <MatchCards
-                    pairs = { currentQuestion.matchPairs }
+                    pairs = { currentQuestion.content.pairs }
                     handleKeyPress = { handleKeyPressRef }
                     setHandleMouseAction = { setHandleMouseAction }
                     setButtonVisible = { setButtonVisible }
@@ -108,7 +99,7 @@ function Learn(){
         case "select":
             answerElement = 
                 <SelectCards
-                    candidates = { currentQuestion.selectCandidates }
+                    candidates = { currentQuestion.content.options }
                     handleKeyPress = { handleKeyPressRef }
                     setButtonVisible = { setButtonVisible } 
                     setCheckFunction = { setCheckFunction }
@@ -120,7 +111,7 @@ function Learn(){
         case "type":
             answerElement =
                 <TypeInput
-                    answer = { currentQuestion.typeAnswer }
+                    answer = { currentQuestion.content.answer }
                     checked = { answerChecked }
                     setChecked = { setAnswerChecked}
                     setCheckFunction = { setCheckFunction }
@@ -131,7 +122,7 @@ function Learn(){
     // Send request to backend to retrieve lesson data
     useEffect( async () => {
         setRenderContent( false )
-        const data = await sendRequest({ url: `http://localhost:9000/api/lesson?language=${language.name}` })
+        const data = await sendRequest({ url: `api/learn/lesson/${language.name}/simple/indicative/present` })
         setLessonData( data )
     }, [])
 
@@ -172,7 +163,7 @@ function Learn(){
     // Show continue button after 5 seconds if activity type = 'alert'
     useEffect(() => {
 
-        if ( currentQuestion.activityType === "alert" ){
+        if ( currentQuestion.format.action === "alert" ){
             let timeout;
 
             setAnswerChecked( true )
@@ -201,8 +192,8 @@ function Learn(){
             onMouseUp = { handleMouseAction }
             tabIndex = { -1 }>
 
-            { currentQuestion.activityType && <ProgressBar 
-                visible = { currentQuestion.activityType !== "alert" }
+            { currentQuestion && <ProgressBar 
+                visible = { currentQuestion.format.action !== "alert" }
                 progress = { questionIndex / lessonData.length }
             /> }
 
@@ -213,18 +204,17 @@ function Learn(){
                     perspective: "1000px",
                     animation: questionIndex ? `${ styles["content-in"] } 500ms ease forwards` : ""
                 }}
-                activity = { currentQuestion.activityType }
+                activity = { currentQuestion.format.action }
                 className = { buttonVisible ? styles["button-visible"] : "" }>
 
-                    { currentQuestion.activityType === "alert" && <AlertBanner type = { currentQuestion.explainerData.type } />}
+                    { currentQuestion.format.action === "alert" && <AlertBanner type = { 'new' } />}
 
                     {promptElement}
 
                     <ExplainerCard 
-                        data = {{
-                            ...currentQuestion.explainerData, 
-                            type: `${currentQuestion.activityType}-${currentQuestion.explainerData.type}` 
-                        }}
+                        format = { currentQuestion.format }
+                        infinitive = { currentQuestion.infinitive }
+                        content = { currentQuestion.content }
                     />
 
                     {answerElement}

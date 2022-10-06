@@ -11,7 +11,6 @@ import styles from "./styles/results.module.css"
 function Results(props){
 
     const [results, setResults] = useState()
-    // const [error, setError] = useState()
     const [transitioned, setTransitioned] = useState(false);
 
     const { sendRequest, error } = useHTTP();
@@ -33,7 +32,7 @@ function Results(props){
 
     useEffect(async () => {
         const data = await sendRequest({
-            url: `http://localhost:9000/api/results?language=${language.name}`,
+            url: `/api/results/${language.name}`,
             method: "POST",
             body: { resultsData: props.resultsData }
         })

@@ -33,19 +33,19 @@ function Auth() {
             username: { value: "", error: "" }, 
             dob: { value: "", error: "" }, 
             email: { value: "", error: "" }, 
-            passwordRegister: { value: "", error: "" }, 
-            passwordConfirm: { value: "", error: "" }
+            password: { value: "", error: "" }, 
+            confirmPassword: { value: "", error: "" }
         },
         login: {
-            usernameEmail: { value: "", error: "" },
-            passwordLogin: { value: "", error: "" }
+            identifier: { value: "", error: "" },
+            password: { value: "", error: "" }
         }
     }
 
     const [formState, dispatch] = useReducer(reducer, defaultState)
 
     async function postForm(formData){
-        const response = await fetch(`http://localhost:8000/${role}`, 
+        const response = await fetch(`/auth/${role}`, 
             {
                 method: "POST",
                 body: JSON.stringify(formData),
@@ -60,7 +60,7 @@ function Auth() {
         const resStatus = response.status
         const resBody = await response.json()
 
-        return resBody
+        return { status: resStatus, body: resBody }
     }
 
     function reducer(currentState, action){
@@ -146,7 +146,7 @@ function Auth() {
                         }
                         break
                     
-                    case "passwordRegister":
+                    case "password":
                         const required = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*\-+]).{0,}$/
                         const valid = /^[a-zA-Z0-9#?!@$%^&*\-+]+$/
 
@@ -163,8 +163,8 @@ function Auth() {
                         }
                         break
 
-                    case "passwordConfirm":
-                        if (value !== currentState.register.passwordRegister.value){
+                    case "confirmPassword":
+                        if (value !== currentState.register.password.value){
                             error = "mismatch"
                         }
                         break
@@ -217,11 +217,6 @@ function Auth() {
             type: ACTIONS.SET_SUBMIT,
             payload: { submit: true }
         })
-
-
-
-        // localStorage.setItem("isLoggedIn", true)
-        // navigate('/reference')
     }
 
     useEffect(() => {dispatch( { type: ACTIONS.RESET_STATE } )}, [role])
@@ -231,48 +226,44 @@ function Auth() {
             let formData = Object.fromEntries(
                 Object.entries(formState[role]).map( ( [field, { value } ] ) => {
                     return [field, value]
-                })
+                }).filter(([field]) => field !== 'confirmPassword')
             )
 
-            postForm(formData).then(data => {
-                if (data.status === 'failed'){
-                    if (data.payload.error === "existing_user"){
-                        dispatch({
+            postForm(formData).then(({ status, body }) => {
+                console.log(body)
+                if (status === 400 || status === 401){
+                    if (body.error === "exists"){
+                        return dispatch({
                             type: ACTIONS.SET_ERROR,
-                            payload: { field: data.payload.field, error: "exists" }
+                            payload: { field: body.field, error: "exists" }
                         })
                     } 
                     
-                    if (data.payload.error === "not_found"){
-                        dispatch({
+                    if (body.error === "not found"){
+                        return dispatch({
                             type: ACTIONS.SET_ERROR,
-                            payload: { field: "usernameEmail", error: "notFound" }
+                            payload: { field: "identifier", error: "notFound" }
                         })
                     }
 
-                    if (data.payload.error === "incorrect_password"){
-                        dispatch({
+                    if (body.error === "invalid password"){
+                        return dispatch({
                             type: ACTIONS.SET_ERROR,
-                            payload: { field: "passwordLogin", error: "incorrect" }
+                            payload: { field: "password", error: "incorrect" }
                         })
                     }
                 }
 
-                if (data.status === 'success'){
-                    const { id, accessToken, refreshToken, userData } = data.payload
-                    login( id, accessToken, refreshToken, userData)
-
-                    // dispatch({
-                    //     type: ACTIONS.SET_SUBMIT,
-                    //     payload: { submit: false }
-                    // })
+                if (status === 200 || status === 201){
+                    const { username, fname, image } = body
+                    login({ username, fname, image })
                 }
             });
         }
     }, [formState.submit])
 
     useEffect(() => { // Adjust horizontal scroll to center if errors are visible 
-        if (!formState.isValid){
+        if (!formState.isValid) {
             const container = document.getElementById(styles["container"])
             window.scroll( (container.offsetWidth / 2) - (window.innerWidth / 2), 0 )
         }
@@ -286,7 +277,10 @@ function Auth() {
                     <h2 className = {styles["title"]}>
                         <Title
                             role = {role}
-                            fullTitle = {role === 'register' ? "​Create an Account " : "​Log In "}
+                            fullTitle = {role === 'register' 
+                                ? "​Create an Account " 
+                                : "​Log In "
+                            }
                         />
                     </h2>
 

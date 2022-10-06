@@ -61,13 +61,12 @@ function Carousel(props){
                     state = {props.state}
                     dispatch = {props.dispatch}
                     ACTIONS = {props.ACTIONS}
-                    postStarred = {props.postStarred}
                 />
             }).slice(0, props.cardLimit)}
 
             {loadVerbs && <LoadingDots id = {"carousel"} style = {{ marginTop: "1.85em" }} dark = {true} size = {0.75}/>}
             {!props.displayedCards && <p id = {styles["verb-carousel__empty"]}>No Matches</p>}
-            {props.starred && props.infinitives.length === 0 && <p id = {styles["verb-carousel__empty"]}>No Saved Verbs</p>}
+            {props.savedVerbs && props.infinitives.length === 0 && <p id = {styles["verb-carousel__empty"]}>No Saved Verbs</p>}
         </div>
     );
 }

@@ -2,11 +2,7 @@ import React, { useState, useEffect, useReducer } from "react";
 import { useNav } from "../../store/NavContext";
 import { useLang } from "../../store/LangContext";
 import useHTTP from "../../hooks/useHTTP";
-import getAudio from "../../functions/getAudio.js"
 import LoadingDots from "../common/LoadingDots/LoadingDots";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleLeft, faChevronCircleDown, faChevronCircleLeft, faCompress, faEarthEurope, faExpand, faEye, faListUl, faMagnifyingGlass, faShapes, faStar as fasFaStar, faVolumeHigh, faXmark } from '@fortawesome/free-solid-svg-icons'
-import { faStar as farFaStar } from '@fortawesome/free-regular-svg-icons'
 
 import Conjugations from "./Conjugations.jsx"
 import infinitivesAll from "../../assets/js/infinitives-array.js"
@@ -35,10 +31,9 @@ function Reference(){
     const [displayedCards, setDisplayedCards] = useState(2000)
 
     const [searchText, setSearchText] = useState("")
-    const [starred, setStarred] = useState(false)
+    const [savedVerbs, setSavedVerbs] = useState(false)
 
     const [displayLeft, setDisplayLeft] = useState(true)
-    const [expanded, setExpanded] = useState(false)
 
     const [regularityVisible, setRegularityVisible] = useState( false )
 
@@ -51,7 +46,8 @@ function Reference(){
         rank: '',
         regularity: '',
         content: {},
-        isStarred: false
+        isSaved: false,
+        savedVerbs: []
     })
 
     const loadingDotsStyle = {
@@ -61,23 +57,17 @@ function Reference(){
         transform: "translate(-50%, -50%)"
     }
 
-    const showStarred = () => setInfinitives(infinitivesAll[language.name].filter(( [verb, rank, reg] ) => state.starredVerbs.includes(verb)))
-    const hideStarred = () => setInfinitives(infinitivesAll[language.name])
+    const showSavedVerbs = () => setInfinitives(infinitivesAll[language.name].filter(( [verb, rank, reg] ) => state.savedVerbs.includes(verb)))
+    const hideSavedVerbs = () => setInfinitives(infinitivesAll[language.name])
 
     let renderContent = Object.values(state.content).length > 0 && state.content.language === language.name
 
     async function fetchData(verb){
         const verbParam = verb ? verb : infinitivesAll[language.name][state.focus - 1][0]
-        const data = await sendRequest({ url: `http://localhost:9000/api/reference/data?language=${language.name}&verb=${verbParam}` })
-        dispatch( { type: ACTIONS.UPDATE_CONTENT, payload: { content: data.content, starred: data.starred }} )
-    }
-
-    async function postStarred(starredVerbs){
-        await sendRequest({
-            url: `http://localhost:9000/api/reference/starred?language=${language.name}`,
-            method: "POST",
-            body: { starred: starredVerbs }
-        }) 
+        const content = await sendRequest({ url: `/api/reference/data/${language.name}/${verbParam}` })
+        const savedVerbs = await sendRequest({ url: `/api/reference/saved/${language.name}` })
+        
+        dispatch( { type: ACTIONS.UPDATE_CONTENT, payload: { content, savedVerbs } } )
     }
 
     function reducer(state, action){ // Reducer function
@@ -92,17 +82,17 @@ function Reference(){
                 return {...state, language: lang, focus: focus, verb: verb, rank: rank, regularity: regularity}
             
             case ACTIONS.UPDATE_CONTENT:
-                const { content, starred } = action.payload
-                const isStarred = starred.includes(state.verb)
-                return { ...state, content, isStarred, starredVerbs: starred }
+                const { content, savedVerbs } = action.payload
+                const isSaved = savedVerbs.includes(state.verb)
+                return { ...state, content, isSaved, savedVerbs: savedVerbs }
 
             case ACTIONS.TOGGLE_STAR:
-                if ( state.isStarred ){
-                    state.starredVerbs = state.starredVerbs.filter(verb => verb !== state.verb)
+                if ( state.isSaved ){
+                    state.savedVerbs = state.savedVerbs.splice(state.savedVerbs.indexOf(state.verb), 1)
                 } else {
-                    state.starredVerbs.push(state.verb)
+                    state.savedVerbs.push(state.verb)
                 }
-                return { ...state, isStarred: !state.isStarred}
+                return { ...state, isSaved: !state.isSaved}
             
             default:
                 return state
@@ -116,10 +106,10 @@ function Reference(){
         
     }, [language])
 
-    useEffect(() => { // Reset variables upon change of language or starred state
+    useEffect(() => { // Reset variables upon change of language or savedVerbs state
         setCardLimit(100)
         setDisplayedCards(2000)
-    }, [language, starred])
+    }, [language, savedVerbs])
 
     return(
         <div id = {styles["reference"]}
@@ -139,10 +129,10 @@ function Reference(){
                     infinitivesAll = {infinitivesAll}
                     setInfinitives = {setInfinitives}
                     setDisplayedCards = {setDisplayedCards}
-                    starred = {starred}
-                    setStarred = {setStarred}
-                    showStarred = {showStarred}
-                    hideStarred = {hideStarred}
+                    savedVerbs = {savedVerbs}
+                    setSavedVerbs = {setSavedVerbs}
+                    showSavedVerbs = {showSavedVerbs}
+                    hideSavedVerbs = {hideSavedVerbs}
                 />
 
                 <div id = {styles["verb-carousel"]}>
@@ -154,8 +144,7 @@ function Reference(){
                         cardLimit = {cardLimit}
                         setCardLimit = {setCardLimit}
                         displayedCards = {displayedCards}
-                        starred = {starred}
-                        postStarred = {postStarred}
+                        savedVerbs = {savedVerbs}
                     />
 
                     <ButtonArrow 

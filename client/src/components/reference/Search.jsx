@@ -10,9 +10,9 @@ function Search(props){
     const { language } = useLang()
 
     const buttonFunction = props.searchText ? () => handleSearch() : () => {
-            props.starred ? props.hideStarred() : props.showStarred();
+            props.savedVerbs ? props.hideSavedVerbs() : props.showSavedVerbs();
             
-            props.setStarred(state => !state)
+            props.setSavedVerbs(state => !state)
             
             setTimeout(() => {
                 document.getElementById(styles["verb-carousel__content"]).scrollTop = 0
@@ -23,7 +23,7 @@ function Search(props){
         
         let content = e ? e.target.value.normalize("NFD").replace(/\p{Diacritic}/gu, "") : ''
 
-        if (props.starred) props.setStarred(false)
+        if (props.savedVerbs) props.setSavedVerbs(false)
 
         props.setInfinitives(() => {
             const primary = []
@@ -71,7 +71,7 @@ function Search(props){
                         />
                         <FontAwesomeIcon 
                             icon = {fasFaStar} 
-                            style = {{ opacity: props.starred ? 1 : 0 }}
+                            style = {{ opacity: props.savedVerbs ? 1 : 0 }}
                         />
                     </div>
                 }

@@ -101,7 +101,7 @@ function NavBar(props) {
                     <Avatar 
                         open = {open}
                         setOpen = {setOpen}
-                        img = {auth.userData.image}
+                        img = {auth.user.image}
                     />
                 </div>
             </nav>

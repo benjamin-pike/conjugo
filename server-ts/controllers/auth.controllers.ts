@@ -15,10 +15,10 @@ const prisma = new PrismaClient();
 // @access Public
 // @body   { emailUsername: string, passwordLogin: string }
 export const login = async (req: Request, res: Response) => {
-    const { emailUsername: identifier, passwordLogin: password } = req.body;
+    const { identifier, password } = req.body;
 
     if (!identifier || !password) {
-        return res.status(400).send('invalid input');
+        return res.status(400).json({ message: 'invalid input' });
     }
 
     const identifierType = identifier.includes('@') ? 'email' : 'username';
@@ -31,7 +31,8 @@ export const login = async (req: Request, res: Response) => {
 
     const valid = user ? await bcrypt.compare(password, user.password) : false;
 
-    if (!user || !valid) return res.status(401).send('invalid credentials');
+    if (!user) return res.status(401).json({ error: 'not found' });
+    if (!valid) return res.status(401).send({ error: 'invalid password' });
 
     await setTokenCookies(res, user.id);
 
@@ -102,8 +103,7 @@ export const register = async (req: Request<{}, {}, { [key: string]: string }>, 
         username: z.string().regex(usernameRegex),
         dob: z.date().min(new Date("1900-01-01")).max(new Date()),
         email: z.string().trim().email().max(320),
-        passwordRegister: z.string().regex(passwordRegex),
-        passwordConfirm: z.literal(req.body.passwordRegister)
+        password: z.string().regex(passwordRegex),
     });
 
     const parsedData = registerPayload.safeParse({...req.body, dob: new Date(req.body.dob)});
@@ -112,7 +112,7 @@ export const register = async (req: Request<{}, {}, { [key: string]: string }>, 
 
     const userData = parsedData.data
 
-    const hash = await bcrypt.hash(userData.passwordRegister, Number(process.env.SALT_ROUNDS));
+    const hash = await bcrypt.hash(userData.password, Number(process.env.SALT_ROUNDS));
 
     try {
         const user = await prisma.user.create({
@@ -152,7 +152,7 @@ export const register = async (req: Request<{}, {}, { [key: string]: string }>, 
 
     catch (err: any) {
         if (err.code === 'P2002')
-            return res.status(400).send(`${err.meta.target[0]} already exists`)
+            return res.status(400).json({ field: `${err.meta.target[0]}`, error: 'exists' })
 
         return res.sendStatus(500)
     }

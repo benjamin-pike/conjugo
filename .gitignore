@@ -26,6 +26,7 @@
 /server/src/static
 /server-ts/.env
 /server-ts/dist
+/server-ts/src/static
 /_development
 /_mongo
 
