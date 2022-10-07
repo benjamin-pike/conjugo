@@ -67,7 +67,7 @@ function useHTTP(){
         }
     }
 
-    localStorage.removeItem("user")
+    // localStorage.removeItem("user")
 
     return { sendRequest, error, loading }
 }

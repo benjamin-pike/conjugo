@@ -16,7 +16,7 @@ function Configure(props){
     const { sendRequest, error } = useHTTP()
     const { language } = useLang()
 
-    const isValid = configuration && configuration.tenses.active.length
+    const isValid = configuration && configuration.tenses.length
 
     useEffect(async () => {
         const data = await sendRequest({
@@ -30,7 +30,7 @@ function Configure(props){
     const postConfiguration = async ( data ) => {
         if (isValid){
             await sendRequest({
-                url: `/api/configure/${language.name}`,
+                url: `/api/practice/configure/${language.name}`,
                 method: "post",
                 body: { settings: data }
             })

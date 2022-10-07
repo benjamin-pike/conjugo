@@ -27,6 +27,7 @@
 /server-ts/.env
 /server-ts/dist
 /server-ts/src/static
+/server_DEPRECATED
 /_development
 /_mongo
 

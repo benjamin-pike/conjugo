@@ -195,7 +195,7 @@ export const token = async (req: Request, res: Response) => {
     if (!isDeleted || !newRefreshToken) return res.sendStatus(500);
 
     // Return access token
-    res.cookie('aceessToken', newAccessToken, {
+    res.cookie('accessToken', newAccessToken, {
         maxAge: 3600000, // 1 hour
         httpOnly: true
     })

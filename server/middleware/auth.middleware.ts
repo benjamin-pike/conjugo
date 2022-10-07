@@ -7,7 +7,7 @@ const prisma = new PrismaClient()
 export default async (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.cookies.accessToken;
-                
+
         const { payload, expired }  = verifyToken(token as string, 'access')
 
         if (!payload) {

@@ -17,6 +17,28 @@ function Buttons(props){
     const [activeSubjects, setActiveSubjects] = useState(props.subjects.active)
     const [activeTenses, setActiveTenses] = useState(props.tenses.active)
 
+    console.log(props.tenses)
+
+    const active = props.tenses.reduce((output, tenseRoot) => {
+        const [complexity, mood, tense] = tenseRoot.split("-")
+
+        if (!output.complexities.includes(complexity))
+            output.complexities.push(complexity)
+        if (!output.moods.includes(mood))
+            output.moods.push(mood)
+
+        if (!output.tenses[mood])
+            output.tenses[mood] = []
+        
+        if (!output.tenses[mood].includes(tense))
+            output.tenses[mood].push(tense)
+
+        return output
+
+    }, { complexities: [], moods: [], tenses: {} })
+
+    console.log(active)
+
     function checkSubjectExclusions(state){
 
         let activeSubjects = [] // Record active subjects (empty by default)
