@@ -31,12 +31,14 @@ function Configure(props){
         if (isValid){
             await sendRequest({
                 url: `/api/practice/configure/${language.name}`,
-                method: "post",
-                body: { settings: data }
+                method: "PUT",
+                body: data
             })
             props.setStage("round")
         } 
     }
+
+    console.log(configuration)
 
     return(
         error ? 
@@ -60,7 +62,7 @@ function Configure(props){
                 <div id = {styles["points-time-row"]}>
                     <Points
                         styles = {styles}
-                        points = {configuration.points} 
+                        points = {configuration.target} 
                         setConfiguration = {setConfiguration}
                     />
                     <Time

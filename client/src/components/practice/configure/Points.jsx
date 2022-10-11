@@ -4,34 +4,43 @@ function Points(props){
 
     const styles = props.styles
 
-    const [points, setPoints] = useState(props.points)
+    const sliderToCount = sliderValue =>
+        Math.ceil((sliderValue / 2) / 5) * 5
 
-    function handleChange(event){
+    const countToSlider = countValue =>
+        countValue * 2
 
-        setPoints(state => {
-            state.slider = event.target.value < 5 ? 5 : event.target.value
-            state.text = Math.ceil(( state.slider / 2 ) / 5) * 5
+    const countToColor = countValue => 
+        countValue <= 10 ? 'green' :
+        countValue <= 20 ? 'yellow' :
+        countValue <= 30 ? 'orange' :
+        countValue <= 40 ? 'red' 
+            : 'purple'
+
+    const handleChange = e => {
+        setPoints(prevState => {
+            const newState = {...prevState}
+
+            newState.sliderValue = e.target.value < 5 ? 5 : e.target.value
+            newState.countValue = sliderToCount(newState.sliderValue)
+            newState.color = countToColor(newState.countValue)
             
-            state.color = state.text <= 10 ? 'green' :
-                          state.text <= 20 ? 'yellow' :
-                          state.text <= 30 ? 'orange' :
-                          state.text <= 40 ? 'red' : 'purple'
-            
-            return {...state}
+            return {...newState}
         })
     }
 
-    useEffect(() => props.setConfiguration(state => (
-        {
+    const [points, setPoints] = useState({
+        sliderValue: countToSlider(props.points),
+        countValue: props.points,
+        color: countToColor(props.points)
+    })
+
+    useEffect(() => props.setConfiguration(
+        state => ({
             ...state,
-            points: 
-                {
-                    slider: points.slider,
-                    text: points.text,
-                    color: points.color
-                },
-        }
-    )), [points])
+            target: points.countValue
+        })
+    ), [points])
 
     return(
         <section id = {styles["wrapper-points"]}>
@@ -40,7 +49,7 @@ function Points(props){
             </div>
             <div id = {styles["points-tab-value"]} className = {`${styles["tab"]} ${styles["value"]}`}>
                 <div className = {styles["number"]}>
-                        <p>{points.text}</p>
+                        <p>{points.countValue}</p>
                 </div>
             </div>
             <div id = {styles["points"]} className = {`${styles["container"]} ${styles["slider"]}`}>
@@ -48,7 +57,7 @@ function Points(props){
                     <div className = {styles["range-foreground"]} 
                          style = {
                             {
-                                width: `${points.slider}%`,
+                                width: `${points.sliderValue}%`,
                                 backgroundColor: `var(--${points.color})`
                             }
                         } />

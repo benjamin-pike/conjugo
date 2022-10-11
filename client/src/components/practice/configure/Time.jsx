@@ -4,37 +4,43 @@ function Time(props){
 
     const styles = props.styles
 
-    const [time, setTime] = useState(props.time)
+    const sliderToSeconds = sliderValue =>
+        Math.ceil((sliderValue / 0.3) / 15) * 15
 
-    function handleChange(event){
+    const secondsToSlider = secondsValue =>
+        Math.ceil(secondsValue * 0.3)
 
-        setTime(state => {
-            state.slider = event.target.value < 5 ? 5 : event.target.value
+    const secondsToColor = secondsValue =>
+        secondsValue >= 240 ? 'green' :
+        secondsValue >= 180 ? 'yellow' :
+        secondsValue >= 120 ? 'orange' :
+        secondsValue >= 60 ? 'red' 
+            : 'purple'
+
+    const handleChange = e => {
+        setTime(prevState => {
+            const newState = {...prevState}
+
+            newState.sliderValue = e.target.value < 5 ? 5 : e.target.value
+            newState.seconds = sliderToSeconds(newState.sliderValue)
+            newState.color = secondsToColor(newState.seconds)
             
-            state.seconds = Math.ceil(( state.slider / 0.3 ) / 15) * 15
-            state.text = `${Math.floor(state.seconds / 60)}:${(state.seconds % 60).toString().padStart(2, '0')}`
-            
-            state.color = state.seconds >= 240 ? 'green' :
-                          state.seconds >= 180 ? 'yellow' :
-                          state.seconds >= 120 ? 'orange' :
-                          state.seconds >= 60 ? 'red' : 'purple'
-            
-            return {...state}
+            return newState
         })
     }
 
-    useEffect(() => props.setConfiguration(state => (
-        {
+    const [time, setTime] = useState({
+        sliderValue: secondsToSlider(props.time),
+        seconds: props.time,
+        color: secondsToColor(props.time)
+    })
+
+    useEffect(() => props.setConfiguration(
+        state => ({
             ...state,
-            time: 
-                {
-                    slider: time.slider,
-                    seconds: time.seconds,
-                    text: time.text,
-                    color: time.color
-                },
-        }
-    )), [time])
+            time: time.seconds
+        })
+    ), [time])
 
     return(
         <section id = {styles["wrapper-time"]}>
@@ -43,7 +49,7 @@ function Time(props){
             </div>
             <div id = {styles["time-tab-value"]} className =  {`${styles["tab"]} ${styles["value"]}`}>
                 <div className = {styles["number"]}>
-                        <p>{time.text}</p>
+                        <p>{`${Math.floor(time.seconds / 60)}:${(time.seconds % 60).toString().padStart(2, '0')}`}</p>
                 </div>
             </div>
             <div id = {styles["time"]} className =  {`${styles["container"]} ${styles["slider"]}`}>
@@ -51,7 +57,7 @@ function Time(props){
                     <div className = {styles["range-foreground"]} 
                          style = {
                             {
-                                width: `${time.slider / 0.9}%`,
+                                width: `${time.sliderValue / 0.9}%`,
                                 backgroundColor: `var(--${time.color})`
                             }
                         } />

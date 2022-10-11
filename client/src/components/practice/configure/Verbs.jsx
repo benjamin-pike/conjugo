@@ -4,45 +4,51 @@ function Verbs(props){
 
     const styles = props.styles
 
-    const [verbs, setVerbs] = useState(props.verbs)
+    const sliderToCount = sliderValue =>
+        sliderValue <= 60 ? Math.ceil((sliderValue * 5) / 6 / 10) * 10
+        : sliderValue <= 120 ? Math.ceil(((sliderValue * 15) / 6 - 100) / 25) * 25
+        : sliderValue <= 180 ? Math.ceil(((sliderValue * 30) / 6 - 400) / 50) * 50
+        : sliderValue <= 240 ? Math.ceil(((sliderValue * 50) / 6 - 1000) / 100) * 100
+            : Math.ceil(((sliderValue * 100) / 6 - 3000) / 200) * 200;
 
-    function handleChange(event){
+    const countToSlider = countValue => 
+        countValue <= 50 ? Math.ceil(countValue * 6 / 5)
+        : countValue <= 200 ? Math.ceil((countValue * 6 + 100) / 15)
+        : countValue <= 500 ? Math.ceil((countValue * 6 + 400) / 30)
+        : countValue <= 1000 ? Math.ceil((countValue * 6 + 1000) / 50)
+            : Math.ceil((countValue * 6 + 3000) / 100);
 
-        setVerbs(state => {
-            state.slider = event.target.value < 5 ? 5 : event.target.value
+    const countToColor = countValue =>
+        countValue <= 50 ? "green"
+        : countValue <= 200 ? "yellow"
+        : countValue <= 500 ? "orange"
+        : countValue <= 1000 ? "red"
+            : "purple";
 
-            if (state.slider <= 60){
-                state.text = Math.ceil(( state.slider * 5/6 ) / 10) * 10
-                state.color = 'green'
-            } else if (state.slider <= 120) {
-                state.text = Math.ceil(( state.slider * 15/6 - 100 ) / 25) * 25
-                state.color = 'yellow'
-            } else if (state.slider <= 180) {
-                state.text = Math.ceil(( state.slider * 30/6 - 400 ) / 50) * 50
-                state.color = 'orange'
-            } else if (state.slider <= 240) {
-                state.text = Math.ceil(( state.slider * 50/6 - 1000 ) / 100) * 100
-                state.color = 'red'
-            } else {
-                state.text = Math.ceil(( state.slider * 100/6 - 3000 ) / 200) * 200
-                state.color = 'purple'
-            }
-        
-            return {...state}
+    const handleChange = e => {
+        setVerbs(prevState => {
+            const newState = {...prevState}
+
+            newState.sliderValue = e.target.value < 5 ? 5 : e.target.value
+            newState.countValue = sliderToCount(newState.sliderValue)
+            newState.color = countToColor(newState.countValue)
+
+            return newState
         })
     }
 
-    useEffect(() => props.setConfiguration(state => (
-        {
+    const [verbs, setVerbs] = useState({
+        sliderValue: countToSlider(props.verbs),
+        countValue: props.verbs,
+        color: countToColor(props.verbs)
+    })
+
+    useEffect(() => props.setConfiguration(
+        state => ({
             ...state,
-            verbs: 
-                {
-                    slider: verbs.slider,
-                    text: verbs.text,
-                    color: verbs.color
-                },
-        }
-    )), [verbs])
+            verbs: verbs.countValue
+        })
+    ), [verbs])
 
     return(
         <section>
@@ -51,7 +57,7 @@ function Verbs(props){
             </div>
             <div id = {styles["tenses-tab-value"]} className = {`${styles["tab"]} ${styles["value"]}`}>
                 <div className = {styles["number"]}>
-                        <p>{verbs.text}</p>
+                        <p>{verbs.countValue}</p>
                 </div>
             </div>
             <div id = {styles["verbs"]} className = {`${styles["container"]} ${styles["slider"]}`}>
@@ -59,12 +65,17 @@ function Verbs(props){
                     <div className = {styles["range-foreground"]} 
                          style = {
                             {
-                                width: `${verbs.slider * 1/3}%`,
+                                width: `${verbs.sliderValue * 1/3}%`,
                                 backgroundColor: `var(--${verbs.color})`
                             }
                         } />
                 </div>
-                <input type = "range" id = {styles["verbs-range"]} max = {300} onChange = {handleChange}/>
+                <input 
+                    type = "range" 
+                    id = {styles["verbs-range"]} 
+                    max = {300} 
+                    onChange = { handleChange }
+                />
             </div>
         </section>
     );
