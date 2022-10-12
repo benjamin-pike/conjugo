@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNav } from "../../store/NavContext";
 import Configure from "./configure/Configure";
-import Round from "./round/Round";
+import Round from "./session/Session";
 import Results from "./results/Results";
 
-function Practice(props){
+function Practice(){
 
     const { displayNav } = useNav()
     const [stage, setStage] = useState("configuration")

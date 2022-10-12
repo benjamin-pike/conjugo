@@ -4,14 +4,15 @@ function Details(props){
 
     const styles = props.styles
     
-    const targetValues = props.data
+    const targetValues = props.config
+    console.log(targetValues)
 
     const [resultsValues, setResultsValues] = useState(
         {
             subjects: { value: 0, width: 0 },
             tenses: { value: 0, width: 0 },
             verbs: { value: 0, width: 0 },
-            points: { value: 0, width: 0 },
+            target: { value: 0, width: 0 },
             time: { value: 0, width: 0 },
         }
     )
@@ -30,14 +31,19 @@ function Details(props){
 
         for (let result in resultsValues){
 
+            console.log(resultsValues, result)
+            let [absoluteValue, relativeValue] = targetValues[result]
+
             setTimeout(() => {
                 let frame = 1;
             
                 let resultsTick = () => {
                     setResultsValues(results => {
                         let frameSigmoid = (totalFrames / 10) * (10 / (1 + (Math.E ** (5 - (frame * scaleFactor)))))
-                        results[result]['value'] = parseInt(Math.ceil(frameSigmoid) * increment * targetValues[result].absolute)
-                        results[result]['width'] = frameSigmoid * increment * targetValues[result].relative + (0.67 * results[result]['width'] * 0.01)
+                        results[result]['width'] = frameSigmoid * increment * relativeValue + (0.67 * results[result]['width'] * 0.01)
+                        results[result]['value'] = parseInt(Math.ceil(frameSigmoid) * increment * (
+                            result === 'time' ? 300 - absoluteValue : absoluteValue
+                        ))
                         
                         return {...results}
                     })
@@ -84,7 +90,7 @@ function Details(props){
             {label: "Subjects", color: "red", text: resultsValues.subjects.value, width: 5.5 + (resultsValues.subjects.width * 0.945)},
             {label: "Tenses", color: "orange", text: resultsValues.tenses.value, width: 5.5 + (resultsValues.tenses.width * 0.945)},
             {label: "Verb Pool", color: "yellow", text: resultsValues.verbs.value, width: 5.5 + (resultsValues.verbs.width * 0.945)},
-            {label: "Points", color: "green", text: resultsValues.points.value, width: 5.5 + (resultsValues.points.width * 0.945)},
+            {label: "Target", color: "green", text: resultsValues.target.value, width: 5.5 + (resultsValues.target.width * 0.945)},
             {label: "Time", color: "blue", text: parseTime(resultsValues.time.value), width: 9 + (resultsValues.time.width * 0.91)},
         ]
 

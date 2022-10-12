@@ -5,7 +5,7 @@ function Level(props){
     const styles = props.styles
 
     const getXP = level => 10 * level * (level - 1)
-    const getLevel = xp => Math.floor( ( 10 + ( 100 + ( 40 * xp ) ) ** 0.5 ) / 20 )
+    const getLevel = xp => Math.floor(( 10 + ( 100 + ( 40 * xp ) ) ** 0.5 ) / 20)
     
     const getBoundaries = xp => {
         const level = getLevel( xp )
@@ -19,12 +19,12 @@ function Level(props){
         return 360 * (xp - boundaries.low) / (boundaries.high - boundaries.low) 
     }
 
-    const [xp, setXP] = useState( props.currentXP )
+    const [xp, setXP] = useState( props.xp.current )
     const [level, setLevel] = useState( getLevel( xp ) )
     const [boundaries, setBoundaries] = useState( getBoundaries( xp ) )
     const [position, setPosition] = useState({
         initial: getPosition( xp, boundaries ),
-        target: getPosition( props.newXP, boundaries )
+        target: getPosition( props.xp.new, boundaries )
     })
 
     useEffect(() => {
@@ -33,9 +33,9 @@ function Level(props){
         const button = document.getElementById( styles["button-continue-level-wrapper"])
         const root = document.documentElement;
         
-        const simple = level === getLevel( props.newXP ) 
+        const simple = level === getLevel( props.xp.new ) 
 
-        const delta = simple ? props.newXP - xp : boundaries.high - xp
+        const delta = simple ? props.xp.new - xp : boundaries.high - xp
         const speed = parseFloat( getComputedStyle( root ).getPropertyValue( "--speed" ) )
         const duration = ( ( 1 / speed * 250 ) + ( delta / 360 ) * ( 1 / speed * 2000 ))
 
@@ -53,7 +53,7 @@ function Level(props){
                 setBoundaries( newBoundaries )
                 setPosition({
                     initial: getPosition( pivot, newBoundaries ),
-                    target: getPosition( props.newXP, newBoundaries )
+                    target: getPosition( props.xp.new, newBoundaries )
                 })
                 setLevel( currentLevel => currentLevel + 1 )
             }
@@ -61,7 +61,7 @@ function Level(props){
 
         let interval  = setInterval( () => {
             setXP(current => {
-                if (current < props.newXP){
+                if (current < props.xp.new){
                     return current + 1
                 }
                 

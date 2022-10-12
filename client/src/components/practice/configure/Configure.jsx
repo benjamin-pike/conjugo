@@ -34,11 +34,10 @@ function Configure(props){
                 method: "PUT",
                 body: data
             })
+
             props.setStage("round")
         } 
     }
-
-    console.log(configuration)
 
     return(
         error ? 

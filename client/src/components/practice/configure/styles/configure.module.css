@@ -111,7 +111,7 @@
 }
 
 #configure .button:not([state = 'disabled']):active {
-	transform: scale(0.95);
+	transform: scale(0.975);
 }
 
 #configure .button::before,

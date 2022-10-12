@@ -120,12 +120,12 @@ const generatePracticeSession = async (req, res) => {
     });
     if (!configData)
         return res.sendStatus(500);
-    const { subjects, tenses, verbs, target } = configData;
-    const output = [];
+    const { subjects, tenses, verbs, target, time } = configData;
+    const content = [];
     const availableInfinitives = infinitives_assets_1.default[language].slice(0, verbs);
-    while (output.length < target) {
+    while (content.length < target) {
         // Generate the practice session
-        const previousEntry = output.at(-1);
+        const previousEntry = content.at(-1);
         const genericSubject = // Select a generic subject...
          subjects.length === 1 // ... if only one subject is selected
             ? subjects[0] // ... select that subject
@@ -165,9 +165,9 @@ const generatePracticeSession = async (req, res) => {
         const conjugations = verbData.conjugations;
         const conjugation = conjugations[complexity][mood][tense][subject];
         const translation = translations.principal;
-        // If valid, add to the output array and remove infinitive from the available infinitive array
+        // If valid, add to the content array and remove infinitive from the available infinitive array
         if (conjugation) {
-            output.push({
+            content.push({
                 infinitive,
                 subject,
                 tense: tenseRoot,
@@ -177,7 +177,7 @@ const generatePracticeSession = async (req, res) => {
             availableInfinitives.splice(availableInfinitives.indexOf(infinitive), 1);
         }
     }
-    return res.json(output);
+    return res.json({ content, target, time });
 };
 exports.generatePracticeSession = generatePracticeSession;
 // @desc   Calculate the score of a practice session

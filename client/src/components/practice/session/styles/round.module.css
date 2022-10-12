@@ -173,27 +173,36 @@
 
 .additional-card{
     margin: auto;
-    margin-top: 3vh;
-    padding: 0 6vh;
-    text-align: center;
+    margin-top: 2vh;
+    padding: 0.5vh 2.5vh;
     width: fit-content;
     background-color: var(--offwhite);
     color: var(--textcolor);
     border-radius: 0.8vh;
-    line-height: 11vh;
-    font-size: 5vh;
+    height: 11vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     box-shadow: 0.5vh 0.5vh 0.5vh 0.15vh var(--shadow);
     white-space: nowrap;
     transition: transform 200ms ease;
 }
 
+.additional-card > p{
+    font-size: 3.75vh;
+    font-weight: 700;
+    margin: 0;
+    padding: 1.1vh 3vh;
+    border-radius: 100vmax;    
+}
+
 #subject-card{
-    margin-right: 1.5vh;
+    margin-right: 1.25vh;
     color: rgb(87, 209, 16);
 }
 
 #tense-card{
-    margin-left: 1.5vh;
+    margin-left: 1.25vh;
     color: rgb(255, 0, 0);
 }
 

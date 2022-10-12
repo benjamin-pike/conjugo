@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { buttonsMap } from "./map-buttons-v2";
+import { buttonsMap } from "./map-buttons";
 
 function Buttons(props){
     const styles = props.styles
@@ -19,10 +19,10 @@ function Buttons(props){
         if (!button.complexities)
             IDs.complexities.push(button)
 
-        if (!button.mood && button.complexities)
+        if (!button.mood && button.complexities && !button.isolate)
             IDs.moods.push(button)
         
-        if (button.mood && button.complexities)
+        if ((button.mood || button.isolate) && button.complexities)
             IDs.tenses.push(button)
 
         return IDs
@@ -35,7 +35,10 @@ function Buttons(props){
 			Object.fromEntries(
 				["all", ...genericSubjects].map(subject => [
                     subject, 
-                    activeSubjects.includes(subject) ? 'active' : 'inactive'])
+                    activeSubjects.length === 6 || activeSubjects.includes(subject)
+                        ? 'active' 
+                        : 'inactive'
+                ])
 			)
 		);
 
@@ -49,7 +52,7 @@ function Buttons(props){
                         : 'inactive'
                 ])
             
-            if (!button.mood && button.complexities)
+            if (!button.mood && button.complexities && !button.isolate)
                 buttonStates.push([
                     button.id, 
                     activeTenses.map(tense => tense.split('-')[1]).includes(button.id) 
@@ -57,7 +60,7 @@ function Buttons(props){
                         : 'inactive'
                 ])
             
-            if (button.mood && button.complexities)
+            if ((button.mood || button.isolate) && button.complexities)
                 buttonStates.push([
                     button.id, 
                     activeTenses.map(tense => tense.split('-').slice(1).join('-')).includes(button.id) 
@@ -162,7 +165,6 @@ function Buttons(props){
             if (tenses[tense.id] === 'active'){
                 tense.complexities.forEach(complexity => {
                     if (tenses[complexity] === 'active'){
-                        console.log('x')
                         active.push(`${complexity}-${tense.id}`)
                     }
                 })

@@ -122,9 +122,9 @@ export const generatePracticeSession = async (req: Request, res: Response) => {
 
 	if (!configData) return res.sendStatus(500);
 
-	const { subjects, tenses, verbs, target } = configData;
+	const { subjects, tenses, verbs, target, time } = configData;
 
-	const output: {
+	const content: {
 		subject: string;
 		tense: string;
 		infinitive: string;
@@ -134,9 +134,9 @@ export const generatePracticeSession = async (req: Request, res: Response) => {
 
 	const availableInfinitives = infinitives[language].slice(0, verbs);
 
-	while (output.length < target) {
+	while (content.length < target) {
 		// Generate the practice session
-		const previousEntry = output.at(-1);
+		const previousEntry = content.at(-1);
 
 		const genericSubject: string = // Select a generic subject...
 			subjects.length === 1 // ... if only one subject is selected
@@ -189,9 +189,9 @@ export const generatePracticeSession = async (req: Request, res: Response) => {
 			conjugations[complexity][mood][tense][subject];
 		const translation = translations.principal;
 
-		// If valid, add to the output array and remove infinitive from the available infinitive array
+		// If valid, add to the content array and remove infinitive from the available infinitive array
 		if (conjugation) {
-			output.push({
+			content.push({
 				infinitive,
 				subject,
 				tense: tenseRoot,
@@ -202,7 +202,7 @@ export const generatePracticeSession = async (req: Request, res: Response) => {
 		}
 	}
 
-	return res.json(output);
+	return res.json({ content, target, time });
 };
 
 // @desc   Calculate the score of a practice session
@@ -228,7 +228,7 @@ export const calculatePracticeResults = async (req: Request, res: Response) => {
 		);
 
     const parsedData = resultsPayload.safeParse(req.body.results);
-
+    
     if (!parsedData.success) return res.sendStatus(500)
 
     const performance = parsedData.data;

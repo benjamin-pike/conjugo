@@ -32,9 +32,9 @@ function Results(props){
 
     useEffect(async () => {
         const data = await sendRequest({
-            url: `/api/results/${language.name}`,
+            url: `/api/practice/results/${language.name}`,
             method: "POST",
-            body: { resultsData: props.resultsData }
+            body: { results: props.resultsData }
         })
         setResults(data)
     }, [])
@@ -50,7 +50,7 @@ function Results(props){
                     <animated.div style = {style}>
                         <Details
                             styles = {styles}
-                            data = {results.roundData}
+                            config = {results.config}
                             accuracy = {results.accuracy}
                             setTransitioned = {setTransitioned}
                         />
@@ -60,8 +60,7 @@ function Results(props){
                         <Level 
                             styles = {styles}
                             flag = {language.flag}
-                            currentXP = {results.xp.current}
-                            newXP = {results.xp.new}
+                            xp = {results.xp}
                             setStage = {props.setStage}
                         />
                     </animated.div>

@@ -11,63 +11,54 @@ import subjectColors from "../../../assets/js/map-subject-colors.js"
 import styles from "./styles/round.module.css"
 
 function Round(props) {
+    
+    const { sendRequest, error } = useHTTP()
+    const { language } = useLang()
 
-    const [round, setRound] = useState({data: [], points: 0, time: 0})
-    const [complete, setComplete] = useState(false)
-    const [roundStatus, setRoundStatus] = useState('active')
-    const [conjugation, setConjugation] = useState({infinitive: '', complexity: '', mood: '', tense: '', subject: '', conjugation: '', translation: '', audio: ''})
-    const [rep, setRep] = useState(0)
+    const [session, setSession] = useState({ content: [], target: 0, time: 0 })
+    const [sessionStatus, setSessionStatus] = useState('active')
+    const [questionIndex, setQuestionIndex] = useState(0)
+    const [questionComplete, setQuestionComplete] = useState(false)
+    
     const [mute, setMute] = useState(false)
-
     const [audio, setAudio] = useState( [] )
 
-    const { sendRequest, error } = useHTTP()
-    const { language: { name: language } } = useLang()
+    const question = session.content[questionIndex]
 
-    const getRound = async () => {
-        const data = await sendRequest({ url: `/api/conjugations/${language}` })
-        setRound(data)
-    }
+    console.log(question)
 
     useEffect( async () => {
-        if ( conjugation.infinitive ){
-            const audioObject = await getAudio( language, conjugation.infinitive, conjugation.conjugation )
-            setAudio( [ conjugation.infinitive, audioObject ] )
+        if ( question ){
+            const audioObject = await getAudio( language.name, question.infinitive, question.conjugation )
+            setAudio([question.infinitive, audioObject])
         }
-    }, [ conjugation ])
+    }, [ question ])
     
-    useEffect(() => {getRound(); console.log(true)}, [])
+    useEffect(async () => {
+        const data = await sendRequest({ url: `/api/practice/session/${language.name}` })
+        setSession(data)
+    }, [])
 
     useEffect(() => {
-
-        if ((round.data.length !== 0) && (rep != round.data.length)){
-            
-            setConjugation(round.data[rep])
-
-            if (complete){
-                if (roundStatus !== 'complete'){
-                    setConjugation(round.data[rep])
-                    setComplete(false)
-                    setRep(rep + 1)
-                    
-                    if ( !mute ){
-                        let [ audioInfinitive, audioObject ] = audio
-                        if ( audioInfinitive === conjugation.infinitive ) audioObject.play()
-                    }
+        if (questionComplete && questionIndex !== session.content.length - 1) {
+            if (sessionStatus !== 'complete') {                
+                if ( !mute ){
+                    let [ audioInfinitive, audioObject ] = audio
+                    if ( audioInfinitive === question.infinitive ) 
+                        audioObject.play()
                 }
-                else{
-                    setRep(rep + 1)
-                }
+
+                setQuestionIndex(prevIndex => prevIndex + 1)
+                setQuestionComplete(false)
             }
-
         }
-    }, [round, complete, conjugation, mute])
+    }, [session, questionComplete, questionIndex, mute])
 
     return (
         <>
-            {roundStatus === "timeup" && <Timeup setStage = {props.setStage} />}
+            {sessionStatus === "timeup" && <Timeup setStage = {props.setStage} />}
 
-            <div style = {{transition: "filter 500ms ease", filter: roundStatus === "timeup" ? "blur(1.5vh)" : ""}}>
+            <div style = {{transition: "filter 500ms ease", filter: sessionStatus === "timeup" ? "blur(1.5vh)" : ""}}>
                 <div id = {styles["corner-buttons"]}>
                     <button id = {styles["exit"]}
                         className = {styles["corner-button"]}
@@ -80,22 +71,20 @@ function Round(props) {
                     </button>
                 </div>
                 
-                {round.data.length !== 0 ? 
+                {question ? 
                     <div>
                         <div id = {styles["upper"]}>
                             <Timer 
-                                time = {round.time}
-                                roundStatus = {roundStatus}
-                                setRoundStatus = {setRoundStatus}
+                                time = {session.time}
+                                sessionStatus = {sessionStatus}
+                                setSessionStatus = {setSessionStatus}
                             />
                             <Cards
-                                infinitive = {conjugation.infinitive}
-                                complexity = {conjugation.complexity}
-                                mood = {conjugation.mood}
-                                subject = {conjugation.subject}
-                                tense = {conjugation.tense}
-                                translation = {"to " + conjugation.translation}
-                                roundStatus = {roundStatus}
+                                infinitive = {question.infinitive}
+                                subject = {question.subject}
+                                tense = {question.tense}
+                                translation = {"to " + question.translation}
+                                sessionStatus = {sessionStatus}
                                 language = {language}
                             />
                         </div>
@@ -104,20 +93,20 @@ function Round(props) {
                             <div id = {styles["answer-mount"]}>
                                 <Answer
                                     styles = {styles}
-                                    conjugation = {conjugation}
+                                    question = {question}
                                     resultsData = {props.resultsData}
                                     setResultsData = {props.setResultsData}
-                                    setComplete = {setComplete}
-                                    setRoundStatus = {setRoundStatus}
-                                    roundStatus = {roundStatus}
-                                    rep = {rep}
-                                    roundLength = {round.points}
+                                    setQuestionComplete = {setQuestionComplete}
+                                    setSessionStatus = {setSessionStatus}
+                                    sessionStatus = {sessionStatus}
+                                    questionIndex = {questionIndex}
+                                    target = {session.target}
                                     setStage = {props.setStage}
                                 />
                                 <Progress
-                                    roundStatus = {roundStatus}
-                                    rep = {rep}
-                                    points = {round.points}
+                                    sessionStatus = {sessionStatus}
+                                    questionIndex = {questionIndex}
+                                    target = {session.target}
                                 />
                             </div>
                         </div>
@@ -144,23 +133,23 @@ function Round(props) {
 function Timer(props){
 
     useEffect(() => {
+        if (props.sessionStatus === 'complete') {
+            return () => clearTimeout(timer)
+        } 
 
-        if (props.roundStatus === 'complete'){return () => clearTimeout(timer);} 
-
-        const timer = setTimeout(() => {props.setRoundStatus('timeup')}, props.time * 1000);
+        const timer = setTimeout(() => {props.setSessionStatus('timeup')}, props.time * 1000);
 
         return () => clearTimeout(timer);
-
-      }, [props.roundStatus]);
+      }, [props.sessionStatus]);
 
     return (
         <div id = {styles["timer"]}>
             <div id = {styles["timer-background"]} />
             <div id = {styles["timer-foreground"]} 
-                className = {props.roundStatus === "complete" ? styles["complete"] : ""} // Change color to yellow upon round completion
+                className = {props.sessionStatus === "complete" ? styles["complete"] : ""} // Change color to yellow upon round completion
                 style = {{
                             animation: `${styles["timer"]} ${props.time}s linear forwards`, // Start countdown timer
-                            animationPlayState: `${props.roundStatus === 'complete' ? 'paused' : 'running'}` // Pause timer upon round completion
+                            animationPlayState: `${props.sessionStatus === 'complete' ? 'paused' : 'running'}` // Pause timer upon round completion
                         }}>
 
                 <div id = {styles["timer-highlight"]}/>
@@ -178,11 +167,11 @@ function Cards(props){
 
     useEffect(() => {
         function handleKeyDown(e){
-            props.roundStatus !== "timeup" && e.key === 'Shift' && setCardFlip(true)
+            props.sessionStatus !== "timeup" && e.key === 'Shift' && setCardFlip(true)
         }
 
         function handleKeyUp(e){
-            props.roundStatus !== "timeup" && e.key === 'Shift' && setCardFlip(false)
+            props.sessionStatus !== "timeup" && e.key === 'Shift' && setCardFlip(false)
         }
 
         document.addEventListener("keydown", handleKeyDown) // Sets cardFlip to true on shift down
@@ -221,21 +210,30 @@ function Cards(props){
                 <div 
                     className = {`${styles["additional-card"]} ${subjectPop ?  styles["scale"] : ""}`} 
                     id = {styles["subject-card"]}
-                    style = {{color: props.infinitive !== '' ? `var(--${subjectColors[props.language][props.subject]})` : 'var(--textcolor)'}}
+                    style = {{ color: !['yellow', 'green'].includes(subjectColors[props.language.name][props.subject])
+                        ? `var(--${subjectColors[props.language.name][props.subject]})` 
+                        : `var(--${subjectColors[props.language.name][props.subject]}-dark)` 
+                    }}
                     onMouseEnter = {() => setSubjectPop(true)} // Listen for mouseover -> Scale up animation 
                     onMouseLeave = {() => setSubjectPop(false)}>
                     
-                    {props.subject}
+                    <p style = {{ backgroundColor: `var(--${subjectColors[props.language.name][props.subject]}-highlight)`  }}>
+                        {props.subject}
+                    </p>
                 </div>
                 <div 
                     className = {`${styles["additional-card"]} ${tensePop ?  styles["scale"] : ""}`} 
                     id = {styles["tense-card"]} 
-                    style = {{color: props.infinitive !== '' ? `var(--${tenseColors[props.tense]})` : 'var(--textcolor)'}}
+                    style = {{ color: !['yellow', 'green'].includes(tenseColors[props.tense.split('-').at(-1)])
+                        ? `var(--${tenseColors[props.tense.split('-').at(-1)]})` 
+                        : `var(--${tenseColors[props.tense.split('-').at(-1)]}-dark)` 
+                    }}
                     onMouseEnter = {() => setTensePop(true)} // Listen for mouseover -> Scale up animation 
                     onMouseLeave = {() => setTensePop(false)}>
                     
-                    { props.tense &&
-                        tenseNames[`${props.complexity}-${props.mood}-${props.tense}`][props.language]['english'].toLowerCase() }
+                    <p style = {{ backgroundColor: `var(--${tenseColors[props.tense.split('-').at(-1)]}-highlight)`  }}>
+                        {props.tense && tenseNames[props.tense][props.language.name]['english'].toLowerCase() }
+                    </p>
                 </div>
             </div>
         </div>
@@ -247,8 +245,16 @@ function Progress(props){
         <div id = {styles["answer-progress"]}>
             <div id = {styles["answer-progress-background"]} />
             <div id = {styles["answer-progress-foreground"]}
-                className = {props.roundStatus === 'complete' ? styles["complete"] : props.roundStatus === "timeup" ? "timeup" : ""}
-                style = {{width: `${(props.rep/props.points) * 100}%`}}>
+                className = {props.sessionStatus === 'complete' 
+                    ? styles["complete"] 
+                    : props.sessionStatus === "timeup" 
+                        ? "timeup" 
+                        : ""
+                }
+                style = {{width: props.sessionStatus !== 'complete'
+                    ? `${(props.questionIndex/props.target) * 100}%`
+                    : '100%'
+                }}>
                 
                 <div id = {styles["answer-progress-highlight"]} />
             </div>

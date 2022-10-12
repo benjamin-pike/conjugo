@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-var incorrect = false // Set incorrect to false by default
-var complete = false // Set complete to false by default
-var hinted = false // Set hinted to false by default
+let incorrect = false // Set incorrect to false by default
+let complete = false // Set complete to false by default
+let hinted = false // Set hinted to false by default
 
 // Log statistics
-var keys = 0 // Sum of keypresses
-var hints = 0 // Sum of hints
-var currentInputLength = 0 // Record input length to ensure only keypresses that increase length are counted
-var accuracy; // Record accuracy
-var time = Date.now() // Record time required to get correct answer
+let keys = 0 // Sum of keypresses
+let hints = 0 // Sum of hints
+let currentInputLength = 0 // Record input length to ensure only keypresses that increase length are counted
+let accuracy; // Record accuracy
+let time = Date.now() // Record time required to get correct answer
 
 function setDefaults(){
     incorrect = false // Set incorrect to false by default
@@ -33,8 +33,8 @@ function Answer(props){
 
     function checkInput(event){
         let input = event.target.value.toLowerCase() // Set input to current input value
-        let correctSlice = props.conjugation.conjugation.slice(0, input.length) // Get slice of correct answer according to input length
-        let correctFull = props.conjugation.conjugation // Get full length correct answer
+        let correctSlice = props.question.conjugation.slice(0, input.length) // Get slice of correct answer according to input length
+        let correctFull = props.question.conjugation // Get full length correct answer
         
         let inputNormalized = input.normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remove diacritics from input
         let correctSliceNormalized = correctSlice.normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remove diacritics from correct slice
@@ -90,28 +90,23 @@ function Answer(props){
             
             props.setResultsData(props.resultsData.concat( //Send data to parent
                 {
-                    rep: props.rep + 1,
-                    answer: {
-                        conjugation: props.conjugation.conjugation,
-                        subject: props.conjugation.subject,
-                        tense: props.conjugation.tense,
-                        mood: props.conjugation.mood,
-                        infinitive: props.conjugation.infinitive,
-                    },
+                    infinitive: props.question.infinitive,
+                    subject: props.question.subject,
+                    tense: props.question.tense,
                     accuracy: accuracy,
                     time: Date.now() - time, 
                     hinted: hinted
                 })) 
                                 
-            props.setComplete(true) // Inform parent that rep is complete
+            props.setQuestionComplete(true) // Inform parent that rep is complete
                 
             setDefaults() // Reset text color and data variable to defaults
                 
-            if (props.rep !== props.roundLength - 1){  
+            if (props.questionIndex !== props.target - 1) {  
                 setValue("") // If not last rep, reset text box value to empty
             } else {
                 setTextColor('var(--roundcomplete)') // If last rep, change text color to yellow
-                props.setRoundStatus('complete') // Inform parent that round is complete
+                props.setSessionStatus('complete') // Inform parent that round is complete
                 setTimeout(() => props.setStage("results"), 2000)
             }
         }
@@ -124,10 +119,10 @@ function Answer(props){
                     onChange = {checkInput} // Trigger function upon update of textbox
                     style = {{"color": textColor}} // Set text color
                     value = {value} // Set up text box as controlled component
-                    readOnly = {complete || props.roundStatus === 'complete' || props.roundStatus === 'timeup'} // Lock input upon completion of word
+                    readOnly = {complete || props.sessionStatus === 'complete' || props.sessionStatus === 'timeup'} // Lock input upon completion of word
                     autoComplete = "off" // Disable autocomplete
                     spellCheck = "false" // Disabled spellcheck
-                    autofocus = "true" // Focus on input box
+                    autoFocus = "true" // Focus on input box
                 />
             </div>
     );
