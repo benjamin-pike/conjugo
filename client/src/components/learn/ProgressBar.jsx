@@ -10,9 +10,10 @@ function ProgressBar( props ){
                     style = {{ width: `${ props.progress ? props.progress * 100 : 0 }%` }}
                 />
             </div>
-            <Link to = "/reference" id = { styles["exit"]}>
-                <button />
-            </Link>
+            <button 
+                id = { styles['exit']}
+                onClick = { () => props.setStage('selection') }
+            />
         </div>
 
     );

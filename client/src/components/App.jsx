@@ -50,11 +50,13 @@ function Routes() {
     ])
 
     if ( auth.isLoggedIn ) return (
-        <NavProvider>
-            <NavBar />
-            <PrivateRoutes />
-            <Footer />
-        </NavProvider>
+        <LangProvider>
+            <NavProvider>
+                <NavBar />
+                <PrivateRoutes />
+                <Footer />
+            </NavProvider>
+        </LangProvider>
     )
     
     return <AuthRoutes />
@@ -82,11 +84,9 @@ function App() {
     return (
         <div ref = { ref }>
             <AuthProvider>
-                <LangProvider>
                     <Router>
                         <Routes />
                     </Router>
-                </LangProvider>
             </AuthProvider>
         </div>
     );

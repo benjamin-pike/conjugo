@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useLang } from '../../store/LangContext';
 import useHTTP from '../../hooks/useHTTP';
-import getAudio from '../../functions/getAudio';
+import getAudio from '../../utils/getAudio';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh, faStar as fasFaStar, faEarthEurope, faListUl, faShapes, faEye, faChevronCircleDown, faChevronCircleLeft, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { faStar as farFaStar } from '@fortawesome/free-regular-svg-icons'

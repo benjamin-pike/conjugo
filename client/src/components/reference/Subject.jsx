@@ -1,8 +1,8 @@
-import normalizeText from "../../functions/normalizeText"
-import { useState, useRef } from "react";
+import normalizeText from "../../utils/normalizeText"
+import { useRef } from "react";
 import { useTransition, animated, easings } from "react-spring"
 import { useLang } from "../../store/LangContext";
-import getAudio from "../../functions/getAudio";
+import getAudio from "../../utils/getAudio";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleQuestion, faClipboard, faVolumeHigh } from '@fortawesome/free-solid-svg-icons'
 import regularitySchema from "../../assets/js/regularity-schema";

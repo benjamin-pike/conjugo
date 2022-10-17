@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import useHTTP from '../hooks/useHTTP';
+import { getLevel } from '../utils/xp';
 
 import spanishFlag from "../assets/images/spanish.svg"
 import frenchFlag from "../assets/images/french.svg"
@@ -37,7 +38,7 @@ export function LangProvider( { children } ){
         portuguese: portugueseFlag
     }
 
-    const localData = localStorage.getItem("language")
+    const localData = localStorage.getItem("languageData")
 
     useEffect(async () => {
         let data;
@@ -45,21 +46,33 @@ export function LangProvider( { children } ){
         if ( localData ){
             data = JSON.parse( localData )
         } else {
-            data = await sendRequest({ url: "/api/language/user-data" })
+            data = await sendRequest({ url: "/api/user/languages" })
         }
 
+        data = await sendRequest({ url: "/api/user/languages" })
+
         if (data){
-            for (let language in data.languages) 
+            Object.keys(data.languages).forEach(language => {
+                data.languages[language].name = language
+                data.languages[language].level = getLevel(data.languages[language].xp)
                 data.languages[language].flag = flags[language]
 
-            localStorage.setItem("language", JSON.stringify(data))
+                if (!data.current || data.languages[data.current].xp < data.languages[language].xp)
+                    data['current'] = language
+            })
+            
+            localStorage.setItem("languageData", JSON.stringify(data))
             setLanguageData( data )
         }
     }, [])
 
     const changeLanguage = language => {
-        localStorage.setItem("currentLanguage", language)
-        setLanguageData({...languageData, current: language})
+        const data = JSON.parse(localStorage.getItem('languageData'))
+
+        data.current = language
+
+        localStorage.setItem("languageData", JSON.stringify(data))
+        setLanguageData(data)
     }
 
     const value = {

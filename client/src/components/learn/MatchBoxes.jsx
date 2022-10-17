@@ -14,8 +14,17 @@ function Boxes( props ){
                 width: props.dimensions.width - 0.05 + "em",
                 height: props.dimensions.height + "em"
             } : {} }>            
-            <svg> 
-                <rect rx = "0.4em" ry = "0.4em" />
+            <svg
+                // width = {`${props.dimensions.width - 0.05 }em"`}
+                width = "calc(100% - 0.2em)"
+                height = "calc(100% - 0.15em)"
+                // height = {`${props.dimensions.height}em`}
+            > 
+                <rect 
+                    rx = "0.4em" 
+                    ry = "0.4em" 
+                    height = "100%"
+                />
             </svg>
         </div>
     )

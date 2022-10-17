@@ -7,4 +7,5 @@ const express_1 = __importDefault(require("express"));
 const user_controllers_1 = require("../controllers/user.controllers");
 const router = express_1.default.Router();
 router.get('/', user_controllers_1.getUser);
+router.get('/languages', user_controllers_1.getLanguages);
 exports.default = router;

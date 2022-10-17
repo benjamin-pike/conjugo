@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { getXP, getLevel } from '../../../utils/xp'
 
 function Level(props){
 
     const styles = props.styles
 
-    const getXP = level => 10 * level * (level - 1)
-    const getLevel = xp => Math.floor(( 10 + ( 100 + ( 40 * xp ) ) ** 0.5 ) / 20)
-    
     const getBoundaries = xp => {
         const level = getLevel( xp )
         const low = getXP( level )

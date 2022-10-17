@@ -155,7 +155,7 @@ export default {
     },
     "simple-subjunctive-conditional": {
         "german": {
-            "english": "Conditional Subjunctive",
+            "english": "Conditional",
             "target": "Futur I (Konjunktiv II)"
         }
     },
@@ -363,7 +363,7 @@ export default {
     },
     "compound-subjunctive-conditional": {
         "german": {
-            "english": "Conditional Perfect Subjunctive",
+            "english": "Conditional Perfect",
             "target": "Futur II (Konjunktiv II)"
         }
     },

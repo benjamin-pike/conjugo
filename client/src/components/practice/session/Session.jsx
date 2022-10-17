@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLang } from "../../../store/LangContext.js";
 import useHTTP from "../../../hooks/useHTTP.js";
-import getAudio from "../../../functions/getAudio.js";
+import getAudio from "../../../utils/getAudio.js";
 import Answer from "./Answer";
 import Timeup from "./Timeup"
 import Loading from "../../temporary/Loading";

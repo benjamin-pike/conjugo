@@ -1,7 +1,7 @@
 import { useRef } from "react"
 import { useLang } from "../../store/LangContext"
 import styles from "./styles/verb-card.module.css"
-import getAudio from "../../functions/getAudio"
+import getAudio from "../../utils/getAudio"
 
 function VerbCard( props ){
 

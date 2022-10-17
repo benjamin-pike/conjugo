@@ -1,6 +1,5 @@
 import { useRef } from "react"
-import getAudio from "../../functions/getAudio"
-import useHTTP from "../../hooks/useHTTP"
+import getAudio from "../../utils/getAudio"
 import { useLang } from "../../store/LangContext"
 import styles from "./styles/conjugation-card.module.css"
 

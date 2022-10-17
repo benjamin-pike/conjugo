@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import measureText from '../../functions/measureText'
+import measureText from '../../utils/measureText'
 import styles from "./styles/carousel.module.css"
 
 function CarouselCard( props ){

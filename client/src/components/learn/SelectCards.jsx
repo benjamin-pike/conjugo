@@ -155,10 +155,6 @@ function Cards( props ){
                     { cards } 
                 </div> 
             }
-            
-            <svg>
-                <rect rx = "0.4em" />
-            </svg>
         </div>
     );
 }

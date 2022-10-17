@@ -53,25 +53,28 @@
 
 /* POOL */
 #pool{
-    /* background-color: var(--shadow); */
+    --bg-color: rgb(0, 0, 0, 0.015);
+
+    background-color: var(--bg-color);
     padding: 1.5em;
     display: flex;
     gap: 1em;
     flex-direction: column;
     align-items: center;
     border-radius: 0.6em;
+    outline: 1px solid rgb(70, 70, 70, 0.125);
 }
 
-#pool > svg{
+/* #pool > svg{
     pointer-events: none;
     margin-top: -11em;
     margin-bottom: -1.5em;
     width: calc(100% + 3em);
     height: 11.5em;
     overflow: visible;
-}
+} */
 
-#pool > svg > rect{
+/* #pool > svg > rect{
     stroke: var(--textcolor50);
     stroke-dasharray: 0.25em 0.5em;
     stroke-linecap: round;
@@ -79,7 +82,7 @@
     stroke-width: 0.1em;
     width: 100%;
     height: 100%;
-}
+} */
 
 #pool__row-1,
 #pool__row-2{
@@ -106,9 +109,9 @@
     color: rgba(0, 0, 0, 0.025);
     background-color: currentColor;
     box-shadow:
+        0 0 0 0.1em var(--bg-color) inset,
         0 0 0 0.1em #efeae6 inset,
-        0 0 0 0.1em rgba(0, 0, 0, 0.015) inset,
-        0 0 0.1em 0.1em currentColor inset;
+        0 0 0.25em 0.1em currentColor inset;
     border-radius: 0.6em;
 }
 
@@ -138,21 +141,14 @@
 .cards__box{
     position: relative;
     border-radius: 0.4em;
-    box-shadow:
-        0.05em 0 0 0.1em #efeae6 inset,
-        -0.05em 0 0 0.1em #efeae6 inset;
-    transition: background-color 500ms ease;
-}
-
-.cards__box.empty{
-    background-color: var(--shadow);
+    display: flex;
 }
 
 .cards__box svg{
     position: absolute;
-    left: 0.125em; top: 0.05em;
-    height: calc(100% - 0.1em);
-    width: calc(100% - 0.25em);
+    left: 0.125em; top: 0.075em;
+    /* height: calc(100% - 0.1em);
+    width: calc(100% - 0.25em); */
     overflow: visible;
     border-radius: 0.4em;
     pointer-events: none;
@@ -167,8 +163,13 @@
     width: 100%;
     height: 100%;
     stroke: var(--textcolor50);
-    fill: transparent;
+    fill: var(--shadow);
     stroke-width: 0.1em;
     stroke-linecap: round;
     stroke-dasharray: 0.25em 0.5em;
+    transition: fill 500ms ease;
+}
+
+.cards__box.empty svg rect{
+    fill: var(--shadow);
 }

@@ -233,7 +233,6 @@ function Pool( props ){
     
     return(
         <div
-            ref = { poolRef }
             id = {styles["pool"]}>
             <div id = {styles["pool__row-1"]}>
                 { elements.slice(0, 3) }
@@ -242,9 +241,9 @@ function Pool( props ){
                 { elements.slice(3, 6) }
             </div>
 
-            <svg ref = { svgRef }>
+            {/* <svg>
                 <rect rx = "0.4em" />
-            </svg>
+            </svg> */}
         </div>
     )
 }

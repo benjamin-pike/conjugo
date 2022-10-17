@@ -5,6 +5,18 @@
     transition: opacity 200ms ease;
     display: flex;
     align-items: center;
+    animation: slide-in 500ms ease forwards
+}
+
+@keyframes slide-in{
+    0%{
+        opacity: 0;
+        transform: translateX(5em);
+    }
+    100%{
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 #progress-bar__wrapper[visible = "false"]{
@@ -42,9 +54,6 @@
     position: absolute;
     right: 0;
     transform: translate( calc( 100% + 0.75em ) );
-}
-
-#exit button{
     margin: 0;
     padding: 0;
     outline: none;
@@ -54,7 +63,7 @@
     opacity: 0.5;
 }
 
-#exit button::after{
+#exit::after{
     content: "\2715";
     font-size: 1.75em;
     font-family: none;
@@ -65,6 +74,6 @@
     transition: opacity 200ms ease;
 }
 
-#exit button:hover::after{
+#exit:hover::after{
     opacity: 75%;
 }
