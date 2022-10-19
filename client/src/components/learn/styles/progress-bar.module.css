@@ -1,11 +1,14 @@
 #progress-bar__wrapper{
+    --progress-animation: slide-in 500ms ease forwards;
+    
     position: absolute;
     top: 3em;
     margin-bottom: 0.5em;
     transition: opacity 200ms ease;
     display: flex;
     align-items: center;
-    animation: slide-in 500ms ease forwards
+    
+    animation: var(--progress-animation)
 }
 
 @keyframes slide-in{
@@ -20,7 +23,7 @@
 }
 
 #progress-bar__wrapper[visible = "false"]{
-    opacity: 0;
+    opacity: 0 !important;
 }
 
 #progress-bar__background{

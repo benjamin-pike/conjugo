@@ -48,6 +48,7 @@ function Session(props){
     // Intialise contentRef
     const contentRef = useRef( null )
     const buttonRef = useRef( null )
+    const progressRef = useRef( null )
     const handleKeyPressRef = useRef( null )
 
     // Elements determined by switch statement
@@ -70,11 +71,20 @@ function Session(props){
             />
     }
 
+    if (currentQuestion.format.action === 'alert') {
+        promptElement = <VerbCard 
+            text = { currentQuestion.infinitive }
+            infinitive = { currentQuestion.infinitive }
+            disabled = { audioDisabled }
+            setDisabled = { setAudioDisabled }
+        />
+    }
+
     switch(currentQuestion.format.action){
         case "alert":
             answerElement = 
                 <AlertConjugations 
-                    pairs = { currentQuestion.content.pairs }
+                    pairs = { currentQuestion.content.conjugations }
                     infinitive = { currentQuestion.infinitive }
                     disabled = { audioDisabled }
                     setDisabled = { setAudioDisabled }
@@ -129,24 +139,35 @@ function Session(props){
     // Reset state when question index is updated
     useEffect(() => { 
         if ( questionIndex ){
-
             if (contentRef.current) { 
                 contentRef.current.style.setProperty( "animation", `${styles['content-out']} 500ms ease forwards` );
                 buttonRef.current.style.setProperty( "animation", `${styles['button-out']} 500ms ease forwards` );
             }
 
+            if (
+                questionIndex === lessonData.length ||
+                (progressRef.current &&
+                    lessonData[questionIndex]?.format.action === "alert")
+            ) {
+                progressRef.current.style.setProperty(
+                    "animation",
+                    `${styles["content-out"]} 500ms ease forwards`
+                );
+            }
+
+            if (questionIndex === lessonData.length)
+                setTimeout(() => props.setStage('results'), 500)
+
             setTimeout(() => {
                 setAudioDisabled( false )
                 setCheckFunction( null )
                 setAnswerChecked( false )
-                setButtonVisible( false )
-                
                 setRenderContent( false )
+                setButtonVisible( false )
             }, 500)
 
-
             setTimeout(() => {
-                buttonRef.current.style.setProperty( "animation", "" );
+                buttonRef.current.style.setProperty('animation', '');
             }, 550)
         }
 
@@ -154,7 +175,7 @@ function Session(props){
 
     // In order to force rerender, set render boolean to true after it has set to false
     useEffect(() => {
-        if ( !renderContent && lessonData.length){
+        if ( !renderContent && lessonData.length && questionIndex < lessonData.length ){
             setCurrentQuestion( lessonData[ questionIndex ] )
             setRenderContent( true )
         } 
@@ -162,10 +183,8 @@ function Session(props){
 
     // Show continue button after 5 seconds if activity type = 'alert'
     useEffect(() => {
-
-        if ( currentQuestion.format.action === "alert" ){
+        if (currentQuestion.format.action === "alert"){
             let timeout;
-
             setAnswerChecked( true )
 
             timeout = setTimeout(() => {
@@ -173,16 +192,23 @@ function Session(props){
             }, 5000)
         }
 
-    }, [ questionIndex ])
+    }, [currentQuestion])
 
     const handleKeyPress = e => {
         if ( e.key === "Enter" && buttonVisible ){
             if ( answerChecked ) return setQuestionIndex( current => current + 1 )
-            return checkFunction()
+            
+            checkFunction()
+
+            return 
         } 
 
         if (handleKeyPressRef.current) handleKeyPressRef.current( e )
     }
+
+    useEffect(() => {
+        console.log(buttonVisible)
+    }, [buttonVisible])
 
     return(
         <div 
@@ -198,7 +224,8 @@ function Session(props){
                 style = {{backgroundImage: 'url(./subtle-waves.svg)'}}
             />
 
-            { currentQuestion && <ProgressBar 
+            { currentQuestion && <ProgressBar
+                progressRef = { progressRef } 
                 visible = { currentQuestion.format.action !== "alert" }
                 progress = { questionIndex / lessonData.length }
                 setStage = { props.setStage }

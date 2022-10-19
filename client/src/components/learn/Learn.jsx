@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Menu from './Menu';
+import Results from './Results';
 import Session from './Session'
 
 const Learn = () => {
@@ -17,10 +18,12 @@ const Learn = () => {
     return(
         stage === 'selection'
             ? <Menu setTense = { setTense } />
-            : <Session 
+        : stage === 'session' 
+            ? <Session 
                 tense = { tense } 
                 setStage = { setStage } 
             />
+            : <Results setStage = { setStage } />
     );
 }
 

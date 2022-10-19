@@ -1,7 +1,7 @@
 #footer{
-    height: 4em;
+    height: 3.9em;
     background-color: white;
-    border-top: 0.25em solid var(--selected);
+    border-top: 0.1em solid var(--selected);
     display: flex;
     align-items: center;
     justify-content: center;

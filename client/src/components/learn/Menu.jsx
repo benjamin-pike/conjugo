@@ -24,7 +24,23 @@ const CARDS = {
         'simple-subjunctive-future',
         'compound-subjunctive-present',
         'compound-subjunctive-imperfect',
-        'compound-subjunctive-future',
+        'compound-subjunctive-future'
+    ],
+    french: [
+        'simple-indicative-present',
+        'simple-indicative-preterite',
+        'simple-indicative-imperfect',
+        'simple-indicative-future',
+        'simple-conditional-conditional',
+        'compound-indicative-present',
+        'compound-indicative-preterite',
+        'compound-indicative-imperfect',
+        'compound-indicative-future',
+        'compound-conditional-conditional',
+        'simple-subjunctive-present',
+        'simple-subjunctive-imperfect',
+        'compound-subjunctive-present',
+        'compound-subjunctive-imperfect',
     ]
 }
 
@@ -37,6 +53,8 @@ const Card = props => {
     const i = props.cardIndex
     const n = props.totalCards
     const s = props.selectedIndex
+
+    const color = tenseColors[props.tenseRoot.split('-').at(-1)]
 
     const handleHover = (e, isSelected) => {
         const isButton = e.target.nodeName === 'P'
@@ -78,6 +96,25 @@ const Card = props => {
                 // filter: `blur(${0 + Math.abs(props.selectedIndex - props.cardIndex) / 10}px)`
             }}
         >
+            
+            {props.unlocked && <header className = {styles['progress']}>
+                <div className = {styles['progress__bar']}>
+                    <div className = {styles['progress__bar--background']} />
+                    <div 
+                        className = {styles['progress__bar--foreground']} 
+                        style = {{
+                            width: `${50}%`,
+                            backgroundColor: `var(--${color})`
+                        }}
+                    />
+                </div>
+                <div className = {styles['progress__text']}>
+                    <p style = {{outline: `1px solid var(--${color})`}}>
+                        10
+                    </p>
+                </div>
+            </header>}
+
             {isSelected && <button 
                 onClick = { () => { if (props.unlocked) props.selectTense(props.tenseRoot) } }>
                 {props.unlocked ? <>
@@ -153,7 +190,9 @@ const Menu = props => {
                     isselected = { `${selectedCard == index}` }
                     unlocked = { `${index < unlocked}` }
                     onClick = { () => setSelectedCard(index) }
-                    connect = { `${index !== arr.length - 1 && tenseRoot.split("-")[0] === arr[index + 1].split("-")[0] }` }
+                    connect = { `${index !== arr.length - 1 && 
+                        tenseRoot.split("-")[0] === arr[index + 1].split("-")[0] &&
+                        tenseRoot.split("-")[1] === arr[index + 1].split("-")[1] }` }
                     color = { tenseColors[ tenseRoot.split("-").at(-1)] }
                     style = {{color: `var(--${tenseColors[ tenseRoot.split("-").at(-1)]})`}}
                 />)}

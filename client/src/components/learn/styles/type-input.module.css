@@ -105,6 +105,7 @@
     max-width: 23.25em;
     background-color: rgba(0, 0, 0, 0.03);
     filter: drop-shadow(0 0 1em var(--shadow));
+    outline: 1px solid var(--selected);
     border-radius: 0.4em;
     padding: 0.7em;
     overflow: hidden;
@@ -132,7 +133,7 @@
     margin-left: 0;
     box-shadow: 
         0.25em 0.25em 0.25em 0.125em var(--shadow),
-        0 0.225em rgb(215, 215, 215);
+        0 0.225em var(--shadow);
     transition:
         box-shadow 100ms ease,
         transform 100ms ease,

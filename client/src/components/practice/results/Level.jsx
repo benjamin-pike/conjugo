@@ -1,89 +1,89 @@
-import React, { useState, useEffect } from "react";
-import { getXP, getLevel } from '../../../utils/xp'
+import React from "react";
+import ProgressCircle from '../../common/ProgressCircle/ProgressCircle'
 
 function Level(props){
 
     const styles = props.styles
 
-    const getBoundaries = xp => {
-        const level = getLevel( xp )
-        const low = getXP( level )
-        const high = getXP( level + 1 )
+    // const getBoundaries = xp => {
+    //     const level = getLevel( xp )
+    //     const low = getXP( level )
+    //     const high = getXP( level + 1 )
 
-        return { level, low, high }
-    }
+    //     return { level, low, high }
+    // }
 
-    const getPosition = (xp, boundaries) => {
-        return 360 * (xp - boundaries.low) / (boundaries.high - boundaries.low) 
-    }
+    // const getPosition = (xp, boundaries) => {
+    //     return 360 * (xp - boundaries.low) / (boundaries.high - boundaries.low) 
+    // }
 
-    const [xp, setXP] = useState( props.xp.current )
-    const [level, setLevel] = useState( getLevel( xp ) )
-    const [boundaries, setBoundaries] = useState( getBoundaries( xp ) )
-    const [position, setPosition] = useState({
-        initial: getPosition( xp, boundaries ),
-        target: getPosition( props.xp.new, boundaries )
-    })
+    // const [xp, setXP] = useState( props.xp.current )
+    // const [level, setLevel] = useState( getLevel( xp ) )
+    // const [boundaries, setBoundaries] = useState( getBoundaries( xp ) )
+    // const [position, setPosition] = useState({
+    //     initial: getPosition( xp, boundaries ),
+    //     target: getPosition( props.xp.new, boundaries )
+    // })
 
-    useEffect(() => {
-        const arc = document.getElementById( styles["progress-circle__foreground"] )
-        const circle = document.getElementById( styles["progress"])
-        const button = document.getElementById( styles["button-continue-level-wrapper"])
-        const root = document.documentElement;
+    // useEffect(() => {
+    //     const arc = document.getElementById( styles["progress-circle__foreground"] )
+    //     const circle = document.getElementById( styles["progress"])
+    //     const button = document.getElementById( styles["button-continue-level-wrapper"])
+    //     const root = document.documentElement;
         
-        const simple = level === getLevel( props.xp.new ) 
+    //     const simple = level === getLevel( props.xp.new ) 
 
-        const delta = simple ? props.xp.new - xp : boundaries.high - xp
-        const speed = parseFloat( getComputedStyle( root ).getPropertyValue( "--speed" ) )
-        const duration = ( ( 1 / speed * 250 ) + ( delta / 360 ) * ( 1 / speed * 2000 ))
+    //     const delta = simple ? props.xp.new - xp : boundaries.high - xp
+    //     const speed = parseFloat( getComputedStyle( root ).getPropertyValue( "--speed" ) )
+    //     const duration = ( ( 1 / speed * 250 ) + ( delta / 360 ) * ( 1 / speed * 2000 ))
 
-        root.style.setProperty('--initial', position.initial);
-        root.style.setProperty('--animation-duration', `${duration}ms`);
+    //     root.style.setProperty('--initial', position.initial);
+    //     root.style.setProperty('--animation-duration', `${duration}ms`);
 
-        if ( simple ) root.style.setProperty('--target', position.target);
-        else root.style.setProperty('--target', 360)
+    //     if ( simple ) root.style.setProperty('--target', position.target);
+    //     else root.style.setProperty('--target', 360)
 
-        if ( !simple ){
-            const pivot = boundaries.high
-            const newBoundaries = getBoundaries( pivot )
+    //     if ( !simple ){
+    //         const pivot = boundaries.high
+    //         const newBoundaries = getBoundaries( pivot )
 
-            arc.onanimationend = () => {    
-                setBoundaries( newBoundaries )
-                setPosition({
-                    initial: getPosition( pivot, newBoundaries ),
-                    target: getPosition( props.xp.new, newBoundaries )
-                })
-                setLevel( currentLevel => currentLevel + 1 )
-            }
-        }
+    //         arc.onanimationend = () => {    
+    //             setBoundaries( newBoundaries )
+    //             setPosition({
+    //                 initial: getPosition( pivot, newBoundaries ),
+    //                 target: getPosition( props.xp.new, newBoundaries )
+    //             })
+    //             setLevel( currentLevel => currentLevel + 1 )
+    //         }
+    //     }
 
-        let interval  = setInterval( () => {
-            setXP(current => {
-                if (current < props.xp.new){
-                    return current + 1
-                }
+    //     let interval  = setInterval( () => {
+    //         setXP(current => {
+    //             if (current < props.xp.new){
+    //                 return current + 1
+    //             }
                 
-                clearInterval( interval )
+    //             clearInterval( interval )
 
-                return current
-            })
-        }, ( duration / delta ) )
+    //             return current
+    //         })
+    //     }, ( duration / delta ) )
 
-        try { clearInterval( displayButton ) }
-        catch {}
+    //     try { clearInterval( displayButton ) }
+    //     catch {}
 
-        let displayButton = setTimeout(() => {
-            button.style.animation = `${styles["slide-up"]} 500ms ease forwards`
-            circle.style.animation = `${styles["slide-up"]} 500ms ease forwards`
-        }, duration + 500)
+    //     let displayButton = setTimeout(() => {
+    //         button.style.animation = `${styles["slide-up"]} 500ms ease forwards`
+    //         circle.style.animation = `${styles["slide-up"]} 500ms ease forwards`
+    //     }, duration + 500)
 
-        return () => clearInterval( interval )
+    //     return () => clearInterval( interval )
 
-    }, [level])
+    // }, [level])
 
     return(
         <div id = {styles["level"]}>
-            <div id = {styles["progress"]}>
+            {/* <div id = {styles["progress"]}>
                 <div id = {styles["progress-circle"]}>
                 <svg>
                     <circle
@@ -122,7 +122,10 @@ function Level(props){
                     <img src = {props.flag} alt = "" draggable = "false" />
                     <div id = {styles["img-shadow"]} />
                 </div>
-            </div>
+            </div> */}
+            <ProgressCircle 
+                xp = { props.xp }
+            />
             <div id = {styles["buttons"]}>
                 <div id = {styles["button-continue-level-wrapper"]}>
                     <button

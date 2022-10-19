@@ -1,7 +1,7 @@
 #menu {
     position: relative;
     height: 100vh;
-    height: calc(100vh - 4.25em);
+    height: max(calc(100vh - 4em), 37.5em);
     background-color: rgb(250, 250, 250);
     background-color: var(--offwhite);
     /* background-image: url(./subtle-waves.svg); */
@@ -45,7 +45,7 @@
     color: var(--textcolor);
     outline: 1px solid var(--shadow);
     border-radius: 100vmax;
-    box-shadow: 0.35rem 0.35rem 0 var(--shadow);
+    box-shadow: 0.25rem 0.35rem 0 var(--shadow);
     transition: 
         translate 500ms ease,
         opacity 500ms ease;
@@ -97,10 +97,8 @@
     position: absolute;
     box-shadow: 
         0.25em 0.25em 1em rgba(0, 0, 0, 0.15);
-    height: 100%;
     overflow: hidden;
     width: var(--card-width);
-    height: var(--card-height);
     flex-shrink: 0;
     background-size: cover;
     border-radius: 2em;
@@ -121,6 +119,7 @@
     opacity: 0.25;
     inset: -1em 0;
     height: 6em;
+    filter: blur(1em);
     width: 100%;
     border-radius: 0 0 100% 100%;
 }
@@ -253,7 +252,7 @@
     gap: 0.75em;
     background-color: rgb(255 255 255 / 1);
     outline: 1px solid var(--shadow);
-    box-shadow: 0.35em 0.35em 0 var(--shadow);
+    box-shadow: 0.25em 0.35em 0 var(--shadow);
     padding: 0.75em 0.9em;
     border-radius: 100vmax;
     z-index: 10;
@@ -336,3 +335,64 @@
 .nav-dot[isselected = 'true'][color = 'blue']::after {
     box-shadow: 0 0 0 0.4em var(--blue-highlight);
 }
+
+.progress{
+    --inset: 2em;
+
+    position: relative;
+    margin: var(--inset) 0 0 var(--inset);
+    width: calc(100% - (var(--inset) * 2));
+    gap: 0.75em;
+    display: flex;
+    align-items: center;
+}
+
+.progress__bar{
+    --height: 1.25em;
+
+    position: relative;
+    width: 100%;
+    height: var(--height);
+    border-radius: 100vmax;
+    overflow: hidden;
+}
+
+.progress__bar--background{
+    background-color: rgb(255 255 255 / 0.5);
+    width: 100%;
+    height: 100%;
+    mix-blend-mode: overlay;
+    opacity: 0.75;
+}
+
+.progress__bar--foreground{
+    position: absolute;
+    top: 0;
+    height: var(--height);
+    border-radius: 100vmax;
+}
+
+.progress__bar--foreground::after{
+    content: '';
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(white, black);
+    mix-blend-mode: overlay;
+    opacity: 0.25;
+    border-radius: 100vmax;
+}
+
+.progress__text > p{
+    margin: 0;
+    line-height: var(--height);
+    color: white;
+    border-radius: 100vmax;
+    padding: 0.2em 0.5em;
+    font-weight: 500;
+    font-size: 0.8em;
+    text-align: center;
+    min-width: 0.6em;
+}
+

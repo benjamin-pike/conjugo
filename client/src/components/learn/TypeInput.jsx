@@ -65,13 +65,14 @@ function TypeInput( props ){
         setScrolled( true )
     }
 
-    props.setButtonVisible( text.length )
+    if (!props.checked)
+        props.setButtonVisible(text.length > 0)
 
     return(
         <div
             id = { styles[ "input__wrapper" ] }
             style = {{ width: 4 * width + "ch" }}>
-            <div id = { styles["input__container"]} correct = { correct !== null && correct.toString()} >
+            <div id = { styles["input__container"]} correct = { `${correct}` } >
                 <input
                     ref = { inputRef }
                     id = { styles[ "input__input" ] }

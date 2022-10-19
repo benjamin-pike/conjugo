@@ -1,6 +1,6 @@
 .raised-button__container{
     background-color: var(--selected);
-    padding: 0.25em;
+    padding: 0.3em;
     border-radius: 1em;
     transition: width 200ms ease;
 }

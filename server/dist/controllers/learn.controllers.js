@@ -99,7 +99,7 @@ const lesson = async (req, res) => {
         },
         select: { infinitive: true }
     }).then(data => data.map(verb => verb.infinitive));
-    while (output.length < 20) {
+    while (output.length < 2) {
         const prevQuestion = output.at(-1); // undefined if output is empty
         const antePrevQuestion = output.at(-2); // undefined if output is empty or has only one element
         const selectedFormatString = (0, math_utils_1.randomElementNotPrevious)(questionFormats, (prevQuestion === null || prevQuestion === void 0 ? void 0 : prevQuestion.format.action) === 'alert'
@@ -289,6 +289,7 @@ async function generateSelect(res, type, language, infinitive, tenseRoot, knownV
             ? Object.entries(options).map(([translation, _infinitive]) => ({ prefix: 'to', main: translation, correct: translation === correctTranslation }))
             : Object.entries(options).map(([translation, infinitive]) => ({ main: infinitive, correct: translation === correctTranslation }));
     }
+    output.options = output.options.sort(() => Math.random() - 0.5);
     return output;
 }
 async function generateType(res, type, language, infinitive, tenseRoot, knownVerbs) {
@@ -318,15 +319,25 @@ async function generateType(res, type, language, infinitive, tenseRoot, knownVer
     return output;
 }
 async function generateAlert(res, language, infinitive, tenseRoot) {
-    const output = { conjugations: [] };
-    const allConjugations = await prisma.verb.findUnique({
+    const output = {
+        conjugations: [],
+        translation: '',
+        regularity: ''
+    };
+    const data = await prisma.verb.findUnique({
         where: { language_infinitive: { language, infinitive } },
-        select: { conjugations: true }
-    }).then(data => data === null || data === void 0 ? void 0 : data.conjugations);
-    if (!allConjugations)
+        select: {
+            conjugations: true,
+            translations: true,
+            regularity: true
+        }
+    });
+    if (!data)
         return res.sendStatus(500);
     const [complexity, mood, tense] = tenseRoot;
-    const conjugations = allConjugations[complexity][mood][tense];
+    output.translation = data.translations.principal;
+    output.regularity = data.regularity;
+    const conjugations = data.conjugations[complexity][mood][tense];
     output.conjugations =
         collatedSubjects[language].map((subjects) => [
             Array.isArray(subjects)

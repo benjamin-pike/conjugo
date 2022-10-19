@@ -113,7 +113,7 @@ function Reference(){
 
     return(
         <div id = {styles["reference"]}
-            style = {{ height: navVisible ? "calc(100vh - 8.5em)" : "100vh" }}>
+            style = {{ height: navVisible ? "calc(100vh - 8em)" : "100vh" }}>
             
             <div id = {styles["left-content"]} 
                 style = {{

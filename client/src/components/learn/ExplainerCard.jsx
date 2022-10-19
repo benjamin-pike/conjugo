@@ -35,10 +35,10 @@ function ExplainerCard( props ){
                             </span>
                         </span> 
                         is {regularity === "irregular" ? "an" : "a" } 
-                        <span id = {styles["card__explainer__tense"]} color = { regColors[ props.data.regularity] } >
+                        <span id = {styles["card__explainer__tense"]} color = { regColors[ props.content.regularity] } >
                             <span className = {styles["card__explainer__background"]} />
                             <span className = {styles["card__explainer__foreground"]}>
-                                { regText[ props.data.regularity ] }
+                                { regText[ props.content.regularity ] }
                             </span>
                         </span>
                         verb that means 
@@ -52,63 +52,63 @@ function ExplainerCard( props ){
                 </div>
             );
 
-        case "alert-irregular":
-            return(
-                <div id = {styles["card__explainer"]}>
-                    <p>
-                        <span id = {styles["card__explainer__verb"]} color = "dark">
-                            <span className = {styles["card__explainer__background"]}/>
-                            <span className = {styles["card__explainer__foreground"]}>
-                                {verb}
-                            </span>
-                        </span> 
-                        is
-                        <span id = {styles["card__explainer__irregular"]} color = "red">
-                            <span className = {styles["card__explainer__background"]}/>
-                            <span className = {styles["card__explainer__foreground"]}>
-                                irregular
-                            </span>
-                        </span>
-                        in the
-                        <span id = {styles["card__explainer__tense"]} color = { tenseColors[ tense.split(" ")[0] ] }>
-                            <span className = {styles["card__explainer__background"]}/>
-                            <span className = {styles["card__explainer__foreground"]}>
-                                {tense}
-                            </span>
-                        </span>
-                        tense
-                    </p>
-                </div>
-            );
+        // case "alert-irregular":
+        //     return(
+        //         <div id = {styles["card__explainer"]}>
+        //             <p>
+        //                 <span id = {styles["card__explainer__verb"]} color = "dark">
+        //                     <span className = {styles["card__explainer__background"]}/>
+        //                     <span className = {styles["card__explainer__foreground"]}>
+        //                         {verb}
+        //                     </span>
+        //                 </span> 
+        //                 is
+        //                 <span id = {styles["card__explainer__irregular"]} color = "red">
+        //                     <span className = {styles["card__explainer__background"]}/>
+        //                     <span className = {styles["card__explainer__foreground"]}>
+        //                         irregular
+        //                     </span>
+        //                 </span>
+        //                 in the
+        //                 <span id = {styles["card__explainer__tense"]} color = { tenseColors[ tense.split(" ")[0] ] }>
+        //                     <span className = {styles["card__explainer__background"]}/>
+        //                     <span className = {styles["card__explainer__foreground"]}>
+        //                         {tense}
+        //                     </span>
+        //                 </span>
+        //                 tense
+        //             </p>
+        //         </div>
+        //     );
 
-        case "alert-stem":
-            return(
-                <div id = {styles["card__explainer"]}>
-                    <p>
-                        <span id = {styles["card__explainer__verb"]} color = "dark">
-                            <span className = {styles["card__explainer__background"]}/>
-                            <span className = {styles["card__explainer__foreground"]}>
-                                {verb}
-                            </span>
-                        </span> 
-                        changes its
-                        <span id = {styles["card__explainer__stem-changing"]} color = "orange">
-                            <span className = {styles["card__explainer__background"]}/>
-                            <span className = {styles["card__explainer__foreground"]}>
-                                stem
-                            </span>
-                        </span> 
-                        in the
-                        <span id = {styles["card__explainer__tense"]} color = { tenseColors[ tense.split(" ")[0] ] }>
-                            <span className = {styles["card__explainer__background"]}/>
-                            <span className = {styles["card__explainer__foreground"]}>
-                                {tense}
-                            </span>
-                        </span>
-                        tense
-                    </p>
-                </div>
-            );
+        // case "alert-stem":
+        //     return(
+        //         <div id = {styles["card__explainer"]}>
+        //             <p>
+        //                 <span id = {styles["card__explainer__verb"]} color = "dark">
+        //                     <span className = {styles["card__explainer__background"]}/>
+        //                     <span className = {styles["card__explainer__foreground"]}>
+        //                         {verb}
+        //                     </span>
+        //                 </span> 
+        //                 changes its
+        //                 <span id = {styles["card__explainer__stem-changing"]} color = "orange">
+        //                     <span className = {styles["card__explainer__background"]}/>
+        //                     <span className = {styles["card__explainer__foreground"]}>
+        //                         stem
+        //                     </span>
+        //                 </span> 
+        //                 in the
+        //                 <span id = {styles["card__explainer__tense"]} color = { tenseColors[ tense.split(" ")[0] ] }>
+        //                     <span className = {styles["card__explainer__background"]}/>
+        //                     <span className = {styles["card__explainer__foreground"]}>
+        //                         {tense}
+        //                     </span>
+        //                 </span>
+        //                 tense
+        //             </p>
+        //         </div>
+        //     );
 
         case "match-conjugations":
             return(

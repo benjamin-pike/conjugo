@@ -92,6 +92,8 @@ export const lesson = async (req: Request, res: Response) => {
 
     interface alertContent {
         conjugations: [string, string][]
+        translation: string,
+        regularity: string
     }
 
     const output: {
@@ -133,7 +135,7 @@ export const lesson = async (req: Request, res: Response) => {
         select: { infinitive: true }
     }).then(data => data.map(verb => verb.infinitive));
    
-    while (output.length < 20) {
+    while (output.length < 2) {
 
         const prevQuestion = output.at(-1) // undefined if output is empty
         const antePrevQuestion = output.at(-2) // undefined if output is empty or has only one element
@@ -463,6 +465,8 @@ async function generateSelect(
             ))
     }
 
+    output.options = output.options.sort(() => Math.random() - 0.5)
+
     return output
 }
 
@@ -521,19 +525,38 @@ async function generateAlert(
 	infinitive: string,
 	tenseRoot: [string, string, string],
 ) {
-    const output: { conjugations: [string, string][] }= { conjugations: [] }
+    const output: { 
+        conjugations: [string, string][],
+        translation: string,
+        regularity: string
+    } = { 
+        conjugations: [], 
+        translation: '', 
+        regularity: '' 
+    };
     
-    const allConjugations = 
+    const data = 
         await prisma.verb.findUnique({
             where: { language_infinitive: { language, infinitive } },
-            select: { conjugations: true }
-        }).then(data => data?.conjugations) as Conjugations
+            select: { 
+                conjugations: true,
+                translations: true,
+                regularity: true
+            }
+        }) as unknown as { 
+            conjugations: Conjugations, 
+            translations: Translations, 
+            regularity: string 
+        }
 
-    if (!allConjugations) return res.sendStatus(500)
+    if (!data) return res.sendStatus(500)
 
     const [complexity, mood, tense] = tenseRoot
 
-    const conjugations = allConjugations[complexity][mood][tense]
+    output.translation = data.translations.principal
+    output.regularity = data.regularity 
+
+    const conjugations = data.conjugations[complexity][mood][tense]
 
     output.conjugations = 
         collatedSubjects[language].map((subjects) => [
