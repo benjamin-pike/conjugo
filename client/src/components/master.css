@@ -23,22 +23,23 @@
     --aqua: hsl(180, 100%, 42%);
     --blue: hsl(211, 100%, 50%);
     --purple: hsl(274, 100%, 55%);
-    --pink: rgb(229, 16, 148);
+    --pink: hsl(323, 87%, 48%);
 
-    --red-dark: #f9003e;
+    --red-dark: hsl(345, 100%, 49%);
     --orange-dark: hsl(20, 100%, 49%);
-    --yellow-dark: #ffae00;
+    --yellow-dark: hsl(41, 100%, 50%);
     --green-dark: hsl(120, 100%, 38%);
-    --aqua-dark: #00a4b3;
+    --aqua-dark: hsl(185, 100%, 35%);
     --blue-dark: hsl(219, 100%, 49%);
     --purple-dark: rgb(124,0,252);
-    --H: #66eefa;
-    --red-highlight: rgb(247,208,216);
-    --orange-highlight: rgb(247,221,204);
-    --yellow-highlight: rgb(247,233,199);
-    --green-highlight: rgb(216,236,206);
-    --blue-highlight: rgb(203,221,243);
-    --purple-highlight: rgb(230,204,243);
+
+    --red-highlight: hsl(348, 71%, 89%);
+    --orange-highlight: hsl(24, 73%, 88%);
+    --yellow-highlight: hsl(42, 75%, 87%);
+    --green-highlight: hsl(100, 44%, 87%);
+    --blue-highlight: hsl(213, 63%, 87%);
+    --purple-highlight: hsl(280, 62%, 88%);
+    --pink-highlight: hsl(323, 71%, 89%);
 }
 
 * {

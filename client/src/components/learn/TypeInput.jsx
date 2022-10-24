@@ -47,8 +47,13 @@ function TypeInput( props ){
 
     useEffect(() => {
         const checkAnswer = () => {
-            console.log(text, props.answer)
             setCorrect( text.trim() === props.answer )
+            
+            props.setCorrect(prevState => [
+                ...prevState,
+                text.trim() === props.answer
+            ])
+            
             props.setChecked( true )
         }
 

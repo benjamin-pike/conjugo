@@ -78,6 +78,7 @@ export function LangProvider( { children } ){
     const value = {
         language: languageData.languages[languageData.current],
         allLanguages: languageData.languages,
+        forceUpdate: () => setLanguageData(state => ({...state})),
         changeLanguage
     }
 

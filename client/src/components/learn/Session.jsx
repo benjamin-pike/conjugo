@@ -7,6 +7,7 @@ import useHTTP from "../../hooks/useHTTP";
 // Components
 import AlertBanner from "./AlertBanner";
 import AlertConjugations from "./AlertConjugations";
+import VerbEndings from "./VerbEndings";
 import ProgressBar from "./ProgressBar";
 import VerbCard from "./VerbCard";
 import AudioCard from "./AudioCard";
@@ -18,6 +19,8 @@ import RaisedButton from "../common/RaisedButton/RaisedButton";
 
 // Styles
 import styles from "./styles/learn.module.css"
+import mapTenseNames from "../../assets/js/map-tense-names";
+import mapTenseColors from "../../assets/js/map-tense-colors";
 
 function Session(props){
 
@@ -32,7 +35,7 @@ function Session(props){
     const { language } = useLang()
 
     const [questionIndex, setQuestionIndex] = useState( 0 )
-    const [currentQuestion, setCurrentQuestion] = useState( {format: {}, content: {}} )
+    const [currentQuestion, setCurrentQuestion] = useState({ format: {}, content: {} })
     const [lessonData, setLessonData] = useState( [] )
 
     const [renderContent, setRenderContent] = useState( false )
@@ -81,6 +84,12 @@ function Session(props){
     }
 
     switch(currentQuestion.format.action){
+        case "introduction":
+            answerElement = <VerbEndings 
+                tenseRoot = {currentQuestion.content.tense}
+                />
+            break;
+
         case "alert":
             answerElement = 
                 <AlertConjugations 
@@ -98,8 +107,8 @@ function Session(props){
                     handleKeyPress = { handleKeyPressRef }
                     setHandleMouseAction = { setHandleMouseAction }
                     setButtonVisible = { setButtonVisible }
-                    checkFunction = { currentQuestion.checkFunction }
                     setCheckFunction = { setCheckFunction }
+                    setCorrect = { props.setCorrect }
                     checked = { answerChecked } 
                     setChecked = { setAnswerChecked }
                 />
@@ -112,6 +121,7 @@ function Session(props){
                     handleKeyPress = { handleKeyPressRef }
                     setButtonVisible = { setButtonVisible } 
                     setCheckFunction = { setCheckFunction }
+                    setCorrect = { props.setCorrect }
                     checked = { answerChecked } 
                     setChecked = { setAnswerChecked }
                 />
@@ -124,6 +134,7 @@ function Session(props){
                     checked = { answerChecked }
                     setChecked = { setAnswerChecked}
                     setCheckFunction = { setCheckFunction }
+                    setCorrect = { props.setCorrect }
                     setButtonVisible = { setButtonVisible }
                 />
     }
@@ -131,8 +142,17 @@ function Session(props){
     // Send request to backend to retrieve lesson data
     useEffect( async () => {
         setRenderContent( false )
-        const [complexity, mood, tense] = props.tense.split('-')
-        const data = await sendRequest({ url: `api/learn/lesson/${language.name}/${complexity}/${mood}/${tense}` })
+        const [complexity, mood, tense] = props.tense.root.split('-')
+        const data = await sendRequest({ 
+            url: `api/learn/lesson/${language.name}/`,
+            method: "POST",
+            body: {
+                complexity,
+                mood,
+                tense,
+                lessonIndex: props.tense.index
+            }
+        })
         setLessonData( data )
     }, [])
 
@@ -183,7 +203,7 @@ function Session(props){
 
     // Show continue button after 5 seconds if activity type = 'alert'
     useEffect(() => {
-        if (currentQuestion.format.action === "alert"){
+        if (currentQuestion.format.action === "alert" || currentQuestion.format.action === "introduction") {
             let timeout;
             setAnswerChecked( true )
 
@@ -216,7 +236,6 @@ function Session(props){
             onKeyPress = { handleKeyPress }
             onMouseMove = { handleMouseAction }
             onMouseUp = { handleMouseAction }
-            // style = {{backgroundImage: 'url(./subtle-waves.svg)'}}
             tabIndex = { -1 }>
 
             <div 
@@ -224,9 +243,16 @@ function Session(props){
                 style = {{backgroundImage: 'url(./subtle-waves.svg)'}}
             />
 
-            { currentQuestion && <ProgressBar
+            { currentQuestion.format.action && <h1 
+                id = {styles['title']}
+                color = {mapTenseColors[props.tense.root.split('-').at(-1)]}
+            >
+                {mapTenseNames[props.tense.root][language.name]['english']}
+            </h1> }
+
+            { currentQuestion.format.action && <ProgressBar
                 progressRef = { progressRef } 
-                visible = { currentQuestion.format.action !== "alert" }
+                visible = { currentQuestion.format.action !== "alert" && currentQuestion.format.action !== "introduction" }
                 progress = { questionIndex / lessonData.length }
                 setStage = { props.setStage }
             /> }
@@ -241,7 +267,7 @@ function Session(props){
                 activity = { currentQuestion.format.action }
                 className = { buttonVisible ? styles["button-visible"] : "" }>
 
-                    { currentQuestion.format.action === "alert" && <AlertBanner type = { 'new' } />}
+                    { currentQuestion.format.action === "alert" && <AlertBanner type = { 'new' } /> }
 
                     {promptElement}
 

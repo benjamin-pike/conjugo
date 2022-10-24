@@ -19,57 +19,117 @@ const ProgressCircle = props => {
         return 360 * (xp - boundaries.low) / (boundaries.high - boundaries.low) 
     }
 
+    const bonus = props.xp.bonus ?? 0
+
     const [xp, setXP] = useState( props.xp.current )
     const [level, setLevel] = useState( getLevel( xp ) )
     const [boundaries, setBoundaries] = useState( getBoundaries( xp ) )
+    const [initialXP, setInitialXP] = useState( props.xp.current )
     const [position, setPosition] = useState({
         initial: getPosition( xp, boundaries ),
-        target: getPosition( props.xp.new, boundaries )
+        targetBase: getPosition( props.xp.new, boundaries ),
+        targetBonus: getPosition( props.xp.new + bonus, boundaries )
     })
 
     const circleRef = useRef(null)
-    const arcRef = useRef(null)
+    const baseRef = useRef(null)
+    const bonusRef = useRef(null)
 
     useEffect(() => {
-        const simple = level === getLevel( props.xp.new ) 
+        const simple = level === getLevel( props.xp.new + bonus ) 
+
+        const baseDelta = simple ? props.xp.new - initialXP : boundaries.high - initialXP
+        const bonusDelta = simple ? props.xp.new + bonus - initialXP : boundaries.high - initialXP
         
-        const delta = simple ? props.xp.new - xp : boundaries.high - xp
         const speed = parseFloat( getComputedStyle(circleRef.current).getPropertyValue( "--speed" ) )
-        const duration = ( ( 1 / speed * 250 ) + ( delta / 360 ) * ( 1 / speed * 2000 ))
         
+        const baseDuration = baseDelta > 0 
+            ? ( ( 1 / speed * 250 ) + ( baseDelta / 360 ) * ( 1 / speed * 2000 ))
+            : 0
+        const bonusDuration = ( ( 1 / speed * 250 ) + ( bonusDelta / 360 ) * ( 1 / speed * 2000 ))
+        const totalDuration = baseDuration + bonusDuration
+
         circleRef.current.style.setProperty('--initial', position.initial);
-        circleRef.current.style.setProperty('--animation-duration', `${duration}ms`);
-        
-        if ( simple ) circleRef.current.style.setProperty('--target', position.target);
-        else circleRef.current.style.setProperty('--target', 360)
+        circleRef.current.style.setProperty('--animation-duration--base', `${baseDuration}ms`);
+        circleRef.current.style.setProperty('--animation-duration--bonus', `${bonusDuration}ms`);
 
-        if ( !simple ){
+        if (simple) {
+            circleRef.current.style.setProperty('--target--base', position.targetBase);
+            circleRef.current.style.setProperty('--target--bonus', position.targetBonus);
+
+            bonusRef.current.onanimationend = () => {
+                bonusRef.current.style.setProperty('animation', 
+                    `${styles['draw-arc--bonus']} var(--animation-duration--bonus) ease forwards`
+                )
+            }
+        } else {
+            const baseOverlap = level !== getLevel(props.xp.new)
+            let hasPivoted = false
+
+            circleRef.current.style.setProperty('--target--base',
+                baseOverlap ? 360 : position.targetBase
+            )
+
+            circleRef.current.style.setProperty('--target--bonus', 360);
+            console.log(circleRef.current.style.getPropertyValue('--target--bonus'))
+            
             const pivot = boundaries.high
-            const newBoundaries = getBoundaries( pivot )
+            const newBoundaries = getBoundaries(pivot)
 
-            arcRef.current.onanimationend = () => {    
-                setBoundaries( newBoundaries )
-                setPosition({
-                    initial: getPosition( pivot, newBoundaries ),
-                    target: getPosition( props.xp.new, newBoundaries )
-                })
-                setLevel( currentLevel => currentLevel + 1 )
+            if (baseOverlap) {
+                bonusRef.current.onanimationend = () => {
+                    setBoundaries(newBoundaries)
+                    setPosition({
+                        initial: getPosition(pivot, newBoundaries),
+                        targetBase: getPosition(props.xp.new, newBoundaries),
+                        targetBonus: getPosition(props.xp.new + bonus, newBoundaries)
+                    })
+                    setInitialXP(pivot)
+                    setLevel(currentLevel => currentLevel + 1)
+                }            
+            } else {
+                bonusRef.current.onanimationend = () => {
+                    if (!hasPivoted) {
+                        bonusRef.current.style.setProperty('animation', 
+                            `${styles['draw-arc--bonus']} var(--animation-duration--bonus) ease forwards`
+                        )
+
+                        return hasPivoted = true
+                    }
+
+                    setBoundaries(newBoundaries)
+                    setPosition({
+                        initial: getPosition(pivot, newBoundaries),
+                        targetBase: 0,
+                        targetBonus: getPosition(props.xp.new + bonus, newBoundaries)
+                    })
+                    setInitialXP(pivot)
+                    setLevel(currentLevel => currentLevel + 1)
+                }
             }
         }
         
-        let interval  = setInterval( () => {
+        let interval = setInterval( () => {
             setXP(current => {
-                if (current < props.xp.new)
+                if (current < props.xp.new + bonus)
                     return current + 1
                 
                 clearInterval( interval )
 
                 return current
             })
-        }, ( duration / delta ) )
+        }, props.xp.new >= boundaries.high 
+            ? (baseDuration / bonusDelta)
+            : (totalDuration / bonusDelta)
+        )
 
         return () => clearInterval( interval )
     }, [level, start])
+
+    useEffect(() => {
+        if (level !== getLevel(props.xp.current)) 
+            new Audio ('/level-up.mp3').play()
+    }, [level])
 
     useEffect(() => setTimeout(() => setStart(true), 3000), [])
 
@@ -77,6 +137,10 @@ const ProgressCircle = props => {
         <div 
             ref = { circleRef }
             id = {styles["progress"]}
+            key = { `${level}-bonus` }
+            style = { level !== getLevel(props.xp.current) ? {
+                animation: `${styles['new-level']} 750ms ease forwards`
+            } : {} }
         >
             <div id = {styles["progress-circle"]}>
                 <svg>
@@ -86,9 +150,16 @@ const ProgressCircle = props => {
                         r = "calc( 50% - ( 4.5vh / 2 ) )" 
                     />
                     <circle
-                        ref = { arcRef }
-                        key = { level }
-                        id = {styles["progress-circle__foreground"]}
+                        ref = { bonusRef }
+                        key = { `${level}-bonus` }
+                        id = {styles["progress-circle__bonus"]}
+                        cx = "50%" cy = "50%"
+                        r = "calc( 50% - ( 4.5vh / 2 ) )" 
+                    />
+                    <circle
+                        ref = { baseRef }
+                        key = { `${level}-base` }
+                        id = {styles["progress-circle__base"]}
                         cx = "50%" cy = "50%"
                         r = "calc( 50% - ( 4.5vh / 2 ) )" 
                     />

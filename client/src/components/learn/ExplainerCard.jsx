@@ -24,6 +24,28 @@ function ExplainerCard( props ){
         [action, answer, prompt].filter( item => item !== undefined ).join("-")
 
     switch( activityType ){
+        case "introduction":
+            return(
+                <div id = {styles["card__explainer"]}>
+                <p>
+                    In the 
+                    <span className = {styles["card__explainer__highlight__middle"]} color = { tenseColors[ tense.split("-").at(-1) ] }>
+                            <span className = {styles["card__explainer__background"]}/>
+                            <span className = {styles["card__explainer__foreground"]}>
+                                { tenseNames[tense][language.name].english.toLowerCase() }
+                            </span>
+                    </span>
+                    tense,
+                    <span id = {styles["card__explainer__tense"]} color = 'green' >
+                        <span className = {styles["card__explainer__background"]} />
+                        <span className = {styles["card__explainer__foreground"]}>
+                            regular
+                        </span>
+                    </span>
+                    verbs are conjugated as follows . . .
+                </p>
+            </div>
+            );
         case "alert":
             return(
                 <div id = {styles["card__explainer"]}>

@@ -2,7 +2,7 @@
     --progress-animation: slide-in 500ms ease forwards;
     
     position: absolute;
-    top: 3em;
+    top: 4em;
     margin-bottom: 0.5em;
     transition: opacity 200ms ease;
     display: flex;

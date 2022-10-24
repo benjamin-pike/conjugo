@@ -49,7 +49,7 @@ export const getPracticeConfig = async (req: Request, res: Response) => {
 
 	const configNew = await prisma.practiceConfig.create({
 		data: {
-			userId: req.body.user.id as string,
+			userId: req.body.user.id as number,
 			language: language
 		}
 	});
@@ -211,7 +211,6 @@ export const generatePracticeSession = async (req: Request, res: Response) => {
 // @params { language: string }
 // @body   { results: { infinitive: string, subject: string, tense: string, accuracy: number, time: number, hinted: boolean }[] }
 export const calculatePracticeResults = async (req: Request, res: Response) => {
-
     const { language } = req.params;
 
     if (!validLanguages.includes(language)) return res.sendStatus(400);
@@ -239,7 +238,7 @@ export const calculatePracticeResults = async (req: Request, res: Response) => {
         where: {
             userId_language: {
                 userId: req.body.user.id,
-                language: language
+                language
             }
         }
     })
@@ -264,19 +263,37 @@ export const calculatePracticeResults = async (req: Request, res: Response) => {
     const configScore = ( 1/3 ) * ( subjectScore + tenseScore + verbScore ) * pressureScore
 
     // Calculate the new XP value based on the accuracy and config complexity  
-    const xpData = await prisma.xp.findUnique({
-        where: { userId: req.body.user.id },
-        select: { [language]: true }
-    }) as { [key: string]: number };
+    const progressDataArray = await prisma.user.findUnique({
+        where: { id: req.body.user.id },
+        select: { UserProgress: true }
+    }).then(data => data?.UserProgress);
 
-    if (!xpData) return res.sendStatus(500);
+    if (!progressDataArray) return res.sendStatus(500);
 
-    const currentXP = xpData[language];
+    let progressData = progressDataArray.find(entry => entry.language === language)
+
+    if (!progressData){
+        progressData = await prisma.userProgress.create({
+            data: {
+                userId: req.body.user.id,
+                language
+            }
+        })
+    }
+
+    if (!progressData) return res.sendStatus(500)
+
+    const currentXP = progressData.totalXP
     const newXP = currentXP + Math.round(100 * configScore * meanAccuracy) * 5
 
-    const updatedXP = await prisma.xp.update({
-        where: { userId: req.body.user.id },
-        data: { [language]: newXP }
+    const updatedXP = await prisma.userProgress.update({
+        where: { 
+            userId_language: {
+                userId: req.body.user.id,
+                language
+            }
+        },
+        data: { totalXP: newXP }
     });
 
     if (!updatedXP) return res.sendStatus(500);

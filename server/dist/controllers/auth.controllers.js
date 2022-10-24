@@ -115,9 +115,6 @@ const register = async (req, res) => {
             await prisma.savedVerbs.create({
                 data: { userId: user.id }
             });
-            await prisma.xp.create({
-                data: { userId: user.id }
-            });
         }
         catch (_a) {
             return res.sendStatus(500);

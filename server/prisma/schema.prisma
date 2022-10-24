@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id             String           @id @default(cuid())
+  id             Int              @id @default(autoincrement())
   username       String           @unique
   email          String           @unique
   password       String
@@ -21,39 +21,41 @@ model User {
   practiceConfig PracticeConfig[]
   RefreshTokens  RefreshToken[]
   SavedVerbs     SavedVerbs?
-  XP             xp?
   UserProgress   UserProgress[]
 }
 
 model RefreshToken {
   id     String   @id
   exp    DateTime
-  userId String
+  userId Int
   user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model SavedVerbs {
-  id         String   @id @default(cuid())
+  id Int @id @default(autoincrement())
+
   spanish    String[] @default([])
   french     String[] @default([])
   german     String[] @default([])
   italian    String[] @default([])
   portuguese String[] @default([])
-  userId     String   @unique
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
 
 model PracticeConfig {
-  id       String   @id @default(cuid())
+  id       Int    @id @default(autoincrement())
   language String
+
   subjects String[]
   verbs    Int      @default(20)
   target   Int      @default(10)
   time     Int      @default(120)
-  userId   String
   tenses   String[]
+  userId   Int
   user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, language])
@@ -75,25 +77,17 @@ model Verb {
   @@index([language, infinitive])
 }
 
-model xp {
-  id         String @id @default(cuid())
-  spanish    Int    @default(0)
-  french     Int    @default(0)
-  german     Int    @default(0)
-  italian    Int    @default(0)
-  portuguese Int    @default(0)
-  userId     String @unique
-  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-}
-
 model UserProgress {
-  id         String @id @default(cuid())
-  language   String
-  knownVerbs Int    @default(3)
-  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String
+  id       Int    @id @default(autoincrement())
+  language String
+
+  knownVerbs Int   @default(3)
+  totalXP    Int   @default(0)
+  lessonXP   Int[] @default([0])
+  lastLesson Int   @default(0)
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
 
   @@unique([userId, language])
   @@index([userId])

@@ -709,126 +709,246 @@ export default {
                 }
             }
         },
-        "eln": {
-            "indicative": {
-                "present": {
-                    "ich": "e",
-                    "du": "st",
-                    "er": "t",
-                    "sie": "t",
-                    "es": "t",
-                    "wir": "en",
-                    "ihr": "t",
-                    "Sie": "en"
+        // "eln": {
+        //     "indicative": {
+        //         "present": {
+        //             "ich": "e",
+        //             "du": "st",
+        //             "er": "t",
+        //             "sie": "t",
+        //             "es": "t",
+        //             "wir": "en",
+        //             "ihr": "t",
+        //             "Sie": "en"
+        //         },
+        //         "imperfect": {
+        //             "ich": "te",
+        //             "du": "test",
+        //             "er": "te",
+        //             "sie": "te",
+        //             "es": "te",
+        //             "wir": "ten",
+        //             "ihr": "tet",
+        //             "Sie": "ten"
+        //         }
+        //     },
+        //     "subjunctive": {
+        //         "present": {
+        //             "ich": "e",
+        //             "du": "est",
+        //             "er": "e",
+        //             "sie": "e",
+        //             "es": "e",
+        //             "wir": "en",
+        //             "ihr": "et",
+        //             "Sie": "en"
+        //         },
+        //         "imperfect": {
+        //             "ich": "te",
+        //             "du": "test",
+        //             "er": "te",
+        //             "sie": "te",
+        //             "es": "te",
+        //             "wir": "ten",
+        //             "ihr": "tet",
+        //             "Sie": "ten"
+        //         }
+        //     },
+        //     "imperative": {
+        //         "affirmative": {
+        //             "du": "e",
+        //             "wir": "en",
+        //             "ihr": "t",
+        //             "Sie": "en"
+        //         },
+        //         "negative": {
+        //             "du": "e",
+        //             "wir": "en",
+        //             "ihr": "t",
+        //             "Sie": "en"
+        //         }
+        //     }
+        // },
+        // "ern": {
+        //     "indicative": {
+        //         "present": {
+        //             "ich": "e",
+        //             "du": "st",
+        //             "er": "t",
+        //             "sie": "t",
+        //             "es": "t",
+        //             "wir": "en",
+        //             "ihr": "t",
+        //             "Sie": "en"
+        //         },
+        //         "imperfect": {
+        //             "ich": "te",
+        //             "du": "test",
+        //             "er": "te",
+        //             "sie": "te",
+        //             "es": "te",
+        //             "wir": "ten",
+        //             "ihr": "tet",
+        //             "Sie": "ten"
+        //         }
+        //     },
+        //     "subjunctive": {
+        //         "present": {
+        //             "ich": "e",
+        //             "du": "est",
+        //             "er": "e",
+        //             "sie": "e",
+        //             "es": "e",
+        //             "wir": "en",
+        //             "ihr": "et",
+        //             "Sie": "en"
+        //         },
+        //         "imperfect": {
+        //             "ich": "te",
+        //             "du": "test",
+        //             "er": "te",
+        //             "sie": "te",
+        //             "es": "te",
+        //             "wir": "ten",
+        //             "ihr": "tet",
+        //             "Sie": "ten"
+        //         }
+        //     },
+        //     "imperative": {
+        //         "affirmative": {
+        //             "du": "e",
+        //             "wir": "en",
+        //             "ihr": "t",
+        //             "Sie": "en"
+        //         },
+        //         "negative": {
+        //             "du": "e",
+        //             "wir": "en",
+        //             "ihr": "t",
+        //             "Sie": "en"
+        //         }
+        //     }
+        // },
+        "eln":{
+            "indicative":{
+                "present":{
+                    "ich":"le",
+                    "du":"elst",
+                    "er":"elt",
+                    "sie":"elt",
+                    "es":"elt",
+                    "wir":"eln",
+                    "ihr":"elt",
+                    "Sie":"eln"
                 },
-                "imperfect": {
-                    "ich": "te",
-                    "du": "test",
-                    "er": "te",
-                    "sie": "te",
-                    "es": "te",
-                    "wir": "ten",
-                    "ihr": "tet",
-                    "Sie": "ten"
+                "imperfect":{
+                    "ich":"elte",
+                    "du":"eltest",
+                    "er":"elte",
+                    "sie":"elte",
+                    "es":"elte",
+                    "wir":"elten",
+                    "ihr":"eltet",
+                    "Sie":"elten"
                 }
             },
-            "subjunctive": {
-                "present": {
-                    "ich": "e",
-                    "du": "est",
-                    "er": "e",
-                    "sie": "e",
-                    "es": "e",
-                    "wir": "en",
-                    "ihr": "et",
-                    "Sie": "en"
+            "subjunctive":{
+                "present":{
+                    "ich":"le",
+                    "du":"lest",
+                    "er":"le",
+                    "sie":"le",
+                    "es":"le",
+                    "wir":"len",
+                    "ihr":"let",
+                    "Sie":"len"
                 },
-                "imperfect": {
-                    "ich": "te",
-                    "du": "test",
-                    "er": "te",
-                    "sie": "te",
-                    "es": "te",
-                    "wir": "ten",
-                    "ihr": "tet",
-                    "Sie": "ten"
+                "imperfect":{
+                    "ich":"elte",
+                    "du":"eltest",
+                    "er":"elte",
+                    "sie":"elte",
+                    "es":"elte",
+                    "wir":"elten",
+                    "ihr":"eltet",
+                    "Sie":"elten"
                 }
             },
-            "imperative": {
-                "affirmative": {
-                    "du": "e",
-                    "wir": "en",
-                    "ihr": "t",
-                    "Sie": "en"
+            "imperative":{
+                "affirmative":{
+                    "du":"le",
+                    "wir":"eln",
+                    "ihr":"elt",
+                    "Sie":"eln"
                 },
-                "negative": {
-                    "du": "e",
-                    "wir": "en",
-                    "ihr": "t",
-                    "Sie": "en"
+                "negative":{
+                    "du":"le",
+                    "wir":"eln",
+                    "ihr":"elt",
+                    "Sie":"eln"
                 }
             }
         },
-        "ern": {
-            "indicative": {
-                "present": {
-                    "ich": "e",
-                    "du": "st",
-                    "er": "t",
-                    "sie": "t",
-                    "es": "t",
-                    "wir": "en",
-                    "ihr": "t",
-                    "Sie": "en"
+        "ern":{
+            "indicative":{
+                "present":{
+                    "ich":"ere",
+                    "du":"erst",
+                    "er":"ert",
+                    "sie":"ert",
+                    "es":"ert",
+                    "wir":"ern",
+                    "ihr":"ert",
+                    "Sie":"ern"
                 },
-                "imperfect": {
-                    "ich": "te",
-                    "du": "test",
-                    "er": "te",
-                    "sie": "te",
-                    "es": "te",
-                    "wir": "ten",
-                    "ihr": "tet",
-                    "Sie": "ten"
+                "imperfect":{
+                    "ich":"erte",
+                    "du":"ertest",
+                    "er":"erte",
+                    "sie":"erte",
+                    "es":"erte",
+                    "wir":"erten",
+                    "ihr":"ertet",
+                    "Sie":"erten"
                 }
             },
-            "subjunctive": {
-                "present": {
-                    "ich": "e",
-                    "du": "est",
-                    "er": "e",
-                    "sie": "e",
-                    "es": "e",
-                    "wir": "en",
-                    "ihr": "et",
-                    "Sie": "en"
+            "subjunctive":{
+                "present":{
+                    "ich":"ere",
+                    "du":"erest",
+                    "er":"ere",
+                    "sie":"ere",
+                    "es":"ere",
+                    "wir":"ern",
+                    "ihr":"ert",
+                    "Sie":"ern"
                 },
-                "imperfect": {
-                    "ich": "te",
-                    "du": "test",
-                    "er": "te",
-                    "sie": "te",
-                    "es": "te",
-                    "wir": "ten",
-                    "ihr": "tet",
-                    "Sie": "ten"
+                "imperfect":{
+                    "ich":"erte",
+                    "du":"ertest",
+                    "er":"erte",
+                    "sie":"erte",
+                    "es":"erte",
+                    "wir":"erten",
+                    "ihr":"ertet",
+                    "Sie":"erten"
                 }
             },
-            "imperative": {
-                "affirmative": {
-                    "du": "e",
-                    "wir": "en",
-                    "ihr": "t",
-                    "Sie": "en"
+            "imperative":{
+                "affirmative":{
+                    "du":"ere",
+                    "wir":"ern",
+                    "ihr":"ert",
+                    "Sie":"ern"
                 },
-                "negative": {
-                    "du": "e",
-                    "wir": "en",
-                    "ihr": "t",
-                    "Sie": "en"
+                "negative":{
+                    "du":"ere",
+                    "wir":"ern",
+                    "ihr":"ert",
+                    "Sie":"ern"
                 }
             }
-        },
+        },   
         "un": {
             "indicative": {
                 "present": {

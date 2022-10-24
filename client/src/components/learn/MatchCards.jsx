@@ -64,6 +64,11 @@ function Cards( props ){
                     }
                 })
 
+                props.setCorrect(prevState => [
+                    ...prevState,
+                    Object.values(states).every(pair => pair.correct)
+                ])
+
                 return { ...states }
             })
 

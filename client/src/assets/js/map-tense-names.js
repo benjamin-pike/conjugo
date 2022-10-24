@@ -31,7 +31,7 @@ export default {
             "target": "Passé Simple"
         },
         "italian": {
-            "english": "Simple Past",
+            "english": "Preterite",
             "target": "Passato Remoto"
         },
         "portuguese": {
@@ -249,7 +249,7 @@ export default {
             "target": "Passé Antérieur"
         },
         "italian": {
-            "english": "Past Perfect",
+            "english": "Preterite Perfect",
             "target": "Trapassato Remoto"
         }
     },

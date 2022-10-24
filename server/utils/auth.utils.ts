@@ -6,14 +6,14 @@ import cuid from 'cuid';
 
 const prisma = new PrismaClient();
 
-export const createAccessToken = (id: string) => {
+export const createAccessToken = (id: number) => {
     return jwt.sign({ id }, process.env.JWT_ACCESS_SECRET, {
         expiresIn: process.env.NODE_ENV === 'production' 
             ? process.env.JWT_EXPIRATION_ACCESS : '1yr'
     });
 }
 
-export const createRefreshToken = async (id: string) => {
+export const createRefreshToken = async (id: number) => {
     const token = jwt.sign({ id }, process.env.JWT_REFRESH_SECRET, {
         expiresIn: process.env.JWT_EXPIRATION_REFRESH,
         jwtid: cuid()
@@ -49,7 +49,7 @@ export const verifyToken = (token: string, tokenType: 'access' | 'refresh') => {
     }
 }
 
-export const setTokenCookies = async (res: Response, userId: string) => {
+export const setTokenCookies = async (res: Response, userId: number) => {
     const accessToken = createAccessToken(userId);
     const refreshToken = await createRefreshToken(userId);
 

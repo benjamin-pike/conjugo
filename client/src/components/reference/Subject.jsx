@@ -38,16 +38,25 @@ function Subject(props){
                     const vowels = ["a", "e", "i", "o", "u"]
 
                     if ( language.name === "german" ){
-                        if ( ending !== "en" ){
-                            stem += ending.slice( 0, ending.length - 1 )
-                            if ( regularEnding === "en" ) regularEnding = "n"
-                            if ( ending === "eln" && regularEnding === "e" ) stem = stem.slice(0, stem.length - 2 ) + "l"
-                        }
+                        // if ( ending !== "en" ){
+                        //     stem += ending.slice( 0, ending.length - 1 )
+                        //     if ( regularEnding === "en" ) regularEnding = "n"
+                        //     if ( ending === "eln" && regularEnding === "e" ) stem = stem.slice(0, stem.length - 2 ) + "l"
+                        // }
 
-                        if ( ( stem.endsWith("d") || stem.endsWith("t") ) || ( ( stem.endsWith("m") || stem.endsWith("n") ) && ![...vowels, stem.at( -1 )].includes( normalizeText( stem.at( -2 ) ) ) ) )
-                            if ( regularEnding === "st" || regularEnding === "t" )
-                                regularEnding = "e" + regularEnding
+                        if (
+                            tense === "present" &&
+                            (
+                                stem.endsWith("d") ||stem.endsWith("t") ||
+                                ((stem.endsWith("m") || stem.endsWith("n")) &&
+                                    ![...vowels, stem.at(-1)].includes(
+                                        normalizeText(stem.at(-2))
+                                    ))
+                            )
+                        ) if (regularEnding === "st" || regularEnding === "t")
+                                regularEnding = "e" + regularEnding;
                         
+
                         if ( props.subjectKey === "du" && [ "s", "ß", "x", "z" ].includes( stem.at( -1 ) ) )
                             regularEnding = "t"
                     }

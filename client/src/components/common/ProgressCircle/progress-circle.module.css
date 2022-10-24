@@ -9,10 +9,16 @@
     
     --initial: 50; /* 0 - 360 */
     --target: 300; /* 0 - 360 */
+    --target--base: 300; /* 0 - 360 */
+    --target--bonus: 320; /* 0 - 360 */
     --speed: 0.25; /* 0 - 1 */
     
     --delta: calc( var(--target) - var(--initial) ); /* Use if target > initial */
     --animation-duration: calc( ( 1 / var(--speed) * 250ms ) + ( var(--delta) / 360 ) * ( 1 / var(--speed) * 2000ms ))
+    
+    --animation-duration--base: calc( ( 1 / var(--speed) * 250ms ) + ( var(--delta) / 360 ) * ( 1 / var(--speed) * 2000ms ))
+    --animation-duration--bonus: calc( ( 1 / var(--speed) * 250ms ) + ( var(--delta) / 360 ) * ( 1 / var(--speed) * 2000ms ))
+
   
     position: relative;
     animation: content-in 500ms ease forwards;
@@ -180,18 +186,56 @@
     fill: transparent;
 }
   
-#progress-circle__foreground {
-    stroke: rgb(255, 192, 0);
+#progress-circle__base {
+    stroke: var(--yellow);
     stroke-width: var(--stroke-width);
     fill: transparent;
     stroke-dasharray: var(--circumference);
     stroke-dashoffset: calc( ( 360 - var(--initial) ) * var(--degconst) );
     stroke-linecap: round;
-    animation: dash var(--animation-duration) ease forwards;
+    animation: draw-arc--base var(--animation-duration--base) ease forwards;
 }
-  
-@keyframes dash {
+
+#progress-circle__bonus {
+    stroke: var(--yellow);
+    opacity: 0.5;
+    stroke-width: var(--stroke-width);
+    fill: transparent;
+    stroke-dasharray: var(--circumference);
+    stroke-dashoffset: calc( ( 360 - var(--initial) ) * var(--degconst) );
+    stroke-linecap: round;
+    animation: draw-arc--base var(--animation-duration--base) ease forwards;
+}
+
+@keyframes draw-arc--base {
     to {
-      stroke-dashoffset: calc( ( 360 - var(--target) ) * var(--degconst) );
+      stroke-dashoffset: calc( ( 360 - var(--target--base) ) * var(--degconst) );
+    }
+}
+
+@keyframes draw-arc--bonus {
+    to {
+      stroke-dashoffset: calc( ( 360 - var(--target--bonus) ) * var(--degconst) );
+    }
+}
+
+@keyframes new-level {
+    0%{
+        scale: 1;
+    }
+    25%{
+        scale: 1.05;
+        rotate: 5deg
+    }
+    50%{
+        scale: 1;
+    }
+    75%{
+        scale: 1.05;
+        rotate: -5deg
+    }
+    100%{
+        scale: 1;
+        rotate: 0deg
     }
 }

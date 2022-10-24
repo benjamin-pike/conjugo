@@ -10,7 +10,6 @@ import Learn from "./learn/Learn";
 import Practice from "./practice/Practice"
 import Auth from "./auth/Auth"
 import Reference from "./reference/Reference"
-import languages from "../assets/js/languages.js"
 import "./master.css"
 
 function Routes() {

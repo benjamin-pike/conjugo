@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.lesson = void 0;
+exports.results = exports.lesson = exports.progress = void 0;
 const client_1 = require("@prisma/client");
 const math_utils_1 = require("../utils/math.utils");
 const math_utils_2 = require("../utils/math.utils");
@@ -62,36 +62,58 @@ const collatedSubjects = {
         ["eles", "elas"]
     ],
 };
-// @desc   Create a practice session for a given language
-// @route  GET /practice/:language/:complexity/:mood/:tense
-// @access Public
-// @params language: string, complexity: string, mood: string, tense: string
+// @desc   Get lesson progress for a specific language
+// @route  GET /progress/:language
+// @access Private
+// @params language
+const progress = async (req, res) => {
+    const { language } = req.params;
+    const progressDataArray = await prisma.user.findUnique({
+        where: { id: req.body.user.id },
+        select: { UserProgress: true }
+    }).then(data => data === null || data === void 0 ? void 0 : data.UserProgress);
+    if (!progressDataArray)
+        return res.sendStatus(500);
+    let progressData = progressDataArray.find(entry => entry.language === language);
+    let extractedData = progressData
+        ? (0, object_utils_1.include)(progressData, ['lessonXP', 'lastLesson'])
+        : { lessonXP: [0], lastLesson: 0 };
+    if (extractedData.lessonXP[extractedData.lessonXP.length - 1] >= 200) // 200 XP == Level 5
+        extractedData.lessonXP.push(0);
+    res.json(extractedData);
+};
+exports.progress = progress;
+// @desc   Create lesson data for a given language
+// @route  GET /lesson/:language/
+// @access Private
+// @params language
+// @body   complexity, mood, tense, lessonIndex
 const lesson = async (req, res) => {
-    const { language, complexity, mood, tense } = req.params;
-    const output = [];
-    let knownVerbs = await prisma.userProgress.findUnique({
+    const { language } = req.params;
+    const { complexity, mood, tense, lessonIndex } = req.body;
+    const lesson = [];
+    let progressData = await prisma.userProgress.findUnique({
         where: {
             userId_language: {
                 userId: req.body.user.id,
                 language,
             }
-        },
-        select: { knownVerbs: true }
-    }).then(data => data === null || data === void 0 ? void 0 : data.knownVerbs);
-    if (!knownVerbs) {
+        }
+    });
+    if (!progressData) {
         try {
-            await prisma.userProgress.create({
+            progressData = await prisma.userProgress.create({
                 data: {
                     userId: req.body.user.id,
                     language,
                 }
             });
-            knownVerbs = 3;
         }
         catch (_a) {
             return res.sendStatus(500);
         }
     }
+    let knownVerbs = progressData.knownVerbs;
     let candidateInfinitives = await prisma.verb.findMany({
         where: {
             rank: { lte: knownVerbs },
@@ -99,33 +121,43 @@ const lesson = async (req, res) => {
         },
         select: { infinitive: true }
     }).then(data => data.map(verb => verb.infinitive));
-    while (output.length < 2) {
-        const prevQuestion = output.at(-1); // undefined if output is empty
-        const antePrevQuestion = output.at(-2); // undefined if output is empty or has only one element
-        const selectedFormatString = (0, math_utils_1.randomElementNotPrevious)(questionFormats, (prevQuestion === null || prevQuestion === void 0 ? void 0 : prevQuestion.format.action) === 'alert'
-            ? antePrevQuestion === null || antePrevQuestion === void 0 ? void 0 : antePrevQuestion.format
-            : prevQuestion === null || prevQuestion === void 0 ? void 0 : prevQuestion.format);
-        const format = Object.fromEntries(selectedFormatString.split('-').map((component, index) => [formatComponent[index], component]));
+    if (progressData.lessonXP[lessonIndex] === 0)
+        lesson.push({
+            format: { action: 'introduction' },
+            infinitive: '',
+            content: { tense: `${complexity}-${mood}-${tense}` }
+        });
+    if (progressData.lessonXP[0] === 0) // If user has no lesson XP, send specialised first lesson
+        lesson.push(...await generateFirstLesson(res, language, candidateInfinitives));
+    while (lesson.length < 15) {
+        const prevQuestion = lesson.at(-1); // undefined if lesson is empty
+        const antePrevQuestion = lesson.at(-2); // undefined if lesson is empty or has only one element
+        const selectedFormatString = (0, math_utils_1.randomElementNotPrevious)(questionFormats, prevQuestion === null || prevQuestion === void 0 ? void 0 : prevQuestion.format);
+        const format = Object.fromEntries(selectedFormatString.split('-').map((component, index) => [formatComponent[index], component])); // Convert format string to object with keys 'action', 'answer', 'prompt'
         if (format.action === (antePrevQuestion === null || antePrevQuestion === void 0 ? void 0 : antePrevQuestion.format.action))
-            continue;
-        if (format.action === 'match' && (prevQuestion === null || prevQuestion === void 0 ? void 0 : prevQuestion.format.action) === 'match')
-            continue;
-        if (format.action === 'alert' && (output.length < 3 || output.length > 17))
-            continue;
+            continue; // Prevent three consecutive questions of the same action
+        if (format.action === 'match' && ((prevQuestion === null || prevQuestion === void 0 ? void 0 : prevQuestion.format.action) === 'match' || (antePrevQuestion === null || antePrevQuestion === void 0 ? void 0 : antePrevQuestion.format.action) === 'match'))
+            continue; // Prevent frequent match questions
+        if (format.action === 'alert' && (lesson.length < 3 || lesson.length > 13))
+            continue; // New verb alerts should not be within the first or last two questions
+        if (knownVerbs < 6 && format.action === 'match' && format.answer === 'translations')
+            continue; // Do not select match-translations if user knows fewer than 6 verbs
         let infinitive = (0, math_utils_1.randomElementNotPrevious)(candidateInfinitives, (prevQuestion === null || prevQuestion === void 0 ? void 0 : prevQuestion.infinitive) !== ''
             ? prevQuestion === null || prevQuestion === void 0 ? void 0 : prevQuestion.infinitive
             : antePrevQuestion === null || antePrevQuestion === void 0 ? void 0 : antePrevQuestion.infinitive);
         if ((prevQuestion === null || prevQuestion === void 0 ? void 0 : prevQuestion.format.action) === 'alert') {
             if (format.action === 'match' && format.answer === 'translations')
-                continue;
-            infinitive = prevQuestion.infinitive;
+                continue; // Do not select match-translations if previous question was alert
+            infinitive = prevQuestion.infinitive; // Test new verb following alert
         }
+        if (format.action === 'alert' && (antePrevQuestion === null || antePrevQuestion === void 0 ? void 0 : antePrevQuestion.format.action) === 'alert')
+            continue; // If either of previous two questions are alerts, do not select alert 
         if (language === 'french' && format.prompt === 'audio' && format.answer !== 'translation')
             continue; // French conjugations are often audibly indistinguishable, hence this is not a good question format
         if (format.action === 'match' && format.answer === 'translations')
-            infinitive = '';
+            infinitive = ''; // Match-translations do not require an infinitive
         if (format.action === 'alert') {
-            knownVerbs++;
+            knownVerbs++; // Increase known verbs by one for each new verb alert
             const newInfinitive = await prisma.verb.findUnique({
                 where: {
                     language_rank: {
@@ -134,13 +166,13 @@ const lesson = async (req, res) => {
                     }
                 },
                 select: { infinitive: true }
-            });
+            }); // Select new verb data for alert
             if (!newInfinitive)
                 continue;
             infinitive = newInfinitive.infinitive;
             candidateInfinitives.push(infinitive);
         }
-        if (infinitive !== '')
+        if (infinitive !== '') // Remove selected infinitive from candidate infinitives
             candidateInfinitives.splice(candidateInfinitives.indexOf(infinitive), 1);
         if (candidateInfinitives.length === 0) {
             candidateInfinitives = await prisma.verb.findMany({
@@ -157,7 +189,7 @@ const lesson = async (req, res) => {
                 content = await generateSelect(res, { answer: format.answer, prompt: format.prompt }, language, infinitive, [complexity, mood, tense], knownVerbs);
                 break;
             case 'type':
-                content = await generateType(res, { answer: format.answer, prompt: format.prompt }, language, infinitive, [complexity, mood, tense], knownVerbs);
+                content = await generateType(res, { answer: format.answer, prompt: format.prompt }, language, infinitive, [complexity, mood, tense]);
                 break;
             case 'alert':
                 content = await generateAlert(res, language, infinitive, [complexity, mood, tense]);
@@ -165,7 +197,7 @@ const lesson = async (req, res) => {
             default:
                 return res.sendStatus(500);
         }
-        output.push({
+        lesson.push({
             format,
             infinitive,
             content,
@@ -182,16 +214,69 @@ const lesson = async (req, res) => {
     });
     if (!updatedKnownVerbs)
         return res.sendStatus(500);
-    res.json(output);
+    return res.json(lesson);
 };
 exports.lesson = lesson;
+// @desc   Get results for a lesson
+// @route  POST /results/:language
+// @access Private
+// @params language
+// @body   user, lessonIndex, bonus
+const results = async (req, res) => {
+    const { language } = req.params;
+    const { user, lessonIndex, bonus } = req.body;
+    const progressDataArray = await prisma.user.findUnique({
+        where: { id: user.id },
+        select: { UserProgress: true }
+    }).then(data => data === null || data === void 0 ? void 0 : data.UserProgress);
+    if (!progressDataArray)
+        return res.sendStatus(500);
+    let progressData = progressDataArray.find(progress => progress.language === language);
+    if (!progressData)
+        progressData = await prisma.userProgress.create({
+            data: {
+                userId: user.id,
+                language,
+            }
+        });
+    const updatedProgressData = await prisma.userProgress.update({
+        where: {
+            userId_language: {
+                userId: user.id,
+                language
+            }
+        },
+        data: {
+            totalXP: progressData.totalXP + 10 + bonus,
+            lessonXP: Object.assign([], progressData.lessonXP, {
+                [lessonIndex]: progressData.lessonXP[lessonIndex]
+                    ? progressData.lessonXP[lessonIndex] + 10 + bonus
+                    : 10 + bonus
+            }),
+            lastLesson: lessonIndex
+        }
+    });
+    if (!updatedProgressData)
+        return res.sendStatus(500);
+    return res.json({
+        totalXP: {
+            current: progressData.totalXP,
+            new: progressData.totalXP + 10,
+            bonus,
+        },
+        lessonXP: updatedProgressData.lessonXP,
+        lastLesson: updatedProgressData.lastLesson
+    });
+};
+exports.results = results;
+// Functions required to generate question content
 async function generateMatch(res, type, language, infinitive, tenseRoot, knownVerbs, candidateInfinitives) {
     const output = { pairs: [] };
     if (type === 'translations') {
         const pool = candidateInfinitives && candidateInfinitives.length >= 6
             ? candidateInfinitives
             : await prisma.verb.findMany({
-                where: { language, rank: { lte: knownVerbs >= 6 ? knownVerbs : 6 } },
+                where: { language, rank: { lte: knownVerbs && knownVerbs >= 6 ? knownVerbs : 6 } },
             }).then(data => data.map(verb => verb.infinitive));
         const infinitives = pool.sort(() => Math.random() - 0.5).slice(0, 6);
         output.pairs = await Promise.all(infinitives.map(async (infinitive) => {
@@ -270,7 +355,7 @@ async function generateSelect(res, type, language, infinitive, tenseRoot, knownV
     }
     if (type.answer === 'translation') {
         const allTranslations = await prisma.verb.findMany({
-            where: { language, rank: { lte: knownVerbs > 6 ? knownVerbs : 6 } },
+            where: { language, rank: { lte: knownVerbs && knownVerbs > 6 ? knownVerbs : 6 } },
             select: { infinitive: true, translations: true }
         }).then(data => data === null || data === void 0 ? void 0 : data.map(verb => ({ infinitive: verb.infinitive, translations: verb === null || verb === void 0 ? void 0 : verb.translations })));
         if (!allTranslations)
@@ -292,7 +377,7 @@ async function generateSelect(res, type, language, infinitive, tenseRoot, knownV
     output.options = output.options.sort(() => Math.random() - 0.5);
     return output;
 }
-async function generateType(res, type, language, infinitive, tenseRoot, knownVerbs) {
+async function generateType(res, type, language, infinitive, tenseRoot) {
     const output = { card: '', answer: '' };
     const conjugationData = await prisma.verb.findUnique({
         where: { language_infinitive: { language, infinitive } },
@@ -383,4 +468,83 @@ function getIncorrectConjugations(num, conjugations, correct, alternativeTenses)
     return Object.entries(output).map(([subject, conjugation]) => ({
         prefix: subject, main: conjugation, correct: false
     }));
+}
+async function generateFirstLesson(res, language, candidateInfinitives) {
+    return await Promise.all([
+        {
+            format: { action: 'alert' },
+            infinitive: candidateInfinitives[0],
+            content: await generateAlert(res, language, candidateInfinitives[0], ['simple', 'indicative', 'present'])
+        },
+        {
+            format: { action: 'select', answer: 'conjugation', prompt: 'subject' },
+            infinitive: candidateInfinitives[0],
+            content: await generateSelect(res, { answer: 'conjugation', prompt: 'subject' }, language, candidateInfinitives[0], ['simple', 'indicative', 'present'])
+        },
+        {
+            format: { action: 'match', answer: 'conjugations' },
+            infinitive: candidateInfinitives[0],
+            content: await generateMatch(res, 'conjugations', language, candidateInfinitives[0], ['simple', 'indicative', 'present'])
+        },
+        {
+            format: { action: 'select', answer: 'translation', prompt: 'text' },
+            infinitive: candidateInfinitives[0],
+            content: await generateSelect(res, { answer: 'translation', prompt: 'text' }, language, candidateInfinitives[0], ['simple', 'indicative', 'present'])
+        },
+        {
+            format: { action: 'type', answer: 'conjugation', prompt: 'subject' },
+            infinitive: candidateInfinitives[0],
+            content: await generateType(res, { answer: 'conjugation', prompt: 'subject' }, language, candidateInfinitives[0], ['simple', 'indicative', 'present'])
+        },
+        {
+            format: { action: 'alert' },
+            infinitive: candidateInfinitives[1],
+            content: await generateAlert(res, language, candidateInfinitives[1], ['simple', 'indicative', 'present'])
+        },
+        {
+            format: { action: 'select', answer: 'translation', prompt: 'audio' },
+            infinitive: candidateInfinitives[1],
+            content: await generateSelect(res, { answer: 'translation', prompt: 'audio' }, language, candidateInfinitives[1], ['simple', 'indicative', 'present'])
+        },
+        {
+            format: { action: 'match', answer: 'conjugations' },
+            infinitive: candidateInfinitives[1],
+            content: await generateMatch(res, 'conjugations', language, candidateInfinitives[1], ['simple', 'indicative', 'present'])
+        },
+        {
+            format: { action: 'select', answer: 'conjugation', prompt: 'tense' },
+            infinitive: candidateInfinitives[1],
+            content: await generateSelect(res, { answer: 'conjugation', prompt: 'tense' }, language, candidateInfinitives[1], ['simple', 'indicative', 'present'])
+        },
+        {
+            format: { action: 'type', answer: 'conjugation', prompt: 'audio' },
+            infinitive: candidateInfinitives[1],
+            content: await generateType(res, { answer: 'conjugation', prompt: 'audio' }, language, candidateInfinitives[1], ['simple', 'indicative', 'present'])
+        },
+        {
+            format: { action: 'alert' },
+            infinitive: candidateInfinitives[2],
+            content: await generateAlert(res, language, candidateInfinitives[2], ['simple', 'indicative', 'present'])
+        },
+        {
+            format: { action: 'type', answer: 'conjugation', prompt: 'subject' },
+            infinitive: candidateInfinitives[2],
+            content: await generateType(res, { answer: 'conjugation', prompt: 'subject' }, language, candidateInfinitives[2], ['simple', 'indicative', 'present'])
+        },
+        {
+            format: { action: 'select', answer: 'conjugation', prompt: 'subject' },
+            infinitive: candidateInfinitives[2],
+            content: await generateSelect(res, { answer: 'conjugation', prompt: 'subject' }, language, candidateInfinitives[2], ['simple', 'indicative', 'present'])
+        },
+        {
+            format: { action: 'match', answer: 'conjugations' },
+            infinitive: candidateInfinitives[2],
+            content: await generateMatch(res, 'conjugations', language, candidateInfinitives[2], ['simple', 'indicative', 'present'])
+        },
+        {
+            format: { action: 'select', answer: 'translation', prompt: 'text' },
+            infinitive: candidateInfinitives[2],
+            content: await generateSelect(res, { answer: 'translation', prompt: 'text' }, language, candidateInfinitives[2], ['simple', 'indicative', 'present'])
+        }
+    ]);
 }

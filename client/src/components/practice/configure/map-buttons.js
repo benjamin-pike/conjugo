@@ -229,7 +229,7 @@ export const buttonsMap = {
 					complexities: ["simple", "compound"]
 				},
 				{
-					text: "past",
+					text: "imperfect",
 					id: "indicative-imperfect",
 					mood: "indicative",
 					complexities: ["simple", "compound"]

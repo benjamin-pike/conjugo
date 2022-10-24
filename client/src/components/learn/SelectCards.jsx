@@ -55,7 +55,8 @@ function Cards( props ){
     let candidates = splitRows ? optimiseRows( props.candidates ) : props.candidates // Split candidates into two arrays + optimise if necessary
 
     const [buttonStates, setButtonStates] = useState( // Initialise button state object with all values set to inactive by default
-        Object.fromEntries( candidates.flat().map( ( _,index ) =>  [index, "inactive"] ))
+        // Object.fromEntries( candidates.flat().map( ( _,index ) =>  [index, "inactive"] ))
+        candidates.flat().map(() => "inactive")
     )
 
     // Function accepts an answer index and updates buttonStates accordingly
@@ -68,7 +69,7 @@ function Cards( props ){
                 states[ index ] = states[ index ] === "active" ? "inactive" : "active"
             }
 
-            return {...states}
+            return [...states]
         })
     }
 
@@ -127,7 +128,12 @@ function Cards( props ){
                     }
                 })
 
-                return { ...states }
+                props.setCorrect(prevState => [
+                    ...prevState, 
+                    states.some(button => button !== "incorrect" && button !== "warning")
+                ])
+
+                return [...states]
             })
 
             props.setChecked( true )

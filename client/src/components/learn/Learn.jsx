@@ -5,14 +5,17 @@ import Session from './Session'
 
 const Learn = () => {
     const [stage, setStage] = useState('selection')
-    const [tense, setTense] = useState('')
+    const [tense, setTense] = useState({ root: '', index: 0 })
+    const [correct, setCorrect] = useState([])
+
+    console.log(correct)
 
     useEffect(() => {
-        if (tense) setStage('session')
+        if (tense.root !== '') setStage('session')
     }, [tense])
 
     useEffect(() => {
-        if (stage === 'selection') setTense('')
+        if (stage === 'selection') setTense({ root: '', index: 0 })
     }, [stage])
 
     return(
@@ -21,9 +24,15 @@ const Learn = () => {
         : stage === 'session' 
             ? <Session 
                 tense = { tense } 
-                setStage = { setStage } 
+                setStage = { setStage }
+                setCorrect = { setCorrect }
             />
-            : <Results setStage = { setStage } />
+            : <Results
+                correct = { correct }
+                setCorrect = { setCorrect }
+                tenseIndex = { tense.index }
+                setStage = { setStage }
+            />
     );
 }
 

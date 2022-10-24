@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { exclude, include } from "../utils/object.utils";
+import { include } from "../utils/object.utils";
+import languages from "../assets/languages.assets";
 
 const prisma = new PrismaClient();
 
@@ -30,16 +31,20 @@ export const getLanguages = async (req: Request, res: Response) => {
 
     const data = await prisma.user.findUnique({
         where: { id: user.id },
-        include: { XP: true }
-    }).then(data => data?.XP) as { [key: string]: number } | null
+        include: { UserProgress: true }
+    }).then(data => data?.UserProgress)
 
     if (!data) return res.sendStatus(500)
 
-    const xp = Object.keys(exclude(data, ['id', 'userId'])).reduce(
-        (output: {[key: string]: {xp: Number}}, language) => {
-            output[language] = {xp: data[language]}
-            return output
-        }, {})
+    const dataObject = Object.fromEntries(data.map(entry => [entry.language, entry.totalXP]))
+
+    const xp = languages.reduce((
+        output: { [key: string]: {xp: number} }, 
+        language
+    ) => {
+        output[language] = { xp: dataObject[language] ?? 0 }
+        return output
+    }, {})
 
     return res.json({ languages: xp })
 }

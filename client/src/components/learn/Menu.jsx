@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './styles/menu.module.css';
 import { useLang } from '../../store/LangContext'
 import { useNav } from '../../store/NavContext'
+import useHTTP from '../../hooks/useHTTP';
+import { getLevel, getXP } from '../../utils/xp';
 import tenseColors from "../../assets/js/map-tense-colors.js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
-
 
 const CARDS = {
     spanish: [
@@ -41,6 +42,56 @@ const CARDS = {
         'simple-subjunctive-imperfect',
         'compound-subjunctive-present',
         'compound-subjunctive-imperfect',
+    ],
+    german: [
+        'simple-indicative-present',
+        'simple-indicative-imperfect',
+        'simple-indicative-future',
+        'simple-subjunctive-conditional',
+        'compound-indicative-present',
+        'compound-indicative-imperfect',
+        'compound-indicative-future',
+        'compound-subjunctive-conditional',
+        'simple-subjunctive-present',
+        'simple-subjunctive-imperfect',
+        'simple-subjunctive-future',
+        'compound-subjunctive-present',
+        'compound-subjunctive-imperfect',
+        'compound-subjunctive-future'
+    ],
+    italian: [
+        'simple-indicative-present',
+        'simple-indicative-preterite',
+        'simple-indicative-imperfect',
+        'simple-indicative-future',
+        'simple-conditional-conditional',
+        'compound-indicative-present',
+        'compound-indicative-preterite',
+        'compound-indicative-imperfect',
+        'compound-indicative-future',
+        'compound-conditional-conditional',
+        'simple-subjunctive-present',
+        'simple-subjunctive-imperfect',
+        'compound-subjunctive-present',
+        'compound-subjunctive-imperfect',
+    ],
+    portuguese: [
+        'simple-indicative-present',
+        'simple-indicative-preterite',
+        'simple-indicative-imperfect',
+        'simple-indicative-future',
+        'simple-indicative-pluperfect',
+        'simple-conditional-conditional',
+        'compound-indicative-present',
+        'compound-indicative-imperfect',
+        'compound-indicative-future',
+        'compound-conditional-conditional',
+        'simple-subjunctive-present',
+        'simple-subjunctive-imperfect',
+        'simple-subjunctive-future',
+        'compound-subjunctive-present',
+        'compound-subjunctive-imperfect',
+        'compound-subjunctive-future'
     ]
 }
 
@@ -54,10 +105,14 @@ const Card = props => {
     const n = props.totalCards
     const s = props.selectedIndex
 
-    const color = tenseColors[props.tenseRoot.split('-').at(-1)]
+    const color = tenseColors[props.tense.root.split('-').at(-1)]
+
+    const currentLevel = getLevel(props.xp)
+    const lowerBound = getXP(currentLevel)
+    const levelProgress = (props.xp - lowerBound) / (getXP(currentLevel + 1) - lowerBound) 
 
     const handleHover = (e, isSelected) => {
-        const isButton = e.target.nodeName === 'P'
+        const isButton = e.target.classList.contains(styles['active'])
         const card = e.target.closest(`.${styles["card"]}`)
 
         if (isSelected && !isButton && e.type === 'mousemove'){
@@ -85,7 +140,7 @@ const Card = props => {
             onMouseMove = { e => handleHover(e, isSelected) }
             onMouseLeave = { e => handleHover(e, isSelected) }
             style = {{ 
-                backgroundImage: `url(./learn-cards/${props.language.name}-${props.tenseRoot}.svg)`,
+                backgroundImage: `url(./learn-cards/${props.language.name}-${props.tense.root}.svg)`,
                 // translate: `${19.25 * (props.selectedIndex - props.cardIndex)}em`,
                 // left: `${3 * (props.cardIndex + 1)}em`,
                 left: `calc(${(((n-1)/2 - s) / ((n-1)/2))}em + ${100*i/(n - 1)}% - (var(--card-width) * ${i/(n - 1)}))`,
@@ -97,26 +152,31 @@ const Card = props => {
             }}
         >
             
-            {props.unlocked && <header className = {styles['progress']}>
-                <div className = {styles['progress__bar']}>
-                    <div className = {styles['progress__bar--background']} />
-                    <div 
-                        className = {styles['progress__bar--foreground']} 
-                        style = {{
-                            width: `${50}%`,
-                            backgroundColor: `var(--${color})`
-                        }}
-                    />
-                </div>
-                <div className = {styles['progress__text']}>
-                    <p style = {{outline: `1px solid var(--${color})`}}>
-                        10
-                    </p>
-                </div>
+            {isSelected && <header className = {styles['progress']}>
+                { props.unlocked 
+                    ? <>
+                        <div className = {styles['progress__bar']}>
+                            <div className = {styles['progress__bar--background']} />
+                            <div 
+                                className = {styles['progress__bar--foreground']} 
+                                style = {{
+                                    width: `${levelProgress * 100}%`,
+                                    backgroundColor: `var(--${color})`
+                                }}
+                            />
+                        </div>
+                        <div className = {styles['progress__text']}>
+                            <p style = {{outline: `1px solid var(--${color})`}}>
+                                {currentLevel}
+                            </p>
+                        </div>
+                    </>
+                    : <p>Reach <span>level 5</span> in the previous tense to unlock the this lesson</p>
+                }
             </header>}
 
             {isSelected && <button 
-                onClick = { () => { if (props.unlocked) props.selectTense(props.tenseRoot) } }>
+                onClick = { () => { if (props.unlocked) props.selectTense(props.tense) } }>
                 {props.unlocked ? <>
                     <p className = {styles['inactive']}>
                         Start Lesson
@@ -124,7 +184,7 @@ const Card = props => {
                     <div className = {styles['active--wrapper']}>
                         <p
                             className = {styles['active']}
-                            style = {{ backgroundImage: `url(./learn-cards/${props.language.name}-${props.tenseRoot}.svg)`}}
+                            style = {{ backgroundImage: `url(./learn-cards/${props.language.name}-${props.tense.root}.svg)`}}
                         >
                             Start Lesson
                         </p>
@@ -140,28 +200,55 @@ const Card = props => {
 
 const Menu = props => {
     const { language } = useLang();
-    const [selectedCard, setSelectedCard] = useState(0)
+    const { sendRequest } = useHTTP()
     const [transition, setTransition] = useState(false)
+
+    const cachedProgress = JSON.parse(localStorage.getItem('lessonProgress'))
+    const isCached = cachedProgress && cachedProgress[language.name]
+
+    console.log(isCached, cachedProgress)
+    
+    const [selectedCard, setSelectedCard] = useState(0)
+    const [progress, setProgress] = useState([])
+    
     const { displayNav } = useNav()
     displayNav(true)
 
-    const unlocked = 6
+    const unlocked = progress.length
 
     window.onkeydown = e => setSelectedCard(index => {
-        if (index !== 0 && (e.key === 'ArrowLeft' || e.key === 'ArrowDown'))
+        if (index !== 0 && e.key === 'ArrowLeft')
             index--
         
-        if (index !== CARDS[language.name].length - 1 && (e.key === 'ArrowRight' || e.key === 'ArrowUp'))
+        if (index !== CARDS[language.name].length - 1 && e.key === 'ArrowRight')
             index++
 
         return index
     })
 
-    const selectTense = tenseRoot => {
+    const selectTense = (tense) => {
         setTransition(true)
 
-        setTimeout(() => props.setTense(tenseRoot), 1000)
+        setTimeout(() => 
+            props.setTense(tense)
+        , 1000)
     }
+
+    useEffect(async () => {
+        if (isCached) {
+            setSelectedCard(cachedProgress[language.name].lastLesson)
+            setProgress(cachedProgress[language.name].lessonXP)
+
+            return
+        }
+
+        const data = await sendRequest({ url: `/api/learn/progress/${language.name}` })
+        
+        if (data) {
+            setProgress(data.lessonXP)
+            setSelectedCard(data.lastLesson)
+        }
+    }, [language.name])
 
     return(
         <div 
@@ -173,13 +260,14 @@ const Menu = props => {
             <h1>Select the tense you would like to learn</h1>
             <div id = {styles["cards--container"]}>
                 {CARDS[language.name].map((tenseRoot, index, arr) => <Card 
-                    unlocked = {index < unlocked}
+                    unlocked = { index < unlocked }
                     selectedIndex = { selectedCard }
                     setSelectedCard = { setSelectedCard }
                     cardIndex = { index }
                     totalCards = { arr.length }
-                    language = {language}
-                    tenseRoot = {tenseRoot}
+                    xp = { progress[index] }
+                    language = { language }
+                    tense = {{ root: tenseRoot, index }}
                     selectTense = { selectTense }
                 />)}
             </div>

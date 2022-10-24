@@ -2,6 +2,8 @@
     padding: 1.25em 1.5em;
     border-radius: 0.4em;
     color: var(--textcolor);
+    width: fit-content;
+    margin: auto;
     background-color: var(--offwhite);
     box-shadow: 0.25em 0.25em 0.25em 0.125em var(--shadow);
 }

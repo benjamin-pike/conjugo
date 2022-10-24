@@ -1,8 +1,10 @@
 import express from 'express';
-import { lesson } from '../controllers/learn.controllers'
+import { progress, lesson, results } from '../controllers/learn.controllers'
 
 const router = express.Router();
 
-router.get('/lesson/:language/:complexity/:mood/:tense', lesson);
+router.get('/progress/:language', progress)
+router.post('/lesson/:language', lesson);
+router.post('/results/:language', results);
 
 export default router;

@@ -67,6 +67,7 @@
     position: relative;
     height: 25rem;
     width: 80%;
+    max-width: 60rem;
     display: flex;
     align-items: center;
     -ms-overflow-style: none;
@@ -126,7 +127,7 @@
 
 .card:not([distance = '0']) {
     cursor: pointer;
-    filter: blur(5px)
+    filter: blur(6px)
 }
 
 .card > button {
@@ -141,16 +142,19 @@
     outline: 1px solid white;
     border-radius: 100vmax;
     white-space: nowrap;
-    bottom: 1.5rem;
+    bottom: 1.35rem;
     display: flex;
     align-items: center;
     justify-content: center;
     left: 50%;
     translate: -50%;
-    box-shadow: 0.3em 0.4em rgb(0 0 0 / 0.1);
     overflow: hidden;
     transition: 
         background-color 200ms ease;
+}
+
+.card[unlocked = 'true'] > button {
+    box-shadow: 0.3em 0.4em rgb(0 0 0 / 0.1);
 }
 
 .card[unlocked = 'false'] > button > svg {
@@ -394,5 +398,19 @@
     font-size: 0.8em;
     text-align: center;
     min-width: 0.6em;
+}
+
+.progress > p {
+    margin: 0;
+    color: white;
+    font-weight: 400;
+    text-align: center;
+    font-size: 0.8em;
+    translate: 0 -0.35rem;
+    background-color: rgb(255 255 255 / 0.05);
+    outline: 1px solid rgb(255 255 255 / 0.2);
+    padding: 0.75rem 0.75rem;
+    width: calc(var(--card-width) - 1rem);
+    border-radius: 1rem;
 }
 
