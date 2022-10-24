@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const path_1 = __importDefault(require("path"));
 const auth_middleware_1 = __importDefault(require("./middleware/auth.middleware"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const dotenv_1 = __importDefault(require("dotenv"));
@@ -34,3 +35,13 @@ app.use('/api/user', user_routes_1.default); // Routes for user data
 app.use('/api/learn', learn_routes_1.default); // Routes for 'learn' section
 app.use('/api/practice', practice_routes_1.default); // Routes for 'practice' section
 app.use('/api/reference', reference_routes_1.default); // Routes for 'reference' section
+// Serve frontend
+if (process.env.NODE_ENV === 'production') {
+    app.use(express_1.default.static(path_1.default.join(__dirname, '../../client/build')));
+    app.get('*', (_req, res) => {
+        res.sendFile(path_1.default.resolve(__dirname, '../../', 'client', 'build', 'index.html'));
+    });
+}
+else {
+    app.get('*', (_req, res) => res.send('App is in development mode.'));
+}

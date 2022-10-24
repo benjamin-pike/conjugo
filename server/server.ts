@@ -1,5 +1,6 @@
 import express from 'express';
 import { Request, Response } from 'express';
+import path from 'path';
 import checkAuth from './middleware/auth.middleware';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
@@ -38,3 +39,13 @@ app.use('/api/user', userRoutes) // Routes for user data
 app.use('/api/learn', learnRoutes) // Routes for 'learn' section
 app.use('/api/practice', practiceRoutes) // Routes for 'practice' section
 app.use('/api/reference', referenceRoutes) // Routes for 'reference' section
+
+// Serve frontend
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../../client/build')));
+    app.get('*', (_req, res) => {
+        res.sendFile(path.resolve(__dirname, '../../', 'client', 'build', 'index.html'))
+    })
+} else {
+    app.get('*', (_req, res) => res.send('App is in development mode.'))
+}
