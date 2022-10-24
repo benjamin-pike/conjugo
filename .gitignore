@@ -40,5 +40,3 @@
 *.out
 *.pid
 *.gz
-*conjugations.ts
-*conjugations.js
