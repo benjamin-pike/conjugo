@@ -6,7 +6,7 @@ export default async ( language, infinitive, conjugation, instantPlay = false ) 
     const sourceNode = new AudioBufferSourceNode( context );
     const rank = infinitives[ language ][ infinitive ]
     
-    const response = await fetch( `/audio/conjugations/${language}/${rank}_${infinitive}/${conjugation.replace( " ", "_" )}.mp3` )
+    const response = await fetch( `https://conjugo.s3.eu-west-2.amazonaws.com/conjugations/${language}/${rank}_${infinitive}/${conjugation.replace( " ", "_" )}.mp3` )
     const arrayBuffer = await response.arrayBuffer()
     const audioBuffer = await context.decodeAudioData( arrayBuffer )
 
