@@ -17,7 +17,7 @@ function NavAvatar(props) {
             }
         }}>
 
-          <img src = {`http://localhost:7000/images/profile_defaults/${props.img}`} draggable = 'false' />
+          <img src = {`${props.img}`} draggable = 'false' />
 
           <Dropdown open = {props.open.avatar} img = {props.img}/>
         </div>
@@ -45,7 +45,7 @@ function Dropdown(props){
         <div id = {styles["avatar-dropdown"]} style = {props.open ? openStyle : null}>
             <div id = {styles["avatar-dropdown__profile"]}>
                 <img 
-                    src = {`http://localhost:7000/images/profile_defaults/${props.img}`} 
+                    src = {`${props.img}`} 
                     id =  {styles["avatar-dropdown__profile-image"]}
                 />
                 <div id = {styles["avatar-dropdown__profile-text"]}>
