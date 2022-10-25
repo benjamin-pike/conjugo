@@ -123,7 +123,7 @@ export const register = async (req: Request<{}, {}, { [key: string]: string }>, 
                 dob: userData.dob,
                 email: userData.email,
                 password: hash,
-                image: `${userData.fname[0].toLowerCase()}-${
+                image: `conjugo.s3.eu-west-2.amazonaws.com/images/profile/${userData.fname[0].toLowerCase()}-${
                     randomElement(['red', 'orange', 'yellow', 'green', 'blue', 'purple'])
                 }.png`
             }

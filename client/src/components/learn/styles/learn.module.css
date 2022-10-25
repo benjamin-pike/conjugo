@@ -158,40 +158,33 @@
 #title[color = 'red'] {
     color: var(--red);
     background-color: var(--red-highlight);
-    outline: 0.1px solid var(--red);
 }
 
 #title[color = 'orange'] {
     color: var(--orange);
     background-color: var(--orange-highlight);
-    outline: 0.1px solid var(--orange);
 }
 #title[color = 'yellow'] {
     color: var(--yellow-dark);
     background-color: var(--yellow-highlight);
-    outline: 0.1px solid var(--yellow);
 }
 
 #title[color = 'green'] {
     color: var(--green-dark);
     background-color: var(--green-highlight);
-    outline: 0.1px solid var(--green);
 }
 
 #title[color = 'aqua'] {
     color: var(--aqua);
     background-color: var(--aqua-highlight);
-    outline: 0.1px solid var(--aqua);
 }
 
 #title[color = 'blue'] {
     color: var(--blue);
     background-color: var(--blue-highlight);
-    outline: 0.1px solid var(--blue);
 }
 
 #title[color = 'purple'] {
     color: var(--purple);
     background-color: var(--purple-highlight);
-    outline: 0.1px solid var(--purple);
 }

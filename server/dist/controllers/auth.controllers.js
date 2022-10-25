@@ -108,7 +108,7 @@ const register = async (req, res) => {
                 dob: userData.dob,
                 email: userData.email,
                 password: hash,
-                image: `${userData.fname[0].toLowerCase()}-${(0, math_utils_1.randomElement)(['red', 'orange', 'yellow', 'green', 'blue', 'purple'])}.png`
+                image: `conjugo.s3.eu-west-2.amazonaws.com/images/profile/${userData.fname[0].toLowerCase()}-${(0, math_utils_1.randomElement)(['red', 'orange', 'yellow', 'green', 'blue', 'purple'])}.png`
             }
         });
         try {
