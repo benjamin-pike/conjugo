@@ -22,7 +22,7 @@ export default async ( language, infinitive, conjugation, instantPlay = false ) 
         return output + (urlEncoded[language][ char ] || char)
     }, '')
     
-    const response = await fetch(`http://conjugo.s3.eu-west-2.amazonaws.com/conjugations/${language}/${rank}_${infinitive}/${encodedConjugation}.mp3`)
+    const response = await fetch(`https://conjugo.s3.eu-west-2.amazonaws.com/conjugations/${language}/${rank}_${infinitive}/${encodedConjugation}.mp3`)
     const arrayBuffer = await response.arrayBuffer()
     const audioBuffer = await context.decodeAudioData( arrayBuffer )
 
