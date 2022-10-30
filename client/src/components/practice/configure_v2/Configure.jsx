@@ -3,6 +3,7 @@ import { useLang } from '../../../store/LangContext';
 import useHTTP from '../../../hooks/useHTTP';
 import ScrollingText from '../../common/ScrollingText/ScrollingText';
 import RaisedButton from '../../common/RaisedButton/RaisedButton';
+import Loading from '../../temporary/Loading';
 import subjectMap from '../../../assets/js/map-subject-person';
 import tenseMap from '../../../assets/js/map-tense-names';
 import subjectColors from '../../../assets/js/map-subject-colors';
@@ -157,9 +158,9 @@ const Configure = props => {
     const [configuration, setConfiguration] = useState({
         subjects: [],
         tenses: [],
-        verbs: 50,
-        target: 50,
-        time: 50,
+        verbs: 0,
+        target: 0,
+        time: 0,
     })
     
     const toggleSection = section => {
@@ -229,6 +230,7 @@ const Configure = props => {
         }, [])}
     })
 
+    const isLoading = configuration.verbs === 0
     const isValid = configuration.subjects.length && configuration.tenses.length
 
     const postConfiguration = async ( data ) => {
@@ -267,172 +269,176 @@ const Configure = props => {
     return(
         <div id = {styles['configure']}>
             <ScrollingText />
-            {/* <div 
-                id = {styles['backdrop']}
-                style = {{backgroundImage: 'url(./subtle-waves.svg)'}}
-            /> */}
-
-            {/* <h1>Set up your practice session</h1> */}
-            <div 
-                id = {styles['mount']}
-                opensection = {sectionOpen.subjects ? 'subjects' : sectionOpen.tenses ? 'tenses' : 'none'}
-            >
-                <section 
-                    id = {styles['subjects']}
-                    className = {styles['row'] + ' ' + styles['toggleable']}
-                >
-                    <div className = {styles['summary']}>
-                        <h2 onClick = {() => toggleSection('subjects')}>Subjects</h2>
-                        <button 
-                            className = {styles['toggle']}
+            {isLoading 
+                ? <Loading /> 
+                : <>
+                    <div 
+                        id = {styles['mount']}
+                        opensection = {sectionOpen.subjects ? 'subjects' : sectionOpen.tenses ? 'tenses' : 'none'}
+                    >
+                        <section 
+                            id = {styles['subjects']}
                             active = {`${sectionOpen.subjects}`}
-                            onClick = {() => toggleSection('subjects')}
+                            className = {styles['row'] + ' ' + styles['toggleable']}
                         >
-                            <FontAwesomeIcon icon = {faCaretRight} />
-                        </button>
-                        <div className = {styles['vertical-divider']} />
-                        <div className = {styles['chips']}>
-                            {configuration.language === language.name && configuration.subjects.length
-                                ? configuration.subjects.map(subject => <Chip
-                                    key = {subject} 
-                                    type = 'subject'
-                                    subject = {subject}
-                                    removeSubject = {removeSubject}
-                                />)
-                                : <Chip 
-                                    type = 'subject' 
-                                    empty = {true} 
-                                />
-                        }
-                        </div>
-                    </div>
-                    <div 
-                        className = {`${styles['buttons__wrapper']} ${styles['subjects']}`}                        
-                        active = {`${sectionOpen.subjects}`}
-                    >
-                        <div className = {styles['buttons__container']}>
-                            <button
-                                active = {`${configuration.subjects.length === 6}`}
-                                onClick = {() => setConfiguration(prevState => 
-                                    ({ ...prevState, subjects: configuration.subjects.length === 6 ? [] : subjects }))}
-                                color = 'black'
+                            <div className = {styles['summary']}>
+                                <div className = {styles['title-and-toggle']}>
+                                    <h2 onClick = {() => toggleSection('subjects')}>Subjects</h2>
+                                    <button 
+                                        className = {styles['toggle']}
+                                        onClick = {() => toggleSection('subjects')}
+                                    >
+                                        <FontAwesomeIcon icon = {faCaretRight} />
+                                    </button>
+                                </div>
+                                <div className = {styles['vertical-divider']} />
+                                <div className = {styles['chips']}>
+                                    {configuration.language === language.name && configuration.subjects.length
+                                        ? configuration.subjects.map(subject => <Chip
+                                            key = {subject} 
+                                            type = 'subject'
+                                            subject = {subject}
+                                            removeSubject = {removeSubject}
+                                        />)
+                                        : <Chip 
+                                            type = 'subject' 
+                                            empty = {true} 
+                                        />
+                                }
+                                </div>
+                            </div>
+                            <div 
+                                className = {`${styles['buttons__wrapper']} ${styles['subjects']}`}
+                                language = {language.name}                        
+                                active = {`${sectionOpen.subjects}`}
                             >
-                                <p>all</p>
-                            </button>
-                            <div className = {styles['vertical-divider']} />
-                            {subjects.map(subject => 
-                                <button
-                                    active = {`${configuration.subjects.includes(subject)}`}
-                                    color = {subjectColors[language.name][subjectMap[language.name]['subjects'][subject][0]]}
-                                    onClick = {() => toggleSubject(subject)}
-                                    onMouseEnter = {handleHover}
-                                    onMouseLeave = {handleHover}
-                                >
-                                    <p>{subjectMap[language.name]['subjects'][subject].slice(0, 2).join(' • ')}</p>
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                </section>
+                                <div className = {styles['buttons__container']}>
+                                    <button
+                                        active = {`${configuration.subjects.length === 6}`}
+                                        onClick = {() => setConfiguration(prevState => 
+                                            ({ ...prevState, subjects: configuration.subjects.length === 6 ? [] : subjects }))}
+                                        color = 'black'
+                                    >
+                                        <p>all</p>
+                                    </button>
+                                    <div className = {styles['vertical-divider']} />
+                                    {subjects.map(subject => 
+                                        <button
+                                            active = {`${configuration.subjects.includes(subject)}`}
+                                            color = {subjectColors[language.name][subjectMap[language.name]['subjects'][subject][0]]}
+                                            onClick = {() => toggleSubject(subject)}
+                                            onMouseEnter = {handleHover}
+                                            onMouseLeave = {handleHover}
+                                        >
+                                            <p>{subjectMap[language.name]['subjects'][subject].slice(0, 2).join(' • ')}</p>
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </section>
 
-                <section 
-                    id = {styles['tenses']}
-                    className = {styles['row'] + ' ' + styles['toggleable']}
-                >
-                    <div className = {styles['summary']}>
-                    <h2 onClick = {() => toggleSection('tenses')}>Tenses</h2>
-                        <button 
-                            className = {styles['toggle']}
+                        <section 
+                            id = {styles['tenses']}
                             active = {`${sectionOpen.tenses}`}
-                            onClick = {() => toggleSection('tenses')}
+                            className = {styles['row'] + ' ' + styles['toggleable']}
                         >
-                            <FontAwesomeIcon icon = {faCaretRight} />
-                        </button>
-                        <div className = {styles['vertical-divider']} />
-                        <div className = {styles['chips']}>
-                            {configuration.language === language.name && configuration.tenses.length 
-                                ? configuration.tenses.map(tenseRoot => <Chip
-                                    key = {tenseRoot}
-                                    type = 'tense' 
-                                    tenseRoot = {tenseRoot} 
-                                    removeTense = {removeTense}
-                                />)
-                                : <Chip 
-                                    type = 'tense' 
-                                    empty = {true} 
+                            <div className = {styles['summary']}>
+                                <div className = {styles['title-and-toggle']}>
+                                    <h2 onClick = {() => toggleSection('tenses')}>Tenses</h2>
+                                    <button 
+                                        className = {styles['toggle']}
+                                        onClick = {() => toggleSection('tenses')}
+                                    >
+                                        <FontAwesomeIcon icon = {faCaretRight} />
+                                    </button>
+                                </div>
+                                <div className = {styles['vertical-divider']} />
+                                <div className = {styles['chips']}>
+                                    {configuration.language === language.name && configuration.tenses.length 
+                                        ? configuration.tenses.map(tenseRoot => <Chip
+                                            key = {tenseRoot}
+                                            type = 'tense' 
+                                            tenseRoot = {tenseRoot} 
+                                            removeTense = {removeTense}
+                                        />)
+                                        : <Chip 
+                                            type = 'tense' 
+                                            empty = {true} 
+                                        />
+                                    }
+                                </div>
+                            </div>
+                            <div 
+                                className = {`${styles['buttons__wrapper']} ${styles['tenses']}`}
+                                language = {language.name}
+                                active = {`${sectionOpen.tenses}`}
+                            >
+                                <div className = {styles['buttons__container']}>
+                                    {tenses.map(tense => 
+                                        <button
+                                            active = {`${configuration.tenses.includes(tense)}`}
+                                            color = {tenseColors[tense.split('-').at(-1)]}
+                                            complexity = {tense.split('-')[0]}
+                                            mood = {tense.split('-').at(-2)}
+                                            tense = {tense.split('-').at(-1)}
+                                            onClick = {() => toggleTense(tense)}
+                                            onMouseEnter = {handleHover}
+                                            onMouseLeave = {handleHover}
+                                        >
+                                            <p>{tenseMap[tense][language.name]['english']}</p>
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </section>
+                        <section 
+                            id = {styles['verbs']}
+                            className = {styles['row']}
+                        >
+                            <h2>Verbs</h2>
+                            <Slider 
+                                type = 'verbs'
+                                configuration = {configuration}
+                                setConfiguration = {setConfiguration}
+                            />
+                        </section>
+                        <div className = {styles['combined-rows']}>
+                            <section 
+                                id = {styles['target']}
+                                className = {styles['row']}
+                            >
+                                <h2>Target</h2>
+                                <Slider
+                                    type = 'target' 
+                                    configuration = {configuration}
+                                    setConfiguration = {setConfiguration}
                                 />
-                            }
+                            </section>
+                            <div className = {styles['vertical-divider']} />
+                            <section 
+                                id = {styles['time']}
+                                className = {styles['row']}
+                            >
+                                <h2>Time</h2>
+                                <Slider
+                                    type = 'time' 
+                                    configuration = {configuration}
+                                    setConfiguration = {setConfiguration}
+                                />
+                            </section>
                         </div>
                     </div>
-                    <div 
-                        className = {`${styles['buttons__wrapper']} ${styles['tenses']}`}
-                        active = {`${sectionOpen.tenses}`}
-                    >
-                        <div className = {styles['buttons__container']}>
-                            {tenses.map(tense => 
-                                <button
-                                    active = {`${configuration.tenses.includes(tense)}`}
-                                    color = {tenseColors[tense.split('-').at(-1)]}
-                                    onClick = {() => toggleTense(tense)}
-                                    language = {language.name}
-                                    complexity = {tense.split('-')[0]}
-                                    mood = {tense.split('-').at(-2)}
-                                    tense = {tense.split('-').at(-1)}
-                                    onMouseEnter = {handleHover}
-                                    onMouseLeave = {handleHover}
-                                >
-                                    <p>{tenseMap[tense][language.name]['english']}</p>
-                                </button>
-                            )}
-                        </div>
+                    <div id = {styles['button__start-round']}> 
+                        <RaisedButton
+                            text = { "Start" }
+                            disabled = { !isValid }
+                            onClick = { () => postConfiguration(configuration) }
+                            verticalPadding = { "0.5em" }
+                            horizontalPadding = { "1.75em" }
+                        />
                     </div>
-                </section>
-                <section 
-                    id = {styles['verbs']}
-                    className = {styles['row']}
-                >
-                    <h2>Verbs</h2>
-                    <Slider 
-                        type = 'verbs'
-                        configuration = {configuration}
-                        setConfiguration = {setConfiguration}
-                    />
-                </section>
-                <div className = {styles['combined-rows']}>
-                    <section 
-                        id = {styles['target']}
-                        className = {styles['row']}
-                    >
-                        <h2>Target</h2>
-                        <Slider
-                            type = 'target' 
-                            configuration = {configuration}
-                            setConfiguration = {setConfiguration}
-                        />
-                    </section>
-                    <div className = {styles['vertical-divider']} />
-                    <section 
-                        id = {styles['time']}
-                        className = {styles['row']}
-                    >
-                        <h2>Time</h2>
-                        <Slider
-                            type = 'time' 
-                            configuration = {configuration}
-                            setConfiguration = {setConfiguration}
-                        />
-                    </section>
-                </div>
-            </div>
-            <div id = {styles['button__start-round']}> 
-                <RaisedButton
-                    text = { "Start" }
-                    disabled = { !isValid }
-                    onClick = { () => postConfiguration(configuration) }
-                    verticalPadding = { "0.5em" }
-                    horizontalPadding = { "1.75em" }
-                />
-            </div>
+                </>
+            }
         </div>
     );
 }

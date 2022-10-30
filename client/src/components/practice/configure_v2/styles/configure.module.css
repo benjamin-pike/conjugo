@@ -66,14 +66,71 @@
     --section-expansion-speed: 400ms;
 
     padding: 1.25em 0;
-    width: max(60vw, 55em);
+    width: 55em;
     border-bottom: 1px solid var(--textcolor50);
     transition: 
         opacity 200ms ease,
         filter 200ms ease;
 }
 
+
+@media (max-width: 65em) {
+    .row {
+        width: 35em !important; 
+    }
+    .combined-rows {
+        flex-direction: column !important;
+    }
+    .combined-rows > .vertical-divider {
+        display: none !important;
+    }
+    .combined-rows > .row:nth-of-type(1) {
+        border-bottom: 1px solid var(--textcolor50) !important;
+    }
+
+    #tenses .chips {
+        justify-content: center !important;
+    }
+
+    #tenses .summary {
+        flex-direction: column;
+        gap: 0
+    }
+
+    #tenses .summary > .vertical-divider {
+        width: 5.5em;
+        height: 1px;
+        background-color: var(--textcolor50);
+        flex-shrink: 0;
+        margin-bottom: 1.25em;
+    }
+}
+
+@media (max-width: 45em) {
+    .row {
+        width: 20em !important; 
+    }
+
+    #subjects .chips {
+        justify-content: center !important;
+    }
+
+    #subjects .summary {
+        flex-direction: column;
+        gap: 0
+    }
+
+    #subjects .summary > .vertical-divider {
+        width: 7em;
+        height: 1px;
+        background-color: var(--textcolor50);
+        flex-shrink: 0;
+        margin-bottom: 1.25em;
+    }
+}
+
 .row:not(.toggleable),
+.title-and-toggle,
 .row.toggleable > .summary {
     display: flex;
     align-items: center;
@@ -81,7 +138,7 @@
 }
 
 .row > h2,
-.summary > h2 {
+.title-and-toggle > h2 {
     position: relative;
     margin: none;
     padding: none;
@@ -119,7 +176,9 @@
     outline: none;
     border: none;
     cursor: pointer;
-    transition: rotate 200ms ease;
+    transition: 
+        rotate 2000ms ease
+        background-color 200ms ease;
 }
 
 [opensection = 'none'] .toggle{
@@ -145,7 +204,7 @@
     scale: 1.25 1;
 }
 
-.toggle[active = 'true'] {
+.row[active = 'true'] .toggle {
     rotate: 90deg;
 }
 
@@ -161,6 +220,14 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5em;
+    max-height: 35em;
+    overflow: hidden;
+    margin-top: 0;
+    opacity: 1;
+    transition: 
+        max-height 500ms ease,
+        margin-top 500ms ease,
+        opacity 500ms ease,
 }
 
 .chip {
@@ -173,6 +240,7 @@
     gap: 0.5em;
     padding: 0 0.5em 0 0.75em;
     cursor: pointer;
+    transition: background-color 200ms ease;
 }
 
 .chip.empty {
@@ -386,11 +454,11 @@
     max-height: 0;
 }
 
-.buttons__wrapper.subjects[active = 'true'] {
+.subjects[active = 'true'] {
     max-height: 10em;
 }
 
-.buttons__wrapper.tenses[active = 'true'] {
+.tenses[active = 'true'] {
     max-height: 22.5em;
 }
 
@@ -856,53 +924,169 @@
     }
 
 /* Button customisation */
-[language = 'spanish'][complexity = 'simple'][mood = 'indicative']{
-    padding: 1em 2em
+@media (min-width: 65em){
+    [language = 'spanish'] [complexity = 'simple'][mood = 'indicative']{
+        padding: 1em 2em
+    }
+    
+    [language = 'spanish'] [complexity = 'compound'][mood = 'indicative']{
+        padding: 1em 1em
+    }
+    
+    [language = 'french'] [complexity = 'simple'][mood = 'indicative']{
+        padding: 1em 2em
+    }
+    
+    [language = 'french'] [complexity = 'compound'][mood = 'indicative']{
+        padding: 1em 1em
+    }
+    
+    [language = 'french'] [complexity = 'compound'][mood = 'subjunctive']{
+        padding: 1em 1.15em
+    }
+    
+    [language = 'german'] [complexity = 'simple'][mood = 'indicative'],
+    [language = 'german'] [complexity = 'simple'][tense = 'conditional'] {
+        padding: 1em 4em !important;
+    }
+    
+    [language = 'italian'] [complexity = 'simple'][mood = 'indicative']{
+        padding: 1em 2.5em
+    }
+    
+    [language = 'italian'] [complexity = 'compound'][mood = 'indicative']{
+        padding: 1em 1.25em;
+    }
+    
+    [language = 'italian'] [mood = 'subjunctive']{
+        padding: 1em 1.25em !important;
+    }
 }
 
-[language = 'spanish'][complexity = 'compound'][mood = 'indicative']{
-    padding: 1em 1em
+@media (max-width: 65em) {
+    /* Subjects */
+    .subjects[language = 'spanish'] button {
+        padding: 1em 3em;
+    }
+
+    .subjects[language = 'french'] button {
+        padding: 1em 2.35em;
+    }
+
+    .subjects[language = 'german'] > .buttons__container {
+        gap: 0.75em;
+    }
+
+    .subjects[language = 'italian'] > .buttons__container {
+        gap: 0.75em;
+    }
+
+    .subjects[language = 'portuguese'] button {
+        padding: 1em 2.35em;
+    }
+
+    /* Tenses */
+    #tenses[active = 'true'] .buttons__wrapper[language = 'spanish'] {
+        max-height: 27.5em !important;
+    }
+
+    #tenses[active = 'true'] .buttons__wrapper[language = 'french'] {
+        max-height: 22.5em !important;
+    }
+
+    .buttons__wrapper[language = 'german'] button {
+        padding: 1em 1.85em;
+    }
+
+    #tenses[active = 'true'] .buttons__wrapper[language = 'german'] {
+        max-height: 27.5em !important;
+    }
+
+    #tenses[active = 'true'] .buttons__wrapper[language = 'italian'] {
+        max-height: 22.5em !important;
+    }
+
+    #tenses[active = 'true'] .buttons__wrapper[language = 'portuguese'] {
+        max-height: 27.5em !important;
+    }
 }
 
-[language = 'french'][complexity = 'simple'][mood = 'indicative']{
-    padding: 1em 2em
+
+@media (max-width: 45em) {
+    .subjects[language = 'spanish'] button {
+        padding: 1em 1.5em;
+    }
+
+    .subjects[language = 'spanish'][active = 'true'] {
+        max-height: 14em;
+    }
+
+    .subjects[language = 'french'] button {
+        padding: 1em 1em;
+    }
+
+    .subjects[language = 'french'] > .buttons__container {
+        gap: 0.6em;
+    }
+
+    .subjects[language = 'german'] button {
+        padding: 1em 1em;
+    }
+
+    .subjects[language = 'german'] > .buttons__container {
+        gap: 0.75em;
+    }
+    
+    .subjects[language = 'italian'] button {
+        padding: 1em 1em;
+    }
+    
+    .subjects[language = 'italian'] > .buttons__container {
+        gap: 0.75em;
+    }
+
+    .subjects[language = 'portuguese'] button {
+        padding: 1em 1.1em;
+    }
+
+    .subjects[language = 'portuguese'] > .buttons__container {
+        gap: 0.75em;
+    }
+
+    /* Tenses */
+    .tenses button {
+        width: 100%;
+    }
+
+    #tenses[active = 'true'] .buttons__wrapper[language = 'spanish'] {
+        max-height: 65em !important;
+    }
+
+    #tenses[active = 'true'] .buttons__wrapper[language = 'french'] {
+        max-height: 57.5em !important;
+    }
+
+    #tenses[active = 'true'] .buttons__wrapper[language = 'german'] {
+        max-height: 57.5em !important;
+    }
+
+    #tenses[active = 'true'] .buttons__wrapper[language = 'italian'] {
+        max-height: 57.5em !important;
+    }
+
+    #tenses[active = 'true'] .buttons__wrapper[language = 'portuguese'] {
+        max-height: 65em !important;
+    }
+
+    #tenses[active = 'true'] .chips {
+        max-height: 0em;
+        margin-top: -0.75em;
+        opacity: 0;
+    }
 }
 
-[language = 'french'][complexity = 'compound'][mood = 'indicative']{
-    padding: 1em 1em
-}
-
-[language = 'french'][complexity = 'compound'][mood = 'subjunctive']{
-    padding: 1em 1.15em
-}
-
-[language = 'german'][complexity = 'simple'][mood = 'indicative'],
-[language = 'german'][complexity = 'simple'][tense = 'conditional'] {
-    padding: 1em 4em !important;
-}
-
-[language = 'italian'][complexity = 'simple'][mood = 'indicative']{
-    padding: 1em 2.5em
-}
-
-[language = 'italian'][complexity = 'compound'][mood = 'indicative']{
-    padding: 1em 1.25em;
-}
-
-[language = 'italian'][mood = 'subjunctive']{
-    padding: 1em 1.25em !important;
-}
 
 /* Section focus */
-.toggle,
-.chip,
-.slider__foreground,
-.slider__value,
-.slider__value p,
-.slider__background{
-    transition: background-color 200ms ease !important;
-}
-
 #mount[opensection = 'subjects'] section:not(#subjects),
 #mount[opensection = 'tenses'] section:not(#tenses) {
     pointer-events: none;

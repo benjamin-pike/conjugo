@@ -1,12 +1,3 @@
-#loading-screen{
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--offwhite);
-}
-
 @keyframes circle-1{
     0%{
         transform: translateX(0vh);
@@ -45,21 +36,28 @@
     }
 }
 
-#loading-screen > .circle{
+#wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    filter: drop-shadow(0 0 1em white)
+}
+
+.circle{
     height: 2em;
     width: 2em;
     border-radius: 50%;
     margin: 0;
 }
 
-#loading-screen > #circle-1{
+#circle-1{
     /* background-color: hsl(160, 90%, 45%); */
     animation: circle-1 850ms ease infinite;
     background-color: var(--yellow);
     /* box-shadow: -0.2em -0.2em 1.2em var(--textcolor50) inset; */
 }
 
-#loading-screen > #circle-2{
+#circle-2{
     /* background-color: hsl(180, 90%, 36%); */
     background-color: var(--red);
     animation: circle-2 850ms ease infinite;
