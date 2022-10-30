@@ -210,28 +210,22 @@ function Cards(props){
                 <div 
                     className = {`${styles["additional-card"]} ${subjectPop ?  styles["scale"] : ""}`} 
                     id = {styles["subject-card"]}
-                    style = {{ color: !['yellow', 'green'].includes(subjectColors[props.language.name][props.subject])
-                        ? `var(--${subjectColors[props.language.name][props.subject]})` 
-                        : `var(--${subjectColors[props.language.name][props.subject]}-dark)` 
-                    }}
+                    color = {subjectColors[props.language.name][props.subject]}
                     onMouseEnter = {() => setSubjectPop(true)} // Listen for mouseover -> Scale up animation 
                     onMouseLeave = {() => setSubjectPop(false)}>
                     
-                    <p style = {{ backgroundColor: `var(--${subjectColors[props.language.name][props.subject]}-highlight)`  }}>
+                    <p>
                         {props.subject}
                     </p>
                 </div>
                 <div 
                     className = {`${styles["additional-card"]} ${tensePop ?  styles["scale"] : ""}`} 
                     id = {styles["tense-card"]} 
-                    style = {{ color: !['yellow', 'green'].includes(tenseColors[props.tense.split('-').at(-1)])
-                        ? `var(--${tenseColors[props.tense.split('-').at(-1)]})` 
-                        : `var(--${tenseColors[props.tense.split('-').at(-1)]}-dark)` 
-                    }}
+                    color = {tenseColors[props.tense.split('-').at(-1)]}
                     onMouseEnter = {() => setTensePop(true)} // Listen for mouseover -> Scale up animation 
                     onMouseLeave = {() => setTensePop(false)}>
                     
-                    <p style = {{ backgroundColor: `var(--${tenseColors[props.tense.split('-').at(-1)]}-highlight)`  }}>
+                    <p>
                         {props.tense && tenseNames[props.tense][props.language.name]['english'].toLowerCase() }
                     </p>
                 </div>

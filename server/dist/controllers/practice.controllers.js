@@ -146,6 +146,7 @@ const generatePracticeSession = async (req, res) => {
          availableInfinitives.length > 0
             ? (0, math_utils_1.randomElement)(availableInfinitives)
             : (0, math_utils_1.randomElementNotPrevious)(infinitives_assets_1.default[language].slice(0, target), previousEntry === null || previousEntry === void 0 ? void 0 : previousEntry.infinitive);
+        console.log(language, infinitive);
         const verbData = await prisma.verb.findUnique({
             // Fetch the conjugations and translations of the chosen infinitive from the database
             where: {

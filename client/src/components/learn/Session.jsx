@@ -164,16 +164,16 @@ function Session(props){
                 buttonRef.current.style.setProperty( "animation", `${styles['button-out']} 500ms ease forwards` );
             }
 
-            if (
-                questionIndex === lessonData.length ||
-                (progressRef.current &&
-                    lessonData[questionIndex]?.format.action === "alert")
-            ) {
-                progressRef.current.style.setProperty(
-                    "animation",
-                    `${styles["content-out"]} 500ms ease forwards`
-                );
-            }
+            // if (
+            //     questionIndex === lessonData.length ||
+            //     (progressRef.current &&
+            //         lessonData[questionIndex]?.format.action === "alert")
+            // ) {
+            //     progressRef.current.style.setProperty(
+            //         "animation",
+            //         `${styles["content-out"]} 500ms ease forwards`
+            //     );
+            // }
 
             if (questionIndex === lessonData.length)
                 setTimeout(() => props.setStage('results'), 500)
@@ -243,16 +243,8 @@ function Session(props){
                 style = {{backgroundImage: 'url(./subtle-waves.svg)'}}
             />
 
-            { currentQuestion.format.action && <h1 
-                id = {styles['title']}
-                color = {mapTenseColors[props.tense.root.split('-').at(-1)]}
-            >
-                {mapTenseNames[props.tense.root][language.name]['english']}
-            </h1> }
-
             { currentQuestion.format.action && <ProgressBar
                 progressRef = { progressRef } 
-                visible = { currentQuestion.format.action !== "alert" && currentQuestion.format.action !== "introduction" }
                 progress = { questionIndex / lessonData.length }
                 setStage = { props.setStage }
             /> }
@@ -266,8 +258,6 @@ function Session(props){
                 }}
                 activity = { currentQuestion.format.action }
                 className = { buttonVisible ? styles["button-visible"] : "" }>
-
-                    { currentQuestion.format.action === "alert" && <AlertBanner type = { 'new' } /> }
 
                     {promptElement}
 

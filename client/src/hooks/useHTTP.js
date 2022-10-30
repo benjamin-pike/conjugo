@@ -48,7 +48,7 @@ function useHTTP(){
         catch( err ){
             if (err.message === "401"){
                 if ( !retry ){
-                    const tokenResponse = await fetch("/token", 
+                    const tokenResponse = await fetch("/auth/token", 
                         {
                             method: "post",
                             headers: {

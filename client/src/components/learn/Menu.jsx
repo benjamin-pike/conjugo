@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
-import styles from './styles/menu.module.css';
 import { useLang } from '../../store/LangContext'
 import { useNav } from '../../store/NavContext'
 import useHTTP from '../../hooks/useHTTP';
+import ScrollingText from '../common/ScrollingText/ScrollingText'
 import { getLevel, getXP } from '../../utils/xp';
 import tenseColors from "../../assets/js/map-tense-colors.js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
+import styles from './styles/menu.module.css';
 
 const CARDS = {
     spanish: [
@@ -254,9 +255,10 @@ const Menu = props => {
         <div 
             key = 'menu'
             id = {styles["menu"]} 
-            style = {{backgroundImage: 'url(./subtle-waves.svg)'}}
+            // style = {{backgroundImage: 'url(./subtle-waves.svg)'}}
             transition = { transition.toString() }
         >
+            <ScrollingText />
             <h1>Select the tense you would like to learn</h1>
             <div id = {styles["cards--container"]}>
                 {CARDS[language.name].map((tenseRoot, index, arr) => <Card 

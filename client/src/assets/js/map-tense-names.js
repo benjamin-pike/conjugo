@@ -95,70 +95,6 @@ export default {
             "target": "Condicional"
         }
     },
-    "simple-subjunctive-present": {
-        "spanish": {
-            "english": "Present Subjunctive",
-            "target": "Presente de Subjuntivo"
-        },
-        "french": {
-            "english": "Present Subjunctive",
-            "target": "Subjonctif Présent"
-        },
-        "german": {
-            "english": "Present Subjunctive",
-            "target": "Präsens (Konjunktiv I)"
-        },
-        "italian": {
-            "english": "Present Subjunctive",
-            "target": "Congiuntivo Presente"
-        },
-        "portuguese": {
-            "english": "Present Subjunctive",
-            "target": "Presente do Subjuntivo"
-        }
-    },
-    "simple-subjunctive-imperfect": {
-        "spanish": {
-            "english": "Imperfect Subjunctive",
-            "target": "Imperfecto de Subjuntivo"
-        },
-        "french": {
-            "english": "Imperfect Subjunctive",
-            "target": "Subjonctif Imparfait"
-        },
-        "german": {
-            "english": "Imperfect Subjunctive",
-            "target": "Präteritum (Konjunktiv II)"
-        },
-        "italian": {
-            "english": "Imperfect Subjunctive",
-            "target": "Congiuntivo Imperfetto"
-        },
-        "portuguese": {
-            "english": "Imperfect Subjunctive",
-            "target": "Imperfeito do Subjuntivo"
-        }
-    },
-    "simple-subjunctive-future": {
-        "spanish": {
-            "english": "Future Subjunctive",
-            "target": "Futuro de Subjuntivo"
-        },
-        "german": {
-            "english": "Future Subjunctive",
-            "target": "Futur I (Konjunktiv I)"
-        },
-        "portuguese": {
-            "english": "Future Subjunctive",
-            "target": "Futuro do Subjuntivo"
-        }
-    },
-    "simple-subjunctive-conditional": {
-        "german": {
-            "english": "Conditional",
-            "target": "Futur I (Konjunktiv II)"
-        }
-    },
     "simple-conditional-conditional": {
         "french": {
             "english": "Conditional",
@@ -171,50 +107,6 @@ export default {
         "portuguese": {
             "english": "Conditional",
             "target": "Condicional Presente"
-        }
-    },
-    "simple-imperative-affirmative": {
-        "spanish": {
-            "english": "Affirmative Imperative",
-            "target": "Imperativo Positivo"
-        },
-        "french": {
-            "english": "Affirmative Imperative",
-            "target": "Imperatif Affirmatif"
-        },
-        "german": {
-            "english": "Affirmative Imperative",
-            "target": "Imperativ (Bejahenden)"
-        },
-        "italian": {
-            "english": "Affirmative Imperative",
-            "target": "Imperativo Affermativo"
-        },
-        "portuguese": {
-            "english": "Affirmative Imperative",
-            "target": "Imperativo Afirmativo"
-        }
-    },
-    "simple-imperative-negative": {
-        "spanish": {
-            "english": "Negative Imperative",
-            "target": "Imperativo Negativo"
-        },
-        "french": {
-            "english": "Negative Imperative",
-            "target": "Impératif Négatif"
-        },
-        "german": {
-            "english": "Negative Imperative",
-            "target": "Imperativ (Verneinten)"
-        },
-        "italian": {
-            "english": "Negative Imperative",
-            "target": "Imperativo Negativo"
-        },
-        "portuguese": {
-            "english": "Negative Imperative",
-            "target": "Imperativo Negativo"
         }
     },
     "compound-indicative-present": {
@@ -303,6 +195,84 @@ export default {
             "target": "Condicional Perfecto"
         }
     },
+    "compound-conditional-conditional": {
+        "french": {
+            "english": "Conditional Perfect",
+            "target": "Conditionnel Passé"
+        },
+        "italian": {
+            "english": "Conditional Perfect",
+            "target": "Condizionale Passato"
+        },
+        "portuguese": {
+            "english": "Conditional Perfect",
+            "target": "Condicional Perfeito"
+        }
+    },
+    "simple-subjunctive-present": {
+        "spanish": {
+            "english": "Present Subjunctive",
+            "target": "Presente de Subjuntivo"
+        },
+        "french": {
+            "english": "Present Subjunctive",
+            "target": "Subjonctif Présent"
+        },
+        "german": {
+            "english": "Present Subjunctive",
+            "target": "Präsens (Konjunktiv I)"
+        },
+        "italian": {
+            "english": "Present Subjunctive",
+            "target": "Congiuntivo Presente"
+        },
+        "portuguese": {
+            "english": "Present Subjunctive",
+            "target": "Presente do Subjuntivo"
+        }
+    },
+    "simple-subjunctive-imperfect": {
+        "spanish": {
+            "english": "Imperfect Subjunctive",
+            "target": "Imperfecto de Subjuntivo"
+        },
+        "french": {
+            "english": "Imperfect Subjunctive",
+            "target": "Subjonctif Imparfait"
+        },
+        "german": {
+            "english": "Imperfect Subjunctive",
+            "target": "Präteritum (Konjunktiv II)"
+        },
+        "italian": {
+            "english": "Imperfect Subjunctive",
+            "target": "Congiuntivo Imperfetto"
+        },
+        "portuguese": {
+            "english": "Imperfect Subjunctive",
+            "target": "Imperfeito do Subjuntivo"
+        }
+    },
+    "simple-subjunctive-future": {
+        "spanish": {
+            "english": "Future Subjunctive",
+            "target": "Futuro de Subjuntivo"
+        },
+        "german": {
+            "english": "Future Subjunctive",
+            "target": "Futur I (Konjunktiv I)"
+        },
+        "portuguese": {
+            "english": "Future Subjunctive",
+            "target": "Futuro do Subjuntivo"
+        }
+    },
+    "simple-subjunctive-conditional": {
+        "german": {
+            "english": "Conditional",
+            "target": "Futur I (Konjunktiv II)"
+        }
+    },
     "compound-subjunctive-present": {
         "spanish": {
             "english": "Present Perfect Subjunctive",
@@ -367,18 +337,48 @@ export default {
             "target": "Futur II (Konjunktiv II)"
         }
     },
-    "compound-conditional-conditional": {
+    "simple-imperative-affirmative": {
+        "spanish": {
+            "english": "Affirmative Imperative",
+            "target": "Imperativo Positivo"
+        },
         "french": {
-            "english": "Conditional Perfect",
-            "target": "Conditionnel Passé"
+            "english": "Affirmative Imperative",
+            "target": "Imperatif Affirmatif"
+        },
+        "german": {
+            "english": "Affirmative Imperative",
+            "target": "Imperativ (Bejahenden)"
         },
         "italian": {
-            "english": "Conditional Perfect",
-            "target": "Condizionale Passato"
+            "english": "Affirmative Imperative",
+            "target": "Imperativo Affermativo"
         },
         "portuguese": {
-            "english": "Conditional Perfect",
-            "target": "Condicional Perfeito"
+            "english": "Affirmative Imperative",
+            "target": "Imperativo Afirmativo"
+        }
+    },
+    "simple-imperative-negative": {
+        "spanish": {
+            "english": "Negative Imperative",
+            "target": "Imperativo Negativo"
+        },
+        "french": {
+            "english": "Negative Imperative",
+            "target": "Impératif Négatif"
+        },
+        "german": {
+            "english": "Negative Imperative",
+            "target": "Imperativ (Verneinten)"
+        },
+        "italian": {
+            "english": "Negative Imperative",
+            "target": "Imperativo Negativo"
+        },
+        "portuguese": {
+            "english": "Negative Imperative",
+            "target": "Imperativo Negativo"
         }
     },
     "progressive-indicative-present": {

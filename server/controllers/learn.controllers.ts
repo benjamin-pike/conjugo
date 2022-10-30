@@ -193,7 +193,7 @@ export const lesson = async (req: Request, res: Response) => {
         select: { infinitive: true }
     }).then(data => data.map(verb => verb.infinitive));
 
-    if (progressData.lessonXP[lessonIndex] === 0)
+    if (!progressData.lessonXP[lessonIndex])
         lesson.push({
             format: { action: 'introduction' },
             infinitive: '',

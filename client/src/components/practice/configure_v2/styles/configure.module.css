@@ -1,0 +1,938 @@
+#configure {
+    position: relative;
+    min-height: calc(100vh - 4em);
+    background-color: var(--offwhite);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1em;
+}
+
+#configure > h1 {
+    line-height: 3rem;
+    padding: 0 1.5rem;
+    background-color: white;
+    font-size: 1.25em;
+    font-weight: 600;
+    color: var(--textcolor);
+    outline: 1px solid var(--shadow);
+    border-radius: 100vmax;
+    box-shadow: 0.25rem 0.35rem 0 var(--shadow);
+    margin-top: 2em;
+    transition: 
+        translate 500ms ease,
+        opacity 500ms ease;
+}
+
+#button__start-round {
+    position: relative;
+    margin-top: 1em;
+    margin-bottom: 2em;
+}
+
+#button__start-round::before{
+    content: "";
+    position: absolute;
+    background-color: var(--shadow);
+    width: 100%;
+    height: 100%;
+    scale: 1.1;
+    inset: 0;
+    filter: blur(5px);
+}
+
+#mount {
+    position: relative;
+    --mount-color: hsl(30, 17%, 98%);
+
+    background-color: var(--mount-color);
+    border-radius: 1.5em;
+    /* box-shadow: 0.25em 0.25em 0.5em var(--selected); */
+    box-shadow: 
+        0.5em 0.5em var(--shadow),
+        -2em 0 2em var(--shadow),
+        2em 0 2em var(--shadow);
+    margin-top: 2em;
+    padding: 1em 3em;
+    outline: 1px solid var(--selected);
+}
+
+.row h2 {
+    transition: color 200ms ease !important;
+}
+
+.row {
+    --section-expansion-speed: 400ms;
+
+    padding: 1.25em 0;
+    width: max(60vw, 55em);
+    border-bottom: 1px solid var(--textcolor50);
+    transition: 
+        opacity 200ms ease,
+        filter 200ms ease;
+}
+
+.row:not(.toggleable),
+.row.toggleable > .summary {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+}
+
+.row > h2,
+.summary > h2 {
+    position: relative;
+    margin: none;
+    padding: none;
+    font-weight: 600;
+    font-size: 1.2em;
+    color: var(--textcolor);
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.combined-rows {
+    display: flex;
+    flex-direction: row;
+}
+
+.combined-rows > .row{
+    width: 50%;
+    border-bottom: none;
+}
+
+.combined-rows > .vertical-divider{
+    margin: 0 1.5em 0 2em;
+    height: 5.5em;
+}
+
+.toggle {
+    height: 1.5em;
+    aspect-ratio: 1;
+    background-color: var(--textcolor);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    transition: rotate 200ms ease;
+}
+
+[opensection = 'none'] .toggle{
+    animation: pulse 2000ms ease infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 0 0.5em rgba(0, 0, 0, 0);
+    }
+}
+
+#tenses .toggle{
+    animation-delay: 500ms;
+    -webkit-animation-delay: 500ms;
+    -moz-animation-delay: 500ms;
+}
+
+.toggle > svg {
+    scale: 1.25 1;
+}
+
+.toggle[active = 'true'] {
+    rotate: 90deg;
+}
+
+.vertical-divider {
+    height: 2em;
+    width: 1px;
+    background-color: var(--textcolor50);
+    flex-shrink: 0;
+}
+
+/* CHIPS */
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+}
+
+.chip {
+    height: 2em;
+    background-color: var(--textcolor);
+    border-radius: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    padding: 0 0.5em 0 0.75em;
+    cursor: pointer;
+}
+
+.chip.empty {
+    padding: 0 1em;
+    pointer-events: none;
+}
+
+.chip > p {
+    color: white;
+    font-weight: 600;
+}
+
+.remove-chip {
+    position: relative;
+    height: 1.5em;
+    width: 1.5em;
+    border-radius: 50%;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: 1px solid white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 0 0 white inset;
+    transition: box-shadow 500ms ease;
+}
+
+.remove-chip::before, 
+.remove-chip::after {
+    content: '';
+    position: absolute;
+    height: 60%;
+    width: 1.5px;
+    background-color: white;
+    transition: background-color 200ms ease;
+}
+
+.remove-chip::before {
+    transform: rotate(45deg);
+}
+
+.remove-chip::after {
+    transform: rotate(-45deg);
+}
+
+.remove-chip:hover {
+    box-shadow: 0 0 0 1em white inset;
+}
+
+/* SLIDER */
+.slider__container {
+    --slider-height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.slider {
+    height: var(--slider-height);
+    position: relative;
+    width: 100%;
+    border-radius: 0 100vmax 100vmax 0;
+    /* overflow: hidden; */
+}
+
+.slider__background {
+    position: absolute;
+    width: 100%;
+    height: var(--slider-height);
+    pointer-events: none;
+    transition: background-color 200ms ease;
+    border-radius: 100vmax;
+}
+
+.slider__foreground {
+    position: absolute;
+    width: 50%;
+    height: var(--slider-height);
+    border-radius: 0 100vmax 100vmax 0;
+    pointer-events: none;
+    transition: background-color 200ms ease;
+}
+
+.slider__foreground::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: var(--slider-height);
+    left: -2em;
+    height: 100%;
+    background: linear-gradient(270deg, transparent, white);
+    opacity: 0.25;
+}
+
+.slider__thumb {
+    position: absolute;
+    background-color: rgb(255 255 255 / 0.2);
+    height: 100%;
+    right: 0;
+    aspect-ratio: 1;
+    border-radius: 50%;
+}
+
+.slider__thumb::after {
+    content: '';
+    position: absolute;
+    outline: 2px solid white;
+    height: 40%;
+    width: 40%;
+    border-radius: 50%;
+    top: 30%;
+    left: 30%;
+    box-shadow: 0 0 0 0 white inset;
+    transition: box-shadow 500ms ease;
+}
+
+.slider:hover .slider__thumb::after {
+    box-shadow: 0 0 0 0.4em rgb(255 255 255 / 0.25) inset;
+}
+
+.slider__value {
+    color: white;
+    border-radius: 100vmax 0 0 100vmax;
+    font-weight: 600;
+    text-align: center;
+    height: var(--slider-height);
+    width: calc(4ch + 1rem);
+    transition: background-color 200ms ease;
+}
+
+.slider__value > p {
+    position: relative;
+    font-size: 0.9em;
+    line-height: calc(var(--slider-height) + 0.4em);
+    margin: -0.2em 0 0 0;
+    padding: 0 0.75rem;
+    border-radius: 100vmax;
+    z-index: 10;
+    transition: 
+        background-color 200ms ease,
+        width 100ms ease;
+}
+
+.slider__value > p::before{
+    content: '';
+    position: absolute;
+    width: calc(100% + 0.5em);
+    height: calc(100% + 0.5em);
+    inset: -0.25em;
+    border-radius: 100vmax;
+    background-color: var(--mount-color);
+    z-index: -1;
+}
+
+.slider__value > p::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 100vmax;
+    background-color: inherit;
+    z-index: -1;
+}
+
+.slider > input {
+    width: 100%;
+}
+
+.slider > input[type = "range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    margin: 0 !important;
+
+    background-color: transparent;
+}
+
+.slider > input[type="range"]::-moz-range-track {
+    background-color: transparent;
+    height: var(--slider-height);
+ }
+
+.slider > input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+
+    height: var(--slider-height);
+    width: var(--slider-height);
+}
+
+.slider > input[type="range"]::-moz-range-thumb {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    height: var(--slider-height);
+    width: var(--slider-height);
+}
+
+/* Buttons */
+.buttons__wrapper {
+    position: relative;
+    overflow: hidden;
+    transition: max-height var(--section-expansion-speed) ease;
+}
+
+.buttons__wrapper[active = 'false'] {
+    max-height: 0;
+}
+
+.buttons__wrapper.subjects[active = 'true'] {
+    max-height: 10em;
+}
+
+.buttons__wrapper.tenses[active = 'true'] {
+    max-height: 22.5em;
+}
+
+.buttons__wrapper::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 2em);
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(transparent, var(--mount-color) calc(100% - 1em));
+    z-index: 1;
+    pointer-events: none;
+    transition: opacity var(--section-expansion-speed) ease;
+}
+
+.buttons__wrapper[active = 'true']::after{
+    opacity: 0;
+}
+
+.buttons__container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 1px;
+    background-color: rgb(0 0 0 / 0.025);
+    border-radius: 0.6rem;
+    outline: 1px solid var(--textcolor50);
+    padding: 1em;
+    pointer-events: none;
+}
+
+.buttons__container > button {
+    position: relative;
+    background-color: grey;
+    border: none;
+    flex-grow: 1;
+    border-radius: 0.4em;
+    padding: 1em 0;
+    overflow: hidden;
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 0 0 0 transparent;
+    transition: 
+        background-color 200ms ease,
+        box-shadow 200ms ease,
+        box-shadow 200ms ease,
+        scale 100ms ease;
+}
+
+.tenses > .buttons__container > button{
+    padding: 1em 1.6em;
+}
+
+.buttons__container > button:active {
+    scale: 0.975
+}
+
+.buttons__container > button > p {
+    padding: 0;
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.15em;
+    pointer-events: none;
+}
+
+.buttons__container > button::before,
+.buttons__container > button::after {
+    content: '';
+    position: absolute;
+    height: 1.5em;
+    width: 100%;
+    border-radius: 100%;
+    opacity: 0;
+    transition: 
+        background-color 200ms ease,
+        opacity 200ms ease;
+}
+
+.buttons__container > button::before {
+    top: -0.75em;
+    left: 0;
+}
+
+.buttons__container > button::after {
+    bottom: -0.75em;
+    right: 0;
+}
+
+
+/* COLORS */
+    /* CHIPS */
+    .chip[color = 'red']{
+        background-color: var(--red);
+    }
+    .chip[color = 'orange']{
+        background-color: var(--orange);
+    }
+    .chip[color = 'yellow']{
+        background-color: var(--yellow);
+    }
+    .chip[color = 'green']{
+        background-color: var(--green);
+    }
+    .chip[color = 'aqua']{
+        background-color: var(--aqua);
+    }
+    .chip[color = 'blue']{
+        background-color: var(--blue);
+    }
+    .chip[color = 'purple']{
+        background-color: var(--purple);
+    }
+    .chip[color = 'black']{
+        background-color: var(--selected);
+    }
+
+    .chip[color = 'black'] > p{
+        color: rgb(0 0 0 / 0.5);
+    }
+
+    .chip[color = 'red'] .remove-chip:hover::before,
+    .chip[color = 'red'] .remove-chip:hover::after{
+        background-color: var(--red);
+    }
+    .chip[color = 'orange'] .remove-chip:hover::before,
+    .chip[color = 'orange'] .remove-chip:hover::after{
+        background-color: var(--orange);
+    }
+    .chip[color = 'yellow'] .remove-chip:hover::before,
+    .chip[color = 'yellow'] .remove-chip:hover::after{
+        background-color: var(--yellow);
+    }
+    .chip[color = 'green'] .remove-chip:hover::before,
+    .chip[color = 'green'] .remove-chip:hover::after{
+        background-color: var(--green);
+    }
+    .chip[color = 'aqua'] .remove-chip:hover::before,
+    .chip[color = 'aqua'] .remove-chip:hover::after{
+        background-color: var(--aqua);
+    }
+    .chip[color = 'blue'] .remove-chip:hover::before,
+    .chip[color = 'blue'] .remove-chip:hover::after{
+        background-color: var(--blue);
+    }
+    .chip[color = 'purple'] .remove-chip:hover::before,
+    .chip[color = 'purple'] .remove-chip:hover::after{
+        background-color: var(--purple);
+    }
+
+    /* SLIDER */
+    .slider[color = 'red'] > .slider__background{
+        background-color: var(--red-highlight);
+    }
+    .slider[color = 'red'] > .slider__foreground{
+        background-color: var(--red);
+    }
+    .slider[color = 'orange'] > .slider__background{
+        background-color: var(--orange-highlight);
+    }
+    .slider[color = 'orange'] > .slider__foreground{
+        background-color: var(--orange);
+    }
+    .slider[color = 'yellow'] > .slider__background{
+        background-color: var(--yellow-highlight);
+    }
+    .slider[color = 'yellow'] > .slider__foreground{
+        background-color: var(--yellow);
+    }
+    .slider[color = 'green'] > .slider__background{
+        background-color: var(--green-highlight);
+    }
+    .slider[color = 'green'] > .slider__foreground{
+        background-color: var(--green);
+    }
+    .slider[color = 'blue'] > .slider__background{
+        background-color: var(--blue-highlight);
+    }
+    .slider[color = 'blue'] > .slider__foreground{
+        background-color: var(--blue);
+    }
+    .slider[color = 'purple'] > .slider__background{
+        background-color: var(--purple-highlight);
+    }
+    .slider[color = 'purple'] > .slider__foreground{
+        background-color: var(--purple);
+    }
+
+    .slider__value[color = 'red']{
+        background-color: var(--red);
+    }
+    .slider__value[color = 'orange']{
+        background-color: var(--orange);
+    }
+    .slider__value[color = 'yellow']{
+        background-color: var(--yellow);
+    }
+    .slider__value[color = 'green']{
+        background-color: var(--green);
+    }
+    .slider__value[color = 'blue']{
+        background-color: var(--blue);
+    }
+    .slider__value[color = 'purple']{
+        background-color: var(--purple);
+    }
+
+    .slider__value[color = 'red'] > p{
+        background-color: var(--red-dark);
+    }
+    .slider__value[color = 'orange'] > p{
+        background-color: var(--orange-dark);
+    }
+    .slider__value[color = 'yellow'] > p{
+        background-color: var(--yellow-dark);
+    }
+    .slider__value[color = 'green'] > p{
+        background-color: var(--green-dark);
+    }
+    .slider__value[color = 'blue'] > p{
+        background-color: var(--blue-dark);
+    }
+    .slider__value[color = 'purple'] > p{
+        background-color: var(--purple-dark);
+    }
+
+    /* BUTTONS */
+    .buttons__container > button[color = 'red'] {
+        outline: 1px solid var(--red);
+    }
+    .buttons__container > button[color = 'orange']{
+        outline: 1px solid var(--orange);
+    }
+    .buttons__container > button[color = 'yellow']{
+        outline: 1px solid var(--yellow);
+    }
+    .buttons__container > button[color = 'green']{
+        outline: 1px solid var(--green);
+    }
+    .buttons__container > button[color = 'aqua']{
+        outline: 1px solid var(--aqua);
+    }
+    .buttons__container > button[color = 'blue']{
+        outline: 1px solid var(--blue);
+    }
+    .buttons__container > button[color = 'purple']{
+        outline: 1px solid var(--purple);
+    }
+    .buttons__container > button[color = 'black']{
+        outline: 1px solid var(--textcolor);
+    }
+
+    .buttons__container > button[color = 'red'][active = 'false']{
+        background-color: var(--red-highlight);
+        color: var(--red);
+    }
+    .buttons__container > button[color = 'red'][active = 'true']{
+        background-color: var(--red);
+        color: white;
+    }
+    .buttons__container > button[color = 'orange'][active = 'false']{
+        background-color: var(--orange-highlight);
+        color: var(--orange);
+    }
+    .buttons__container > button[color = 'orange'][active = 'true']{
+        background-color: var(--orange);
+        color: white;
+    }
+    .buttons__container > button[color = 'yellow'][active = 'false']{
+        background-color: var(--yellow-highlight);
+        color: var(--yellow-dark);
+    }   
+    .buttons__container > button[color = 'yellow'][active = 'true']{
+        background-color: var(--yellow);
+        color: white;
+    }
+    .buttons__container > button[color = 'green'][active = 'false']{
+        background-color: var(--green-highlight);
+        color: var(--green-dark);
+    }
+    .buttons__container > button[color = 'green'][active = 'true']{
+        background-color: var(--green);
+        color: white;
+    }
+    .buttons__container > button[color = 'aqua'][active = 'false']{
+        background-color: var(--aqua-highlight);
+        color: var(--aqua-dark);
+    }
+    .buttons__container > button[color = 'aqua'][active = 'true']{
+        background-color: var(--aqua);
+        color: white;
+    }
+    .buttons__container > button[color = 'blue'][active = 'false']{
+        background-color: var(--blue-highlight);
+        color: var(--blue);
+    }
+    .buttons__container > button[color = 'blue'][active = 'true']{
+        background-color: var(--blue);
+        color: white;
+    }
+    .buttons__container > button[color = 'purple'][active = 'false']{
+        background-color: var(--purple-highlight);
+        color: var(--purple);
+    }
+    .buttons__container > button[color = 'purple'][active = 'true']{
+        background-color: var(--purple);
+        color: white;
+    }
+    .buttons__container > button[color = 'black'][active = 'false']{
+        background-color: var(--textcolor50);
+        color: var(--textcolor);
+    }
+    .buttons__container > button[color = 'black'][active = 'true']{
+        background-color: var(--textcolor);
+        color: white;
+    }
+
+    .buttons__container > button[color = 'red'][active = 'true']::before{
+        background-color: var(--red-highlight);
+        mix-blend-mode: soft-light;
+        opacity: 0.7;
+    }
+    .buttons__container > button[color = 'red'][active = 'true']::after{
+        background-color: var(--red-dark);
+        mix-blend-mode: multiply;
+        opacity: 0.4;
+    }
+    .buttons__container > button[color = 'orange'][active = 'true']::before{
+        background-color: var(--orange-highlight);
+        mix-blend-mode: soft-light;
+        opacity: 0.6;
+    }
+    .buttons__container > button[color = 'orange'][active = 'true']::after{
+        background-color: var(--orange-dark);
+        mix-blend-mode: multiply;
+        opacity: 0.3;
+    }
+    .buttons__container > button[color = 'yellow'][active = 'true']::before{
+        background-color: var(--yellow-highlight);
+        mix-blend-mode: soft-light;
+        opacity: 0.6;
+    }
+    .buttons__container > button[color = 'yellow'][active = 'true']::after{
+        background-color: var(--yellow-dark);
+        mix-blend-mode: multiply;
+        opacity: 0.3;
+    }
+    .buttons__container > button[color = 'green'][active = 'true']::before{
+        background-color: var(--green-highlight);
+        mix-blend-mode: soft-light;
+        opacity: 0.6;
+    }
+    .buttons__container > button[color = 'green'][active = 'true']::after{
+        background-color: var(--green-dark);
+        mix-blend-mode: multiply;
+        opacity: 0.25;
+    }
+    .buttons__container > button[color = 'aqua'][active = 'true']::before{
+        background-color: var(--aqua-highlight);
+        mix-blend-mode: soft-light;
+        opacity: 0.6;
+    }
+    .buttons__container > button[color = 'aqua'][active = 'true']::after{
+        background-color: var(--aqua-dark);
+        mix-blend-mode: multiply;
+        opacity: 0.2;
+    }
+    .buttons__container > button[color = 'blue'][active = 'true']::before{
+        background-color: var(--blue-highlight);
+        mix-blend-mode: soft-light;
+        opacity: 0.6;
+    }
+    .buttons__container > button[color = 'blue'][active = 'true']::after{
+        background-color: var(--blue-dark);
+        mix-blend-mode: multiply;
+        opacity: 0.3;
+    }
+    .buttons__container > button[color = 'purple'][active = 'true']::before{
+        background-color: var(--purple-highlight);
+        mix-blend-mode: soft-light;
+        opacity: 0.5;
+    }
+    .buttons__container > button[color = 'purple'][active = 'true']::after{
+        background-color: var(--purple-dark);
+        opacity: 0.7;
+    }
+    .buttons__container > button[color = 'black'][active = 'true']::before{
+        background-color: var(--offwhite);
+        mix-blend-mode: soft-light;
+        opacity: 0.25;
+    }
+    .buttons__container > button[color = 'black'][active = 'true']::after{
+        background-color: black;
+        mix-blend-mode: soft-light;
+        opacity: 0.25;
+    }
+
+    @keyframes pulse-red{
+        0% { box-shadow: 0 0 0 0 var(--red) }
+        100% { box-shadow: 0 0 0 0.65em transparent }
+    }
+
+    @keyframes pulse-orange{
+        0% { box-shadow: 0 0 0 0 var(--orange) }
+        100% { box-shadow: 0 0 0 0.65em transparent }
+    }
+
+    @keyframes pulse-yellow{
+        0% { box-shadow: 0 0 0 0 var(--yellow) }
+        100% { box-shadow: 0 0 0 0.65em transparent }
+    }
+
+    @keyframes pulse-green{
+        0% { box-shadow: 0 0 0 0 var(--green) }
+        100% { box-shadow: 0 0 0 0.65em transparent }
+    }
+
+    @keyframes pulse-aqua{
+        0% { box-shadow: 0 0 0 0 var(--aqua) }
+        100% { box-shadow: 0 0 0 0.65em transparent }
+    }
+
+    @keyframes pulse-blue{
+        0% { box-shadow: 0 0 0 0 var(--blue) }
+        100% { box-shadow: 0 0 0 0.65em transparent }
+    }
+
+    @keyframes pulse-purple{
+        0% { box-shadow: 0 0 0 0 var(--purple) }
+        100% { box-shadow: 0 0 0 0.65em transparent }
+    }
+
+    @keyframes pulse-black{
+        0% { box-shadow: 0 0 0 0 var(--textcolor) }
+        100% { box-shadow: 0 0 0 0.65em transparent }
+    }
+
+    .buttons__container > button[color = 'red'].button-hover {
+        animation: pulse-red 1000ms ease infinite;
+    }
+    .buttons__container > button[color = 'orange'].button-hover {
+        animation: pulse-orange 1000ms ease infinite;
+    }
+    .buttons__container > button[color = 'yellow'].button-hover {
+        animation: pulse-yellow 1000ms ease infinite;
+    }
+    .buttons__container > button[color = 'green'].button-hover {
+        animation: pulse-green 1000ms ease infinite;
+    }
+    .buttons__container > button[color = 'aqua'].button-hover {
+        animation: pulse-aqua 1000ms ease infinite;
+    }
+    .buttons__container > button[color = 'blue'].button-hover {
+        animation: pulse-blue 1000ms ease infinite;
+    }
+    .buttons__container > button[color = 'purple'].button-hover {
+        animation: pulse-purple 1000ms ease infinite;
+    }
+    .buttons__container > button[color = 'black'].button-hover{
+        animation: pulse-black 1000ms ease infinite;
+    }
+
+/* Button customisation */
+[language = 'spanish'][complexity = 'simple'][mood = 'indicative']{
+    padding: 1em 2em
+}
+
+[language = 'spanish'][complexity = 'compound'][mood = 'indicative']{
+    padding: 1em 1em
+}
+
+[language = 'french'][complexity = 'simple'][mood = 'indicative']{
+    padding: 1em 2em
+}
+
+[language = 'french'][complexity = 'compound'][mood = 'indicative']{
+    padding: 1em 1em
+}
+
+[language = 'french'][complexity = 'compound'][mood = 'subjunctive']{
+    padding: 1em 1.15em
+}
+
+[language = 'german'][complexity = 'simple'][mood = 'indicative'],
+[language = 'german'][complexity = 'simple'][tense = 'conditional'] {
+    padding: 1em 4em !important;
+}
+
+[language = 'italian'][complexity = 'simple'][mood = 'indicative']{
+    padding: 1em 2.5em
+}
+
+[language = 'italian'][complexity = 'compound'][mood = 'indicative']{
+    padding: 1em 1.25em;
+}
+
+[language = 'italian'][mood = 'subjunctive']{
+    padding: 1em 1.25em !important;
+}
+
+/* Section focus */
+.toggle,
+.chip,
+.slider__foreground,
+.slider__value,
+.slider__value p,
+.slider__background{
+    transition: background-color 200ms ease !important;
+}
+
+#mount[opensection = 'subjects'] section:not(#subjects),
+#mount[opensection = 'tenses'] section:not(#tenses) {
+    pointer-events: none;
+}
+
+#mount[opensection = 'subjects'] section:not(#subjects) .toggle,
+#mount[opensection = 'tenses'] section:not(#tenses) .toggle {
+    pointer-events: auto
+}
+
+#mount[opensection = 'subjects'] section:not(#subjects) .toggle,
+#mount[opensection = 'subjects'] section:not(#subjects) .chip:not(.empty),
+#mount[opensection = 'subjects'] section:not(#subjects) .slider__foreground,
+#mount[opensection = 'subjects'] section:not(#subjects) .slider__value,
+#mount[opensection = 'subjects'] section:not(#subjects) .slider__value p,
+
+#mount[opensection = 'tenses'] section:not(#tenses) .toggle,
+#mount[opensection = 'tenses'] section:not(#tenses) .chip:not(.empty),
+#mount[opensection = 'tenses'] section:not(#tenses) .slider__foreground,
+#mount[opensection = 'tenses'] section:not(#tenses) .slider__value,
+#mount[opensection = 'tenses'] section:not(#tenses) .slider__value p{
+    background-color: rgb(210 210 210) !important;
+}
+
+#mount[opensection = 'subjects'] section:not(#subjects) h2,
+#mount[opensection = 'tenses'] section:not(#tenses) h2 {
+    color: rgb(210 210 210) !important
+}
+
+#mount[opensection = 'subjects'] section:not(#subjects) .slider__background,
+#mount[opensection = 'tenses'] section:not(#tenses) .slider__background {
+    background-color: rgb(235 235 235) !important;
+}

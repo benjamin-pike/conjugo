@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNav } from "../../store/NavContext";
-import Configure from "./configure/Configure";
+import Configure from "./configure_v2/Configure";
 import Round from "./session/Session";
 import Results from "./results/Results";
 

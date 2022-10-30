@@ -2,7 +2,7 @@
     --progress-animation: slide-in 500ms ease forwards;
     
     position: absolute;
-    top: 4em;
+    top: 3.5em;
     margin-bottom: 0.5em;
     transition: opacity 200ms ease;
     display: flex;
@@ -20,10 +20,6 @@
         opacity: 1;
         transform: translateX(0);
     }
-}
-
-#progress-bar__wrapper[visible = "false"]{
-    opacity: 0 !important;
 }
 
 #progress-bar__background{

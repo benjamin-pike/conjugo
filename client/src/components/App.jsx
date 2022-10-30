@@ -66,14 +66,19 @@ function App() {
     const ref = useRef()
 
     useEffect(() => {
-        let timeout = null;
+        let mouseIsOutside = false
+        
+        document.onmouseleave = () => mouseIsOutside = true
+        document.onmouseenter = () => mouseIsOutside = false
 
-        const resizeObserver = new ResizeObserver( () => {
-            ref.current.classList.add( "disable-transitions" )
+        const resizeObserver = new ResizeObserver(() => {
+            if ( mouseIsOutside ) {
+                ref.current.classList.add( "disable-transitions" )
 
-            timeout = setTimeout( () => {
-                ref.current.classList.remove( "disable-transitions" )
-            })
+                setTimeout( () => {
+                    ref.current.classList.remove( "disable-transitions" )
+                })
+            }
         })
 
         resizeObserver.observe( ref.current )

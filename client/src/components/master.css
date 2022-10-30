@@ -1,9 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 :root {
-    --offwhite: #f5f2f0;
+    /* --offwhite: #f5f2f0; */
+    --offwhite: hsl(24, 20%, 98%);
     --offwhite90: rgb(235, 230, 226, 0.9);
-    --lightgray: hsl(22, 20%, 92%);
+    --lightgray: hsl(22, 20%, 95%);
     --textcolor: rgba(70, 70, 70, 0.995);
     --textcolor50: rgba(70, 70, 70, 0.25);
     --selected: rgba(70, 70, 70, 0.10);
@@ -29,7 +30,7 @@
     --orange-dark: hsl(20, 100%, 49%);
     --yellow-dark: hsl(41, 100%, 50%);
     --green-dark: hsl(120, 100%, 38%);
-    --aqua-dark: hsl(185, 100%, 35%);
+    --aqua-dark: hsl(185, 100%, 40%);
     --blue-dark: hsl(219, 100%, 49%);
     --purple-dark: rgb(124,0,252);
 
@@ -37,6 +38,7 @@
     --orange-highlight: hsl(24, 73%, 88%);
     --yellow-highlight: hsl(42, 75%, 87%);
     --green-highlight: hsl(100, 44%, 87%);
+    --aqua-highlight: hsl(180, 45%, 87%);
     --blue-highlight: hsl(213, 63%, 87%);
     --purple-highlight: hsl(280, 62%, 88%);
     --pink-highlight: hsl(323, 71%, 89%);

@@ -1,0 +1,110 @@
+#scrolling-text {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+#scrolling-text--container {
+    translate: 0 -25%;
+    rotate: 20deg
+}
+
+.row {
+    --speed: 90s;
+
+    position: relative;
+    white-space: nowrap;
+    display: flex;
+    /* justify-content: center; */
+    /* height: 1.25em; */
+    margin: 0;
+    /* color: var(--shadow); */
+    font-size: 1.5em;
+}
+
+.word {
+    transition: 
+        color 200ms ease 1000ms, 
+        opacity 200ms ease 1000ms;
+}
+
+.word:nth-of-type(2n) {
+    font-weight: 700;
+    opacity: 0.025;
+}
+
+.word:nth-of-type(2n-1) {
+    font-weight: 600;
+    opacity: 0.025;
+}
+
+.word:hover{
+    opacity: 0.5;
+    transition: 
+        color 0ms ease, 
+        opacity 0ms ease;
+}
+  
+.word-container {
+    position: relative;
+    animation: slide-left var(--speed) linear infinite;
+    white-space: pre;
+}
+
+.row:nth-of-type(2n) > .word-container {
+    position: relative;
+    animation: slide-right var(--speed) linear infinite;
+    white-space: pre;
+}
+
+@keyframes slide-left {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(-100%, 0);
+    }
+}
+
+
+@keyframes slide-right {
+    0% {
+        transform: translate(-100%, 0);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+.word[color = 'red']:hover{
+    color: var(--red);
+}
+
+.word[color = 'orange']:hover{
+    color: var(--orange);
+}
+
+.word[color = 'yellow']:hover{
+    color: var(--yellow);
+}
+
+.word[color = 'green']:hover{
+    color: var(--green);
+}
+
+.word[color = 'aqua']:hover{
+    color: var(--aqua);
+}
+
+.word[color = 'blue']:hover{
+    color: var(--blue);
+}
+
+.word[color = 'purple']:hover{
+    color: var(--purple);
+}
+
+.word[color = 'pink']:hover{
+    color: var(--pink);
+}

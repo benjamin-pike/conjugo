@@ -192,6 +192,7 @@
     font-size: 3.5vh;
     font-weight: 700;
     margin: 0;
+    color: white;
     padding: 1.25vh 3vh;
     border-radius: 100vmax;    
 }
@@ -296,4 +297,33 @@
 
 .timeup{
     background-color: var(--incorrect) !important;
+}
+
+/* ADDITIONAL CARD COLORS */
+.additional-card[color = 'red'] > p {
+    background-color: var(--red);
+}
+
+.additional-card[color = 'orange'] > p {
+    background-color: var(--orange);
+}
+
+.additional-card[color = 'yellow'] > p {
+    background-color: var(--yellow);
+}
+
+.additional-card[color = 'green'] > p {
+    background-color: var(--green);
+}
+
+.additional-card[color = 'aqua'] > p {
+    background-color: var(--aqua);
+}
+
+.additional-card[color = 'blue'] > p {
+    background-color: var(--blue);
+}
+
+.additional-card[color = 'purple'] > p {
+    background-color: var(--purple);
 }
