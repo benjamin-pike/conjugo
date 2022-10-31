@@ -43,9 +43,10 @@
     font-size: 1.25em;
     font-weight: 600;
     color: var(--textcolor);
-    outline: 1px solid var(--shadow);
     border-radius: 100vmax;
-    box-shadow: 0.25rem 0.35rem 0 var(--shadow);
+    box-shadow:
+        0 0 0 1px var(--selected),
+        0.25rem 0.35rem 0 var(--shadow);
     z-index: 1;
     transition: 
         translate 500ms ease,
@@ -132,6 +133,18 @@
     filter: blur(6px)
 }
 
+@supports (background: -webkit-named-image(i)){
+    .card {
+        rotate: none !important;
+        transform: none !important;
+        filter: none !important;
+    }
+
+    .card:not([distance = '0']) {
+        filter: blur(6px) !important
+    }
+}
+
 .card > button {
     --button-height: calc(0.125 * var(--card-width));
     --button-width: calc(4 * var(--button-height));
@@ -141,7 +154,6 @@
     border: none;
     padding: 0;
     height: var(--button-height);
-    outline: 1px solid white;
     border-radius: 100vmax;
     white-space: nowrap;
     bottom: 1.35rem;
@@ -157,13 +169,20 @@
 
 .card[unlocked = 'true'] > button {
     box-shadow: 
+        0 0 0 1px white,
         0.3em 0.4em rgb(0 0 0 / 0.1),
+        0 0 0 0.5px white inset;
+}
+
+.card[unlocked = 'false'] > button {
+    box-shadow: 
+        0 0 0 1px white,
         0 0 0 0.5px white inset;
 }
 
 .card[unlocked = 'false'] > button > svg {
     margin: 0;
-    padding: 0 0.9em;
+    padding: 0 0.8rem;
     color: white;
 }
 
@@ -259,8 +278,9 @@
     align-items: center;
     gap: 0.75em;
     background-color: rgb(255 255 255 / 1);
-    outline: 1px solid var(--shadow);
-    box-shadow: 0.25em 0.35em 0 var(--shadow);
+    box-shadow: 
+        0 0 0 1px var(--selected),
+        0.25em 0.35em 0 var(--shadow);
     padding: 0.75em 0.9em;
     border-radius: 100vmax;
     z-index: 10;
@@ -395,8 +415,8 @@
 .progress__text > p{
     margin: 0;
     line-height: var(--height);
-    color: white;
     border-radius: 100vmax;
+    color: white !important;
     padding: 0.2em 0.5em;
     font-weight: 500;
     font-size: 0.8em;
@@ -412,7 +432,7 @@
     font-size: 0.8em;
     translate: 0 -0.35rem;
     background-color: rgb(255 255 255 / 0.05);
-    outline: 1px solid rgb(255 255 255 / 0.2);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.2);
     padding: 0.75rem 0.75rem;
     width: calc(var(--card-width) - 1rem);
     border-radius: 1rem;

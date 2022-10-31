@@ -48,14 +48,13 @@
 
     background-color: var(--mount-color);
     border-radius: 1.5em;
-    /* box-shadow: 0.25em 0.25em 0.5em var(--selected); */
     box-shadow: 
+        0 0 0 1px var(--selected),
         0.5em 0.5em var(--shadow),
         -2em 0 2em var(--shadow),
         2em 0 2em var(--shadow);
     margin-top: 2em;
     padding: 1em 3em;
-    outline: 1px solid var(--selected);
 }
 
 .row h2 {
@@ -165,8 +164,8 @@
 }
 
 .toggle {
-    height: 1.5em;
-    aspect-ratio: 1;
+    height: 1.25rem;
+    width: 1.25rem;
     background-color: var(--textcolor);
     color: white;
     border-radius: 50%;
@@ -204,6 +203,13 @@
     scale: 1.25 1;
 }
 
+@supports (background: -webkit-named-image(i)){
+    .toggle > svg {
+        scale: 1.5 1.25;
+        translate: -0.25px 0.25px;
+    }
+}
+
 .row[active = 'true'] .toggle {
     rotate: 90deg;
 }
@@ -238,7 +244,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5em;
-    padding: 0 0.5em 0 0.75em;
+    padding: 0 0.25rem 0 0.75em;
     cursor: pointer;
     transition: background-color 200ms ease;
 }
@@ -255,17 +261,16 @@
 
 .remove-chip {
     position: relative;
-    height: 1.5em;
-    width: 1.5em;
+    height: 1.5rem;
+    width: 1.5rem;
     border-radius: 50%;
     background-color: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
-    outline: 1px solid white;
     border: none;
     cursor: pointer;
-    box-shadow: 0 0 0 0 white inset;
+    box-shadow: 0 0 0 1px white inset;
     transition: box-shadow 500ms ease;
 }
 
@@ -349,18 +354,21 @@
 .slider__thumb::after {
     content: '';
     position: absolute;
-    outline: 2px solid white;
-    height: 40%;
-    width: 40%;
+    height: 60%;
+    width: 60%;
     border-radius: 50%;
-    top: 30%;
-    left: 30%;
-    box-shadow: 0 0 0 0 white inset;
+    top: 20%;
+    left: 20%;
+    box-shadow: 
+        0 0 0 2px white inset,
+        0 0 0 0 rgb(255 255 255 / 0.5) inset;
     transition: box-shadow 500ms ease;
 }
 
 .slider:hover .slider__thumb::after {
-    box-shadow: 0 0 0 0.4em rgb(255 255 255 / 0.25) inset;
+    box-shadow: 
+        0 0 0 2px white inset,
+        0 0 0 0.5em rgb(255 255 255 / 0.5) inset;
 }
 
 .slider__value {
@@ -371,6 +379,7 @@
     height: var(--slider-height);
     width: calc(4ch + 1rem);
     transition: background-color 200ms ease;
+    margin-right: -1px;
 }
 
 .slider__value > p {
@@ -455,7 +464,7 @@
 }
 
 .subjects[active = 'true'] {
-    max-height: 10em;
+    max-height: 12.5em;
 }
 
 .tenses[active = 'true'] {
@@ -488,9 +497,15 @@
     margin: 1rem 1px;
     background-color: rgb(0 0 0 / 0.025);
     border-radius: 0.6rem;
-    outline: 1px solid var(--textcolor50);
+    box-shadow: 0 0 0 1px var(--textcolor50);
     padding: 1em;
     pointer-events: none;
+}
+
+@supports (background: -webkit-named-image(i)){
+    .buttons__container {
+        gap: 0.8rem;
+    }
 }
 
 .buttons__container > button {
@@ -498,6 +513,7 @@
     background-color: grey;
     border: none;
     flex-grow: 1;
+    font-size: 0.835rem;
     border-radius: 0.4em;
     padding: 1em 0;
     overflow: hidden;
@@ -689,28 +705,44 @@
 
     /* BUTTONS */
     .buttons__container > button[color = 'red'] {
-        outline: 1px solid var(--red);
+        box-shadow: 
+            0 0 0 1px var(--red),
+            0 0 0 0 var(--red);
     }
     .buttons__container > button[color = 'orange']{
-        outline: 1px solid var(--orange);
+        box-shadow: 
+            0 0 0 1px var(--orange),
+            0 0 0 0 var(--orange);
     }
     .buttons__container > button[color = 'yellow']{
-        outline: 1px solid var(--yellow);
+        box-shadow: 
+            0 0 0 1px var(--yellow),
+            0 0 0 0 var(--yellow);
     }
     .buttons__container > button[color = 'green']{
-        outline: 1px solid var(--green);
+        box-shadow: 
+            0 0 0 1px var(--green),
+            0 0 0 0 var(--green);
     }
     .buttons__container > button[color = 'aqua']{
-        outline: 1px solid var(--aqua);
+        box-shadow: 
+            0 0 0 1px var(--aqua),
+            0 0 0 0 var(--aqua);
     }
     .buttons__container > button[color = 'blue']{
-        outline: 1px solid var(--blue);
+        box-shadow: 
+            0 0 0 1px var(--blue),
+            0 0 0 0 var(--blue);
     }
     .buttons__container > button[color = 'purple']{
-        outline: 1px solid var(--purple);
+        box-shadow: 
+            0 0 0 1px var(--purple),
+            0 0 0 0 var(--purple);
     }
     .buttons__container > button[color = 'black']{
-        outline: 1px solid var(--textcolor);
+        box-shadow: 
+            0 0 0 1px var(--textcolor),
+            0 0 0 0 var(--textcolor);
     }
 
     .buttons__container > button[color = 'red'][active = 'false']{
@@ -859,43 +891,107 @@
     }
 
     @keyframes pulse-red{
-        0% { box-shadow: 0 0 0 0 var(--red) }
-        100% { box-shadow: 0 0 0 0.65em transparent }
+        from {
+            box-shadow: 
+                0 0 0 1px var(--red),
+                0 0 0 0 var(--red);
+        }
+        to {
+            box-shadow: 
+                0 0 0 1px var(--red),
+                0 0 0 0.65em transparent;
+        }
     }
 
     @keyframes pulse-orange{
-        0% { box-shadow: 0 0 0 0 var(--orange) }
-        100% { box-shadow: 0 0 0 0.65em transparent }
+        from {
+            box-shadow: 
+                0 0 0 1px var(--orange),
+                0 0 0 0 var(--orange);
+        }
+        to {
+            box-shadow: 
+                0 0 0 1px var(--orange),
+                0 0 0 0.65em transparent;
+        }
     }
 
     @keyframes pulse-yellow{
-        0% { box-shadow: 0 0 0 0 var(--yellow) }
-        100% { box-shadow: 0 0 0 0.65em transparent }
+        from {
+            box-shadow: 
+                0 0 0 1px var(--yellow),
+                0 0 0 0 var(--yellow);
+        }
+        to {
+            box-shadow: 
+                0 0 0 1px var(--yellow),
+                0 0 0 0.65em transparent;
+        }
     }
 
     @keyframes pulse-green{
-        0% { box-shadow: 0 0 0 0 var(--green) }
-        100% { box-shadow: 0 0 0 0.65em transparent }
+        from {
+            box-shadow: 
+                0 0 0 1px var(--green),
+                0 0 0 0 var(--green);
+        }
+        to {
+            box-shadow: 
+                0 0 0 1px var(--green),
+                0 0 0 0.65em transparent;
+        }
     }
 
     @keyframes pulse-aqua{
-        0% { box-shadow: 0 0 0 0 var(--aqua) }
-        100% { box-shadow: 0 0 0 0.65em transparent }
+        from {
+            box-shadow: 
+                0 0 0 1px var(--aqua),
+                0 0 0 0 var(--aqua);
+        }
+        to {
+            box-shadow: 
+                0 0 0 1px var(--aqua),
+                0 0 0 0.65em transparent;
+        }
     }
 
     @keyframes pulse-blue{
-        0% { box-shadow: 0 0 0 0 var(--blue) }
-        100% { box-shadow: 0 0 0 0.65em transparent }
+        from {
+            box-shadow: 
+                0 0 0 1px var(--blue),
+                0 0 0 0 var(--blue);
+        }
+        to {
+            box-shadow: 
+                0 0 0 1px var(--blue),
+                0 0 0 0.65em transparent;
+        }
     }
 
     @keyframes pulse-purple{
-        0% { box-shadow: 0 0 0 0 var(--purple) }
-        100% { box-shadow: 0 0 0 0.65em transparent }
+        from {
+            box-shadow: 
+                0 0 0 1px var(--purple),
+                0 0 0 0 var(--purple);
+        }
+        to {
+            box-shadow: 
+                0 0 0 1px var(--purple),
+                0 0 0 0.65em transparent;
+        }
     }
 
     @keyframes pulse-black{
-        0% { box-shadow: 0 0 0 0 var(--textcolor) }
-        100% { box-shadow: 0 0 0 0.65em transparent }
+        from {
+            box-shadow: 
+                0 0 0 1px var(--textcolor),
+                0 0 0 0 var(--textcolor);
+        }
+        to {
+            box-shadow: 
+                0 0 0 1px var(--textcolor),
+                0 0 0 0.65em transparent;
+        }
     }
 
     .buttons__container > button[color = 'red'].button-hover {
@@ -970,15 +1066,18 @@
     }
 
     .subjects[language = 'french'] button {
-        padding: 1em 2.35em;
+        padding: 1em 2.5em;
     }
 
-    .subjects[language = 'german'] > .buttons__container {
-        gap: 0.75em;
+    .subjects[language = 'german'] button {
+        padding: 1em 1.2em !important;
     }
 
-    .subjects[language = 'italian'] > .buttons__container {
-        gap: 0.75em;
+    @supports (background: -webkit-named-image(i)){
+        .subjects[language = 'german'] > .buttons__container,
+        .subjects[language = 'italian'] > .buttons__container {
+            gap: 0.6em;
+        }
     }
 
     .subjects[language = 'portuguese'] button {
@@ -1026,11 +1125,11 @@
     }
 
     .subjects[language = 'french'] > .buttons__container {
-        gap: 0.6em;
+        gap: 0.75em;
     }
 
     .subjects[language = 'german'] button {
-        padding: 1em 1em;
+        padding: 1em 1em !important;
     }
 
     .subjects[language = 'german'] > .buttons__container {
@@ -1046,18 +1145,27 @@
     }
 
     .subjects[language = 'portuguese'] button {
-        padding: 1em 1.1em;
+        padding: 1em 1em;
     }
 
     .subjects[language = 'portuguese'] > .buttons__container {
         gap: 0.75em;
     }
 
+    @supports (background: -webkit-named-image(i)){
+        .subjects[language = 'french'] > .buttons__container,
+        .subjects[language = 'german'] > .buttons__container,
+        .subjects[language = 'italian'] > .buttons__container,
+        .subjects[language = 'portuguese'] > .buttons__container {
+            gap: 0.6em;
+        }
+    }
+
     /* Tenses */
     .tenses button {
         width: 100%;
     }
-
+ 
     #tenses[active = 'true'] .buttons__wrapper[language = 'spanish'] {
         max-height: 65em !important;
     }

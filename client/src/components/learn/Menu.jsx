@@ -167,7 +167,7 @@ const Card = props => {
                             />
                         </div>
                         <div className = {styles['progress__text']}>
-                            <p style = {{outline: `1px solid var(--${color})`}}>
+                            <p style = {{boxShadow: `0 0 0 1px var(--${color})`}}>
                                 {currentLevel}
                             </p>
                         </div>

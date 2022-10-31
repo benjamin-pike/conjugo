@@ -16,12 +16,14 @@
 
 .tense-card__header{
     background-color: var(--lightgray);
-    height: 2.5em;
+    padding-top: 1em;
+    background: linear-gradient(var(--lightgray) 0%, var(--lightgray) 62.5%, var(--offwhite) 62.5%, var(--offwhite) 100%);
+    height: 3em;
 }
 
 .tense-name{
-    cursor: pointer;
     position: relative;
+    cursor: pointer;
     box-sizing: border-box;
     font-weight: 700;
     padding: 0;
@@ -34,10 +36,9 @@
     max-width: calc(100% - 2em);
     background-color: currentColor;
     white-space: nowrap;
-    overflow: hidden;
     border-radius: 2em;
+    overflow: hidden;
     border: 0.5em solid var(--offwhite);
-    transform: translateY(1em);
 }
 
 .tense-name > span{
@@ -46,20 +47,11 @@
     color: var(--offwhite);
     transition: transform 1000ms ease;
 }
+/* 
 .tense-name::before,
 .tense-name::after{
-    content: "";
     position: absolute;
-    width: 1em;
-    height: 100%;
-    top: 0;
-    color: inherit;
-    z-index: 1;
-}
-
-.tense-name::before{
     content: "";
-    position: absolute;
     width: 1em;
     height: 100%;
     top: 0;
@@ -69,18 +61,17 @@
 
 .tense-name::before{
     left: 0;
-    background: linear-gradient(-90deg, transparent, currentColor 60%);
+    background: linear-gradient(-90deg, color(currentColor, alpha(0%)), currentColor 60%);
 }
 .tense-name::after{
     right: 0;
     background: linear-gradient(90deg, transparent, currentColor 60%);
-}
+} */
 
 .tense-card__content > ul{
     list-style-type: none;
     padding: 0;
     margin: 0;
-    margin-top: 1.5em;
     overflow-x: scroll;
     overflow-y: hidden;
 

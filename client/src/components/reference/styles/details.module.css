@@ -159,6 +159,17 @@
     border-radius: 0.5em;
 }
 
+/* Target safari only */
+@supports (background: -webkit-named-image(i)){
+    #verb-details__translation-dropdown{
+        filter: none;
+    }
+    
+    #verb-details__translation-dropdown__backdrop{
+        box-shadow: 0 0 0 1px var(--selected) inset;
+    }
+}
+
 .translation > .eng{
     padding: 0.5em 1em;
     border-radius: 0.3em 0 0 0.3em;

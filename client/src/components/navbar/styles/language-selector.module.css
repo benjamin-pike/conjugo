@@ -5,16 +5,21 @@
 
 #nav-language-selector-toggle{
     height: 2em;
-    border-radius: 1em;
     display: flex;
     align-items: center;
-    box-shadow: 0 0 0 0 var(--selected);
+    box-shadow: 
+        0 0 0 1px var(--selected),
+        0 0 0 0 var(--selected);
     transition: box-shadow 200ms;
-    outline: 0.07em solid var(--textcolor50);
+    /* outline: 0.07em solid var(--textcolor50); */
+    border-radius: 1em;
+    transform: translate(0)
 }
 
 #nav-language-selector-toggle:hover{
-    box-shadow: 0 0 0 0.25em var(--selected);
+    box-shadow:
+        0 0 0 1px var(--selected),
+        0 0 0 0.25em var(--selected);
 }
 
 #nav-language-selector img{

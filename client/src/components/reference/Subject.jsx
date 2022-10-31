@@ -24,6 +24,7 @@ function Subject(props){
         for ( let ending of Object.keys( regularitySchema[ language.name ] ) ){
             if ( verb.endsWith( ending ) ){
                 let stem = verb.slice( 0, verb.length - ending.length )
+                console.log(stem, typeof stem)
                 let subjects = Object.keys( regularitySchema[language.name][ending][mood][tense] ?? {} ) 
 
                 if ( subjects.includes( props.subjectKey ) ){

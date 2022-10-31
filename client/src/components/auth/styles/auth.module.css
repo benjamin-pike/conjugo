@@ -51,7 +51,7 @@
     font-size: 0.85em;
     font-family: "Montserrat";
     font-weight: 600;
-    user-select: none;
+    /* user-select: none; */
     letter-spacing: var(--textspacing);
     transition:
         border-color 200ms linear,
@@ -169,6 +169,8 @@
 .title::after{
     content: '';
     position: absolute;
+    top: 0;
+    right: 0;
     height: 1.15em;
     margin-top: 0.06em;
     width: 0.125em;
